@@ -14,6 +14,7 @@
     "react-addons-shallow-compare": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-virtualized": "^8.8.1",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "d3-chart-framework": "^0.0.1"
   }
 }

@@ -1,8 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Incidents } from '../imports/api/incidents';
 
-import { Heapsort, HeapsortImmutable } from '../imports/lib/d3-chart-framework';
-
 function randomDate(start, end) {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }

@@ -1,6 +1,6 @@
 import d3 from 'd3';
 import _ from 'underscore';
-import { Node } from '../../lib/d3-chart-framework';
+import { Node } from 'd3-chart-framework';
 
 const MINIMUM_LINE_STROKE = 4;
 const MINIMUM_CIRCLE_RADIUS = 5;
