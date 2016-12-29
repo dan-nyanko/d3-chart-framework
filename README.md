@@ -16,6 +16,11 @@ Provides an extensible, reusable approach to building charts with [D3js.org](htt
 
 TODO: Link a screenshot
 
+
+See a live example of the react-meteor application on heroku:
+[chart-framework-app](https://chart-framework-app.herokuapp.com/)
+
+
 ## Installation
 ```
 npm install d3-chart-framework
