@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Immutable from 'immutable'
 /* immutable vs mutable data structures comes down to cold, hard math */
-import { ScatterPlot, InvalidNodeError } from '../lib/d3-chart-framework';
+import { ScatterPlot, InvalidNodeError } from 'd3-chart-framework';
 import RectNode from '../api/nodes/RectNode';
 
 import Toolbar from './Toolbar';

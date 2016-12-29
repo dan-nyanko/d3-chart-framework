@@ -1,6 +1,6 @@
 {
   "name": "d3-chart-framework",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Provides an extensible, reusable approach to building charts with D3js.org",
   "keywords": [
     "d3",
@@ -20,6 +20,7 @@
     "type": "git",
     "url": "https://github.com/dan-nyanko/d3-chart-framework.git"
   },
+  "main": "build/d3-chart-framework.js",
   "scripts": {
     "clean": "rm -rf build && mkdir build",
     "build": "./node_modules/.bin/webpack --mode=build",

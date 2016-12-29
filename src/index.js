@@ -7,5 +7,3 @@ export { default as Plot } from './Plot';
 export { default as ScatterPlot } from './ScatterPlot';
 export { default as Tooltip } from './Tooltip';
 export { default as Zoom } from './Zoom';
-export { default as Heapsort } from './Heapsort';
-export { default as HeapsortImmutable } from './HeapsortImmutable';

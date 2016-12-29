@@ -39,7 +39,7 @@ Hopefully, this answers the why to `d3-chart-framework` and you begin to use it 
 ## Hows does it work?
 The main idea behind `d3-chart-framework` is to create *detached* `Node` class(es), which are an SVG group that are not immediately attached to the DOM. The key word here is *detached*. This simple, yet effective method allows for custom, *reusable*, *extendable* `Node` classes that utilize the D3js [workflow](https://github.com/d3/d3-selection/blob/master/README.md#joining-data).
 
-A `Node` can be any visualization, for example, a single 'circle' SVG element or a more sophisticated group of SVG elements, such as a line segment that contains two circles for the start and end points, connected by a 'line', such as the `[SegmentNode](/examples/shared/nodes/SegmentNode.js)`. 
+A `Node` can be any visualization, for example, a single 'circle' SVG element or a more sophisticated group of SVG elements, such as a line segment that contains two circles for the start and end points, connected by a 'line', such as the `[SegmentNode](/examples/shared/nodes/SegmentNode.js)`.
 
 Therefore to utilize `d3-chart-framework`, one only has to create one or more custom nodes and provide them to a Chart or Plot.
 
@@ -65,12 +65,12 @@ The current external dependencies are:
 ## Integration Examples
 I have provided an example of using `d3-chart-framework` with meteor and react. This is a very powerful framework combination and is very easy to get working out-of-the-box. However, meteor does require MongoDB and this may or may not work for you. See [react-meteor](examples/react-meteor/README.md)
 
-As an alternative, you may use `webpack`, `browserify`, or even `<script>` tags combined with any server-side framework of your choosing, such as [django](https://www.djangoproject.com/), [ruby on rails](http://rubyonrails.org/), or [hapi](https://hapijs.com/). 
+As an alternative, you may use `webpack`, `browserify`, or even `<script>` tags combined with any server-side framework of your choosing, such as [django](https://www.djangoproject.com/), [ruby on rails](http://rubyonrails.org/), or [hapi](https://hapijs.com/).
 
 
 ## About
 I am a software engineer at EcoHealth Alliance, Inc [(EHA)](http://ecohealthalliance.org).
 
-EHA is a non-profit organization who leads cutting-edge research into the critical connections between human and wildlife health and delicate ecosystems. With this science we develop solutions that promote conservation and prevent pandemics. 
+EHA is a non-profit organization who leads cutting-edge research into the critical connections between human and wildlife health and delicate ecosystems. With this science we develop solutions that promote conservation and prevent pandemics.
 
-If you'd like to learn more, please check out some of our work at [http://apps.eha.io](https://apps.eha.io).
+If you'd like to learn more, please check out some of our work at [http://apps.eha.io](http://apps.eha.io).

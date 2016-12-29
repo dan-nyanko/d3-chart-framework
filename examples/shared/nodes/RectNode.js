@@ -1,6 +1,6 @@
 const d3 = require('d3');
 
-import { Node } from '../../lib/d3-chart-framework';
+import { Node } from 'd3-chart-framework';
 
 
 const MINIMUM_MARKER_WIDTH = 10;
