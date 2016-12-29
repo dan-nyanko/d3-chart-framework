@@ -1,0 +1,49 @@
+{
+  "name": "d3-chart-framework",
+  "version": "0.0.1",
+  "description": "Provides an extensible, reusable approach to building charts with D3js.org",
+  "keywords": [
+    "d3",
+    "chart",
+    "library",
+    "framework",
+    "graph",
+    "plot",
+    "line",
+    "bar",
+    "scatter"
+  ],
+  "author": "Dan Nyanko <dan.nyanko@gmail.com>",
+  "license": "GPL-3.0",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dan-nyanko/d3-chart-framework.git"
+  },
+  "scripts": {
+    "clean": "rm -rf build && mkdir build",
+    "build": "./node_modules/.bin/webpack --mode=build",
+    "watch": "./node_modules/.bin/webpack --progress --colors --watch --mode=dev",
+    "test": "./node_modules/.bin/eslint -c .eslintrc.js --quiet true ."
+  },
+  "dependencies": {
+    "underscore": "1.8.3",
+    "d3": "4.4.0",
+    "moment": "2.17.1"
+  },
+  "devDependencies": {
+    "babel-cli": "6.18.0",
+    "babel-eslint": "7.1.1",
+    "babel-loader": "6.2.9",
+    "babel-plugin-add-module-exports": "0.2.1",
+    "babel-preset-latest": "6.16.0",
+    "chai": "3.5.0",
+    "copy-webpack-plugin": "^4.0.1",
+    "eslint": "3.0.1",
+    "eslint-loader": "1.6.1",
+    "eslint-plugin-babel": "3.3.0",
+    "mocha": "3.2.0",
+    "webpack": "1.14.0",
+    "yargs": "6.5.0"
+  }
+}

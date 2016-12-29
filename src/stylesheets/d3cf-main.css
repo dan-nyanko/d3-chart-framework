@@ -1,0 +1,98 @@
+.d3cf > svg {
+  margin-top: 0.5em;
+  opacity: 1;
+}
+.d3cf-toolbar {
+  font-size: 0.75em;
+  margin-left: 25px;
+  margin-top: 1em;
+}
+.d3cf-toolbar-button {
+  margin: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: #fff;
+  color: #7791ae;
+  border-color: #e3e8ee;
+}
+.d3cf-toolbar-button span {
+  padding-left: 5px;
+}
+.d3cf-toolbar-button:focus,
+.d3cf-toolbar-button:active {
+  border-color: #c6d1dd;
+  background: #f1f3f6;
+}
+.d3cf-toolbar-button:active:focus,
+.d3cf-toolbar-button:active {
+  background: #c6d1dd;
+  color: #345e7e;
+}
+.d3cf-toolbar-button.active {
+  background: #345e7e;
+  color: #fff;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-color: #345e7e;
+}
+.d3cf-toolbar-button.active:focus,
+.d3cf-toolbar-button.active:hover {
+  background: #345e7e;
+  color: #fff;
+  outline: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-color: #345e7e;
+}
+.d3cf-container {
+  overflow: hidden;
+}
+.d3cf-axis {
+  font-family: sans-serif;
+  font-size: 0.75em;
+  color: #345e7e;
+}
+.d3cf-axis path,
+.d3cf-axis line {
+  fill: none;
+  stroke: #92a7be;
+  shape-rendering: crispEdges;
+}
+.d3cf-axis-label {
+  font-size: 0.9em;
+  font-weight: bold;
+}
+.d3cf-warn {
+  fill: #f07382;
+  font-size: 1.5em;
+  font-weight: 200;
+  text-transform: uppercase;
+}
+.d3cf-tooltip {
+  position: absolute;
+  padding: 0.75em 1.25em;
+  background: rgba(251,217,203,0.95);
+  border: 0px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  pointer-events: none;
+  font-size: 0.9em;
+}
+.d3cf-tooltip p {
+  margin-bottom: 0;
+}
+.d3cf-grid g.tick line {
+  stroke: #e3e8ed;
+}
+.d3cf-grid path {
+  stroke-width: 0;
+}
+.d3cf-zoomOverlay {
+  pointer-events: all;
+  fill: none;
+}
+.d3cf-zoomBand {
+  fill: rgba(247,178,151,0.3);
+  stroke-width: 1px;
+  stroke: #f7b297;
+}

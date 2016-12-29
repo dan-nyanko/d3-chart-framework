@@ -1,0 +1,4 @@
+**/node_modules/**/*.*
+build/**
+examples/**
+webpack.config.js
