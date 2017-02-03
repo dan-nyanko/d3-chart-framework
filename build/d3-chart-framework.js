@@ -102,6 +102,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
+	var _LineGroup = __webpack_require__(9);
+	
+	Object.defineProperty(exports, 'LineGroup', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_LineGroup).default;
+	  }
+	});
+	
+	var _NodeGroup = __webpack_require__(10);
+	
+	Object.defineProperty(exports, 'NodeGroup', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_NodeGroup).default;
+	  }
+	});
+	
 	var _Node = __webpack_require__(8);
 	
 	Object.defineProperty(exports, 'Node', {
@@ -111,16 +129,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _Plot = __webpack_require__(9);
+	var _LineNode = __webpack_require__(11);
+	
+	Object.defineProperty(exports, 'LineNode', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_LineNode).default;
+	  }
+	});
+	
+	var _RectNode = __webpack_require__(12);
+	
+	Object.defineProperty(exports, 'RectNode', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_RectNode).default;
+	  }
+	});
+	
+	var _SegmentNode = __webpack_require__(13);
+	
+	Object.defineProperty(exports, 'SegmentNode', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_SegmentNode).default;
+	  }
+	});
+	
+	var _Chart = __webpack_require__(14);
 	
 	Object.defineProperty(exports, 'Plot', {
 	  enumerable: true,
 	  get: function get() {
-	    return _interopRequireDefault(_Plot).default;
+	    return _interopRequireDefault(_Chart).default;
 	  }
 	});
 	
-	var _ScatterPlot = __webpack_require__(12);
+	var _ScatterPlot = __webpack_require__(17);
 	
 	Object.defineProperty(exports, 'ScatterPlot', {
 	  enumerable: true,
@@ -129,7 +174,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _Tooltip = __webpack_require__(10);
+	var _LineChart = __webpack_require__(18);
+	
+	Object.defineProperty(exports, 'LineChart', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_LineChart).default;
+	  }
+	});
+	
+	var _Tooltip = __webpack_require__(15);
 	
 	Object.defineProperty(exports, 'Tooltip', {
 	  enumerable: true,
@@ -138,30 +192,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _Zoom = __webpack_require__(11);
+	var _Zoom = __webpack_require__(16);
 	
 	Object.defineProperty(exports, 'Zoom', {
 	  enumerable: true,
 	  get: function get() {
 	    return _interopRequireDefault(_Zoom).default;
-	  }
-	});
-	
-	var _Heapsort = __webpack_require__(13);
-	
-	Object.defineProperty(exports, 'Heapsort', {
-	  enumerable: true,
-	  get: function get() {
-	    return _interopRequireDefault(_Heapsort).default;
-	  }
-	});
-	
-	var _HeapsortImmutable = __webpack_require__(14);
-	
-	Object.defineProperty(exports, 'HeapsortImmutable', {
-	  enumerable: true,
-	  get: function get() {
-	    return _interopRequireDefault(_HeapsortImmutable).default;
 	  }
 	});
 
@@ -207,8 +243,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Axes = function () {
 	  /*
 	  * Axes
-	  * constructs 2d cartesian axes, appends to the container SVG element of the plot
-	  * @param {object} plot, the plot to append the axis
+	  * constructs 2d cartesian axes, appends to the container SVG element of the chart
+	  * @param {object} chart, the chart to append the axis
 	  * @param {object} options, the properties for the axis
 	  * @param {boolean} grid, should the grid be displayed?
 	  * X axis properties
@@ -221,7 +257,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param {string} options.axes.y.type, the datatype of the y axis {numeric, datetime}
 	  * @returns {object} this, returns self
 	  * example usage:
-	  *  with an instance of a plot:
+	  *  with an instance of a chart:
 	  ```
 	  axes = new Axes(plot, {
 	    axes: {
@@ -240,15 +276,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  })
 	  ```
 	  */
-	  function Axes(plot, options) {
+	  function Axes(chart, options) {
 	    _classCallCheck(this, Axes);
 	
-	    this.plot = plot;
+	    this.chart = chart;
 	    this.options = options || { x: { title: 'x', type: 'numeric' }, y: { title: 'y', type: 'numeric' }, grid: true, filter: true };
 	    this.initialized = false;
+	    this.useAutoPadding = options.useAutoPadding || false;
 	    this.initialMinMax = [[0, 0], [0, 0]];
 	    this.currentMinMax = [[0, 0], [0, 0]];
-	    this.init();
+	    this.draw();
 	  }
 	
 	  /*
@@ -259,19 +296,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	  _createClass(Axes, [{
-	    key: 'init',
-	    value: function init(xDomain, yDomain) {
+	    key: 'draw',
+	    value: function draw(xDomain, yDomain) {
+	      var _this = this;
+	
 	      if (this.options.x.type === 'datetime') {
 	        if (xDomain) {
-	          this.xScale = d3.scaleTime().domain(xDomain).range([0, this.plot.getWidth()]).nice();
+	          this.xScale = d3.scaleTime().domain(xDomain).range([0, this.chart.getWidth()]).nice();
 	        } else {
-	          this.xScale = d3.scaleTime().domain(this.currentMinMax[0]).range([0, this.plot.getWidth()]).nice();
+	          this.xScale = d3.scaleTime().domain(this.currentMinMax[0]).range([0, this.chart.getWidth()]).nice();
 	        }
 	      } else {
 	        if (xDomain) {
-	          this.xScale = d3.scaleLinear().domain(xDomain).range([0, this.plot.getWidth()]);
+	          this.xScale = d3.scaleLinear().domain(xDomain).range([0, this.chart.getWidth()]);
 	        } else {
-	          this.xScale = d3.scaleLinear().domain(this.currentMinMax[0]).range([0, this.plot.getWidth()]);
+	          this.xScale = d3.scaleLinear().domain(this.currentMinMax[0]).range([0, this.chart.getWidth()]);
 	        }
 	      }
 	      if (this.options.x.type === 'datetime') {
@@ -280,25 +319,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.xAxis = d3.axisBottom().scale(this.xScale).ticks(10);
 	      }
 	      if (this.options.x.type === 'datetime') {
-	        this.xGroup = this.plot.container.append('g').attr('class', 'x d3cf-axis').attr('transform', 'translate(' + this.plot.margins.left + ', ' + this.plot.getHeight() + ')').call(this.xAxis);
+	        this.xGroup = this.chart.container.append('g').attr('class', 'x d3cf-axis').attr('transform', 'translate(' + this.chart.margins.left + ', ' + this.chart.getHeight() + ')').call(this.xAxis);
 	        this.xGroup.selectAll('text').style('text-anchor', 'end').attr('dx', '-.8em').attr('dy', '.15em').attr('transform', function () {
 	          return 'rotate(-65)';
 	        });
-	        this.xGroup.append('text').attr('class', 'd3cf-axis-label').attr('dx', this.plot.width / 2 - (this.plot.margins.right + this.plot.margins.left) / 2).attr('dy', this.plot.margins.bottom + 30).style('text-anchor', 'middle').text(this.options.x.title);
 	      } else {
-	        this.xGroup = this.plot.container.append('g').attr('class', 'd3cf-axis').attr('transform', 'translate(' + this.plot.margins.left + ', ' + this.plot.getHeight() + ')').call(this.xAxis);
-	        this.xGroup.append('text').attr('dx', this.plot.width / 2 - (this.plot.margins.right + this.plot.margins.left) / 2).attr('dy', this.plot.margins.bottom).attr('class', 'd3cf-axis-label').style('text-anchor', 'middle').text(this.options.x.title);
+	        this.xGroup = this.chart.container.append('g').attr('class', 'x d3cf-axis').attr('transform', 'translate(' + this.chart.margins.left + ', ' + this.chart.getHeight() + ')').call(this.xAxis);
 	      }
+	
 	      if (yDomain) {
-	        this.yScale = d3.scaleLinear().domain(yDomain).range([this.plot.getHeight(), 0]);
+	        this.yScale = d3.scaleLinear().domain(yDomain).range([this.chart.getHeight(), 0]);
 	      } else {
-	        this.yScale = d3.scaleLinear().domain(this.currentMinMax[1]).range([this.plot.getHeight(), 0]);
+	        this.yScale = d3.scaleLinear().domain(this.currentMinMax[1]).range([this.chart.getHeight(), 0]);
 	      }
 	      this.yAxis = d3.axisLeft().scale(this.yScale);
-	      this.yGroup = this.plot.container.append('g').attr('class', 'y d3cf-axis').attr('transform', 'translate(' + this.plot.margins.left + ', 0)').call(this.yAxis);
-	      this.yGroup.append('text').attr('transform', 'rotate(-90)').attr('dx', -(this.plot.height / 2) + (this.plot.margins.top + this.plot.margins.bottom) / 2).attr('dy', -this.plot.margins.left).attr('class', 'd3cf-axis-label').style('text-anchor', 'middle').text(this.options.y.title);
+	      this.yGroup = this.chart.container.append('g').attr('class', 'y d3cf-axis').attr('transform', 'translate(' + this.chart.margins.left + ', 0)').call(this.yAxis);
 	      if (this.options.grid) {
-	        this.grid = new _Grid2.default(this, this.plot);
+	        this.grid = new _Grid2.default(this, this.chart);
+	      }
+	
+	      var padding = 0;
+	      if (this.options.x.type === 'datetime') {
+	        padding = 45;
+	      }
+	
+	      if (this.xLabel) {
+	        // update
+	        this.xLabel.attr('dx', this.chart.width / 2 - (this.chart.margins.right + this.chart.margins.left) / 2).attr('dy', this.chart.margins.bottom);
+	      } else {
+	        // add
+	        this.xLabel = this.chart.container.append('g').attr('class', 'x d3cf-axis-label').attr('transform', 'translate(' + this.chart.margins.left + ', ' + (this.chart.getHeight() + padding) + ')').append('text').attr('dx', this.chart.width / 2 - (this.chart.margins.right + this.chart.margins.left) / 2).attr('dy', this.chart.margins.bottom).attr('class', 'd3cf-axis-label').style('text-anchor', 'middle').text(function () {
+	          return _this.options.x.title || '';
+	        });
+	      }
+	      if (this.yLabel) {
+	        // update
+	        this.yLabel.attr('dx', -(this.chart.height / 2) + (this.chart.margins.top + this.chart.margins.bottom) / 2).attr('dy', -this.chart.margins.left);
+	      } else {
+	        // add
+	        this.yLabel = this.chart.container.append('g').attr('class', 'y d3cf-axis-label').attr('transform', 'translate(' + this.chart.margins.left + ', 0)').append('text').attr('transform', 'rotate(-90)').attr('dx', -(this.chart.height / 2) + (this.chart.margins.top + this.chart.margins.bottom) / 2).attr('dy', -this.chart.margins.left).attr('class', 'd3cf-axis-label').style('text-anchor', 'middle').text(function () {
+	          return _this.options.y.title;
+	        });
 	      }
 	    }
 	
@@ -310,51 +371,59 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'setDomain',
 	    value: function setDomain(data) {
-	      var _this = this;
+	      var _this2 = this;
 	
 	      var xMin = 0;
 	      var xMax = 0;
 	      if (this.options.x.type === 'datetime') {
-	        xMin = Axes.minDatetime(_.pluck(data, 'x1'));
+	        var x1 = _.pluck(data, 'x1');
 	        var x2 = _.pluck(data, 'x2');
+	        xMin = Axes.minDatetime(x1, this.useAutoPadding);
+	        xMax = xMin;
 	        if (x2.length > 0) {
-	          xMax = Axes.maxDatetime(_.pluck(data, 'x2'));
-	        } else {
-	          xMax = Axes.maxDatetime(_.pluck(data, 'x1'));
+	          xMax = Axes.maxDatetime(x2, this.useAutoPadding);
+	        }
+	        if (isNaN(xMax)) {
+	          xMax = Axes.maxDatetime(x1, this.useAutoPadding);
 	        }
 	      } else {
-	        var _x = _.pluck(data, 'x2');
-	        if (_x.length > 0) {
-	          xMax = Axes.maxNumeric(_.pluck(data, 'x2'));
-	        } else {
-	          xMax = Axes.maxNumeric(_.pluck(data, 'x1'));
+	        var _x = _.pluck(data, 'x1');
+	        var _x2 = _.pluck(data, 'x2');
+	        xMin = Axes.minNumeric(_x, this.useAutoPadding);
+	        xMax = xMin;
+	        if (_x2.length > 0) {
+	          xMax = Axes.maxNumeric(_x2, this.useAutoPadding);
+	        }
+	        if (isNaN(xMax)) {
+	          xMax = Axes.maxNumeric(_x, this.useAutoPadding);
 	        }
 	      }
+	
 	      var yMin = 0;
-	      var yMax = Axes.maxNumeric(_.pluck(data, 'y1'));
+	      var yMax = Axes.maxNumeric(_.pluck(data, 'y1'), this.useAutoPadding);
 	      this.xScale.domain([xMin, xMax]);
 	      this.yScale.domain([yMin, yMax]);
 	      if (this.initialized === false) {
 	        this.initialMinMax = [[xMin, xMax], [yMin, yMax]];
 	        if (this.options.filter) {
-	          this.plot.addFilter('_domain', function (d) {
+	          this.chart.addFilter('_domain', function (d) {
 	            // TODO: should this scope be the Plot or the Axes?
-	            var x1 = _this.xScale.domain()[0];
+	            var x1 = _this2.xScale.domain()[0];
 	            if (x1 instanceof Date) {
 	              x1 = x1.getTime();
 	            }
-	            var x2 = _this.xScale.domain()[1];
+	            var x2 = _this2.xScale.domain()[1];
 	            if (x2 instanceof Date) {
 	              x2 = x2.getTime();
 	            }
-	            var y1 = _this.yScale.domain()[0];
-	            var y2 = _this.yScale.domain()[1];
+	            var y1 = _this2.yScale.domain()[0];
+	            var y2 = _this2.yScale.domain()[1];
 	            if (d.hasOwnProperty('x2')) {
 	              if (d.x1 >= x1 && d.x2 <= x2 && d.y1 >= y1 && d.y1 <= y2) {
 	                return d;
 	              }
 	            } else {
-	              if (d.x1 >= x1 && d.x2 <= x2 && d.y1 >= y1 && d.y1 <= y2) {
+	              if (d.x1 >= x1 && d.y1 >= y1 && d.y1 <= y2) {
 	                return d;
 	              }
 	            }
@@ -381,16 +450,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /*
 	    * update - update the x,y axes using the zoom domain
 	    * @param {array} data, an array of {object} for each marker
+	    * @param {boolean} shouldSetDomain, should the domain be set to data bounds
 	    */
 	
 	  }, {
 	    key: 'update',
-	    value: function update(data) {
+	    value: function update(data, shouldSetDomain) {
 	      this.remove();
-	      if (data) {
+	      if (data && shouldSetDomain) {
 	        this.setDomain(data);
 	      }
-	      this.init(this.xScale.domain(), this.yScale.domain());
+	      this.draw(this.xScale.domain(), this.yScale.domain());
 	      return this;
 	    }
 	
@@ -402,7 +472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'reset',
 	    value: function reset() {
 	      this.remove();
-	      this.init(this.initialMinMax[0], this.initialMinMax[1]);
+	      this.draw(this.initialMinMax[0], this.initialMinMax[1]);
 	      return this;
 	    }
 	
@@ -427,13 +497,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else {
 	        this.yScale.domain([zoomArea.y1, zoomArea.y2]);
 	      }
-	      var trans = this.plot.container.transition().duration(750);
+	      var trans = this.chart.container.transition().duration(750);
 	      this.xGroup.transition(trans).call(this.xAxis);
 	      this.xGroup.selectAll('g').selectAll('text').style('text-anchor', 'end').attr('dx', '-.8em').attr('dy', '.15em').attr('transform', 'rotate(-65)');
 	      this.yGroup.transition(trans).call(this.yAxis);
 	      if (this.grid) {
 	        this.grid.remove();
-	        this.grid = new _Grid2.default(this, this.plot);
+	        this.grid = new _Grid2.default(this, this.chart);
 	      }
 	      return this;
 	    }
@@ -477,14 +547,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }], [{
 	    key: 'maxNumeric',
-	    value: function maxNumeric(data) {
-	      var m = _.max(data);
-	      var l = String(m).split('').length;
-	      if (l === 1) {
-	        return 10;
+	    value: function maxNumeric(data, useAutoPadding) {
+	      var m = Math.floor(_.max(data));
+	      if (useAutoPadding) {
+	        var l = String(m).split('').length;
+	        if (l === 1) {
+	          return 10;
+	        }
+	        var p = Math.pow(10, l) / 10;
+	        return m + p;
 	      }
-	      var p = Math.pow(10, l) / 10;
-	      return m + p;
+	      return m;
 	    }
 	
 	    /*
@@ -497,14 +570,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'minNumeric',
-	    value: function minNumeric(data) {
-	      var m = _.min(data);
-	      var l = String(m).split('').length;
-	      if (l === 1) {
-	        return 10;
+	    value: function minNumeric(data, useAutoPadding) {
+	      var m = Math.floor(_.min(data));
+	      if (useAutoPadding) {
+	        var l = String(m).split('').length;
+	        if (l === 1) {
+	          return 10;
+	        }
+	        var p = Math.pow(10, l) / 10;
+	        return m + p;
 	      }
-	      var p = Math.pow(10, l) / 10;
-	      return m + p;
+	      return m;
 	    }
 	
 	    /*
@@ -515,11 +591,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'maxDatetime',
-	    value: function maxDatetime(data) {
-	      var min = moment(_.min(data));
+	    value: function maxDatetime(data, useAutoPadding) {
 	      var max = moment(_.max(data));
-	      var unit = getDatetimeUnit(min, max);
-	      return moment(max).add(1, unit).valueOf();
+	      if (useAutoPadding) {
+	        var min = moment(_.min(data));
+	        var unit = getDatetimeUnit(min, max);
+	        return moment(max).add(1, unit).valueOf();
+	      }
+	      return max.valueOf();
 	    }
 	
 	    /*
@@ -530,11 +609,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'minDatetime',
-	    value: function minDatetime(data) {
+	    value: function minDatetime(data, useAutoPadding) {
 	      var min = moment(_.min(data));
-	      var max = moment(_.max(data));
-	      var unit = getDatetimeUnit(min, max);
-	      return moment(min).subtract(1, unit).valueOf();
+	      if (useAutoPadding) {
+	        var max = moment(_.max(data));
+	        var unit = getDatetimeUnit(min, max);
+	        return moment(min).subtract(1, unit).valueOf();
+	      }
+	      return min.valueOf();
 	    }
 	  }]);
 	
@@ -704,7 +786,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	var Group = function () {
-	  function Group(plot, options) {
+	  function Group(chart, options) {
 	    _classCallCheck(this, Group);
 	
 	    this.options = options || {};
@@ -716,8 +798,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var onExit = this.options.onExit || Group.onExit;
 	    this.onExit = _.bind(onExit, this);
 	    this.nodes_ = {};
-	    this.plot = plot;
-	    this.plot.addGroup(this);
+	    this.chart = chart;
 	    return this;
 	  }
 	
@@ -743,7 +824,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'addNode',
 	    value: function addNode(node) {
-	      if (!node instanceof _Node2.default) {
+	      if (typeof node === 'undefined' || !node instanceof _Node2.default) {
 	        throw new _Errors.InvalidNodeError();
 	      }
 	      this.nodes_[node.id] = node;
@@ -784,22 +865,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'update',
 	    value: function update() {
-	      if (typeof this.group === 'undefined') {
-	        return;
-	      }
-	      var filtered = this.applyFilters();
-	      var filteredLen = filtered.length;
-	      this.group.attr('numNodes', filteredLen);
-	      var nodes = this.group.selectAll('.node').data(filtered, function (d) {
-	        return d.id;
-	      });
-	      nodes.enter().append(function (node) {
-	        return node.detached();
-	      }).call(this.onEnter);
-	      nodes.each(function (node) {
-	        return node.update();
-	      }).call(this.onUpdate);
-	      return nodes.exit().remove().call(this.onExit);
+	      throw new Error('Update must be implemented.');
 	    }
 	
 	    /*
@@ -814,39 +880,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.group = d3.select(document.createElementNS(d3.namespaces.svg, 'g')).attr('id', this.id).attr('class', 'd3cf-group').remove();
 	      this.update();
 	      return this.group.node();
-	    }
-	
-	    /*
-	    * applyFilters - apply any filters from the plot
-	    * @param {object} filters, an array of filters to apply
-	    * @returns {array} filtered, the filtered data
-	    */
-	
-	  }, {
-	    key: 'applyFilters',
-	    value: function applyFilters(filters) {
-	      var filters_ = filters || this.plot.filters;
-	      var filtered = [];
-	      if (this.nodes_) {
-	        filtered = this.getNodes().filter(function (d) {
-	          var valid = true;
-	          var keys = Object.keys(filters_);
-	          var i = 0;
-	          var keysLen = keys.length;
-	          while (i < keysLen) {
-	            var key = keys[i++];
-	            var f = filters_[key](d);
-	            if (typeof f === 'undefined') {
-	              valid = false;
-	              break;
-	            }
-	          }
-	          if (valid) {
-	            return d;
-	          }
-	        });
-	      }
-	      return filtered;
 	    }
 	
 	    /*
@@ -869,9 +902,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'destroy',
 	    value: function destroy() {
 	      this.remove();
-	      this.plot.removeLayer(this.id);
+	      this.chart.removeLayer(this.id);
 	      this.nodes = null;
-	      this.plot = null;
+	      this.chart = null;
 	      this.group = null;
 	    }
 	
@@ -959,6 +992,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /*
+	    * update - updates one or more elements within the RectNode SVG group
+	    */
+	
+	  }, {
+	    key: 'update',
+	    value: function update() {
+	      return this;
+	    }
+	
+	    /*
 	    * detached - builds a detached svg group and returns the node
 	    * @return {object} node, the SVG node to append to the parent during .call()
 	    */
@@ -986,15 +1029,764 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
+	var _Group2 = __webpack_require__(7);
+	
+	var _Group3 = _interopRequireDefault(_Group2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var d3 = __webpack_require__(3);
+	
+	var LineGroup = function (_Group) {
+	  _inherits(LineGroup, _Group);
+	
+	  function LineGroup(chart, options) {
+	    var _ret;
+	
+	    _classCallCheck(this, LineGroup);
+	
+	    var _this = _possibleConstructorReturn(this, (LineGroup.__proto__ || Object.getPrototypeOf(LineGroup)).call(this, chart, options));
+	
+	    _this.s = options.s || 'steelblue';
+	    _this.w = options.w || 1.5;
+	    _this.meta = options.meta || {};
+	    var defaultGenerator = d3.line().x(function (d) {
+	      return _this.chart.axes.xScale(d.x1);
+	    }).y(function (d) {
+	      return _this.chart.axes.yScale(d.y1);
+	    });
+	    _this.generator = options.generator || defaultGenerator;
+	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
+	  }
+	
+	  /*
+	  * update - handles updating the marker
+	  * @return {object} this
+	  */
+	
+	
+	  _createClass(LineGroup, [{
+	    key: 'update',
+	    value: function update() {
+	      var _this2 = this;
+	
+	      if (typeof this.group === 'undefined') {
+	        return;
+	      }
+	      var filtered = this.chart.applyFilters(this.getNodes());
+	      this.group.attr('numNodes', filtered.length);
+	
+	      var path = this.group.append('path').datum(filtered).attr('fill', 'none').attr('stroke', this.s).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round').attr('stroke-width', this.w).attr('class', 'd3cf-line').attr('d', function (d) {
+	        return _this2.generator(d);
+	      }).call(this.onEnter);
+	      path.attr('stroke', this.s).attr('stroke-width', this.w).attr('d', function (d) {
+	        return _this2.generator(d);
+	      }).call(this.onUpdate);
+	      path.exit().remove().call(this.onExit);
+	      var nodes = this.group.selectAll('.node').data(filtered, function (d) {
+	        return d.id;
+	      });
+	      nodes.enter().append(function (node) {
+	        return node.detached();
+	      }).call(this.onEnter);
+	      nodes.each(function (node) {
+	        return node.update();
+	      }).call(this.onUpdate);
+	      nodes.exit().remove().call(this.onExit);
+	    }
+	  }]);
+	
+	  return LineGroup;
+	}(_Group3.default);
+	
+	module.exports = LineGroup;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _Group2 = __webpack_require__(7);
+	
+	var _Group3 = _interopRequireDefault(_Group2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var NodeGroup = function (_Group) {
+	  _inherits(NodeGroup, _Group);
+	
+	  function NodeGroup(chart, options) {
+	    var _ret;
+	
+	    _classCallCheck(this, NodeGroup);
+	
+	    var _this = _possibleConstructorReturn(this, (NodeGroup.__proto__ || Object.getPrototypeOf(NodeGroup)).call(this, chart, options));
+	
+	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
+	  }
+	
+	  /*
+	  * update - handles updating the marker
+	  * @override
+	  * @return {object} this
+	  */
+	
+	
+	  _createClass(NodeGroup, [{
+	    key: 'update',
+	    value: function update() {
+	      if (typeof this.group === 'undefined') {
+	        return;
+	      }
+	      var filtered = this.chart.applyFilters(this.getNodes());
+	      this.group.attr('numNodes', filtered.length);
+	      var nodes = this.group.selectAll('.node').data(filtered, function (d) {
+	        return d.id;
+	      });
+	      nodes.enter().append(function (node) {
+	        return node.detached();
+	      }).call(this.onEnter);
+	      nodes.each(function (node) {
+	        return node.update();
+	      }).call(this.onUpdate);
+	      nodes.exit().remove().call(this.onExit);
+	    }
+	  }]);
+	
+	  return NodeGroup;
+	}(_Group3.default);
+	
+	module.exports = NodeGroup;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _Node2 = __webpack_require__(8);
+	
+	var _Node3 = _interopRequireDefault(_Node2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var d3 = __webpack_require__(3);
+	
+	var LineNode = function (_Node) {
+	  _inherits(LineNode, _Node);
+	
+	  /*
+	  * LineNode - a data point for a path/line generator
+	  * @param {object} chart, an instance of a chart
+	  * @param {object} options, the options used to construct the plot
+	  * @param {number} options.x1, the value for x1 position
+	  * @param {number} options.y1, the value for y1 position
+	  * @param {string} options.r, the radius of the circle
+	  * @param {number} options.o, the opacity of the cirle
+	  * @param {object} options.meta, the optional meta data associated with the circle (e.g. used in the Tooltip)
+	  * @return {object} this
+	  */
+	  function LineNode(chart, options) {
+	    var _ret;
+	
+	    _classCallCheck(this, LineNode);
+	
+	    var _this = _possibleConstructorReturn(this, (LineNode.__proto__ || Object.getPrototypeOf(LineNode)).call(this, chart, options));
+	
+	    _this.chart = chart;
+	    _this.x1 = options.x1;
+	    _this.y1 = options.y1;
+	    _this.r = options.r || 3;
+	    _this.o = options.o || 0;
+	    _this.style = options.style || 'd3cf-node';
+	    _this.meta = options.meta || {};
+	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
+	  }
+	
+	  _createClass(LineNode, [{
+	    key: 'getFill',
+	    value: function getFill(type) {
+	      var fill = '#33B5E';
+	      switch (type) {
+	        case 'warning':
+	          fill = '#FFBB33';
+	          break;
+	        case 'success':
+	          fill = '#00C851';
+	          break;
+	        case 'info':
+	          fill = '#33B5E5';
+	          break;
+	        default:
+	          break;
+	      }
+	      return fill;
+	    }
+	
+	    /*
+	    * update - updates one or more elements
+	    */
+	
+	  }, {
+	    key: 'update',
+	    value: function update() {
+	      var _this2 = this;
+	
+	      if (typeof this.group === 'undefined') {
+	        this.group = d3.select('#' + this.id);
+	      }
+	      /*
+	      * Each node of the line's `path` (see LineGroup) is a transparent circle in
+	      * order to have a mouseover event.
+	      * @see https://groups.google.com/forum/#!topic/d3-js/gHzOj91X2NA
+	      */
+	      // select
+	      var circle = this.group.selectAll('circle').data([this], function (d) {
+	        return d.id;
+	      });
+	      // create
+	      circle.enter().append('circle').attr('class', this.style).attr('cx', function () {
+	        return _this2.chart.axes.xScale(_this2.x1);
+	      }).attr('cy', function () {
+	        return _this2.chart.axes.yScale(_this2.y1);
+	      }).attr('r', function () {
+	        return _this2.r;
+	      }).attr('opacity', function () {
+	        return _this2.o;
+	      }).on('mouseover', function () {
+	        if (_this2.chart.tooltip) {
+	          return _this2.chart.tooltip.mouseover(_this2, d3.event.pageX, d3.event.pageY);
+	        }
+	      }).on('mouseout', function () {
+	        if (_this2.chart.tooltip) {
+	          return _this2.chart.tooltip.mouseout();
+	        }
+	      });
+	      // update
+	      circle.attr('cx', function () {
+	        return _this2.chart.axes.xScale(_this2.x1);
+	      }).attr('cy', function () {
+	        return _this2.chart.axes.yScale(_this2.y1);
+	      }).attr('r', function () {
+	        return _this2.r;
+	      }).attr('opacity', function () {
+	        return _this2.o;
+	      });
+	      // remove
+	      circle.exit().remove();
+	      return this;
+	    }
+	  }]);
+	
+	  return LineNode;
+	}(_Node3.default);
+	
+	module.exports = LineNode;
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _Node2 = __webpack_require__(8);
+	
+	var _Node3 = _interopRequireDefault(_Node2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var d3 = __webpack_require__(3);
+	
+	var MINIMUM_MARKER_WIDTH = 10;
+	var MINIMUM_MARKER_HEIGHT = 10;
+	
+	var RectNode = function (_Node) {
+	  _inherits(RectNode, _Node);
+	
+	  /*
+	  * RectNode - a rectangular node
+	  * @param {object} plot, an instance of a plot
+	  * @param {object} options, the options used to construct the plot
+	  * @param {number} options.x1, the value for x1 position
+	  * @param {number} options.x2, the value for x2 position
+	  * @param {number} options.y1, the value for y1 position
+	  * @param {number} options.h, the value for the height
+	  * @param {string} options.f, the fill of the marker
+	  * @param {number} options.o, the opacity of the marker
+	  * @param {object} options.meta, the optional meta data associated with the marker (e.g. used in the Tooltip)
+	  * @return {object} this
+	  */
+	  function RectNode(plot, options) {
+	    var _ret;
+	
+	    _classCallCheck(this, RectNode);
+	
+	    var _this = _possibleConstructorReturn(this, (RectNode.__proto__ || Object.getPrototypeOf(RectNode)).call(this, options));
+	
+	    _this.plot = plot;
+	    _this.x1 = options.x1;
+	    _this.x2 = options.x2;
+	    _this.y1 = options.y1;
+	    _this.h = options.h || 10;
+	    _this.f = options.f || '#345e7e';
+	    _this.o = options.o || 0.4;
+	    _this.style = options.style || 'd3cf-node';
+	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
+	  }
+	
+	  /*
+	  * update - updates one or more elements within the RectNode SVG group
+	  */
+	
+	
+	  _createClass(RectNode, [{
+	    key: 'update',
+	    value: function update() {
+	      var _this2 = this;
+	
+	      if (typeof this.group === 'undefined') {
+	        this.group = d3.select('#' + this.id);
+	      }
+	      // select
+	      var rect = this.group.selectAll('rect').data([this], function (d) {
+	        return d.id;
+	      });
+	      // create
+	      rect.enter().append('rect').attr('class', this.style).attr('x', function () {
+	        return _this2.plot.axes.xScale(_this2.x1);
+	      }).attr('y', function () {
+	        var height = _this2.h;
+	        if (height < MINIMUM_MARKER_HEIGHT) {
+	          height = MINIMUM_MARKER_HEIGHT;
+	        }
+	        return _this2.plot.axes.yScale(_this2.y1) - height / 2;
+	      }).attr('width', function () {
+	        var width = _this2.plot.axes.xScale(_this2.x2) - _this2.plot.axes.xScale(_this2.x1);
+	        if (width < MINIMUM_MARKER_WIDTH) {
+	          width = MINIMUM_MARKER_WIDTH;
+	        }
+	        return width;
+	      }).attr('height', function () {
+	        var height = _this2.h;
+	        if (height < MINIMUM_MARKER_HEIGHT) {
+	          height = MINIMUM_MARKER_HEIGHT;
+	        }
+	        return height;
+	      }).style('fill', function () {
+	        return _this2.f;
+	      }).style('opacity', function () {
+	        return _this2.o;
+	      }).on('mouseover', function () {
+	        if (_this2.plot.tooltip) {
+	          return _this2.plot.tooltip.mouseover(_this2, d3.event.pageX, d3.event.pageY);
+	        }
+	      }).on('mouseout', function () {
+	        if (_this2.plot.tooltip) {
+	          return _this2.plot.tooltip.mouseout();
+	        }
+	      });
+	
+	      // update
+	      rect.attr('x', function () {
+	        return _this2.plot.axes.xScale(_this2.x1);
+	      }).attr('y', function () {
+	        var height = _this2.h;
+	        if (height < MINIMUM_MARKER_HEIGHT) {
+	          height = MINIMUM_MARKER_HEIGHT;
+	        }
+	        return _this2.plot.axes.yScale(_this2.y1) - height / 2;
+	      }).attr('width', function () {
+	        var width = _this2.plot.axes.xScale(_this2.x2) - _this2.plot.axes.xScale(_this2.x1);
+	        if (width < MINIMUM_MARKER_WIDTH) {
+	          width = MINIMUM_MARKER_WIDTH;
+	        }
+	        return width;
+	      }).attr('height', function () {
+	        var height = _this2.h;
+	        if (height < MINIMUM_MARKER_HEIGHT) {
+	          height = MINIMUM_MARKER_HEIGHT;
+	        }
+	        return height;
+	      });
+	
+	      // remove
+	      rect.exit().remove();
+	      return this;
+	    }
+	  }]);
+	
+	  return RectNode;
+	}(_Node3.default);
+	
+	module.exports = RectNode;
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _d = __webpack_require__(3);
+	
+	var _d2 = _interopRequireDefault(_d);
+	
+	var _underscore = __webpack_require__(4);
+	
+	var _underscore2 = _interopRequireDefault(_underscore);
+	
+	var _Node2 = __webpack_require__(8);
+	
+	var _Node3 = _interopRequireDefault(_Node2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var MINIMUM_LINE_STROKE = 4;
+	var MINIMUM_CIRCLE_RADIUS = 5;
+	var MINIMUM_LINE_THRESHOLD = 2;
+	
+	var SegmentNode = function (_Node) {
+	  _inherits(SegmentNode, _Node);
+	
+	  /*
+	  * SegmentNode - a line with beginning and end circles
+	  * @param {object} plot, an instance of a plot
+	  * @param {object} options, the options used to construct the SegmentNode
+	  * @param {number} options.x, the value for x position
+	  * @param {number} options.y, the value for y position
+	  * @param {number} options.l, the value for the length of the line
+	  * @param {number} options.h, the value for the height
+	  * @param {string} options.f, the fill of the line
+	  * @param {number} options.o, the opacity of the line
+	  * @param {object} options.meta, the optional meta data associated with the node (e.g. used in the Tooltip)
+	  * @return {object} this
+	  */
+	  function SegmentNode(plot, options) {
+	    var _ret;
+	
+	    _classCallCheck(this, SegmentNode);
+	
+	    var _this = _possibleConstructorReturn(this, (SegmentNode.__proto__ || Object.getPrototypeOf(SegmentNode)).call(this, options));
+	
+	    _this.plot = plot;
+	    _this.x = options.x;
+	    _this.y = options.y;
+	    _this.w = options.w;
+	    _this.h = options.h || MINIMUM_LINE_STROKE;
+	    _this.r = options.r || MINIMUM_CIRCLE_RADIUS;
+	    _this.f = options.f || '#345e7e';
+	    _this.o = options.o || 0.3;
+	    _this.meta = options.meta || {};
+	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
+	  }
+	
+	  /*
+	  * remove - removes the node from the DOM
+	  * @return {object} this
+	  */
+	
+	
+	  _createClass(SegmentNode, [{
+	    key: 'remove',
+	    value: function remove() {
+	      if (this.group) {
+	        return this.group.remove();
+	      }
+	    }
+	
+	    /*
+	    * filteredOrderedPair - determine if the pair exists within the domain
+	    */
+	
+	  }, {
+	    key: 'filteredOrderedPair',
+	    value: function filteredOrderedPair(orderedPair) {
+	      if (orderedPair[0] < this.plot.axes.xScale.range()[0]) {
+	        orderedPair[0] = null;
+	      }
+	      if (orderedPair[0] > this.plot.axes.xScale.range()[1]) {
+	        orderedPair[0] = null;
+	      }
+	      if (orderedPair[1] < this.plot.axes.yScale.range()[1]) {
+	        orderedPair[1] = null;
+	      }
+	      if (orderedPair[1] > this.plot.axes.yScale.range()[0]) {
+	        orderedPair[1] = null;
+	      }
+	      return orderedPair;
+	    }
+	
+	    /*
+	    * update - handles updating the node
+	    * @return {object} this
+	    */
+	
+	  }, {
+	    key: 'update',
+	    value: function update() {
+	      var _this2 = this;
+	
+	      if (typeof this.group === 'undefined') {
+	        this.group = _d2.default.select('#' + this.id);
+	      }
+	      var linePairs = [[this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)], [this.plot.axes.xScale(this.w), this.plot.axes.yScale(this.y)]];
+	      var lineDistance = this.distance(linePairs);
+	      var totalRange = this.plot.axes.xScale.range()[1];
+	      var linePercentage = Math.floor(lineDistance / totalRange * 100);
+	      var startPoint = this.filteredOrderedPair([this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)]);
+	      var start = this.group.selectAll('.start-circle').data([this], function (d) {
+	        return d.id;
+	      });
+	      if (startPoint[0] !== null && startPoint[1] !== null) {
+	        start.enter().append('circle').attr('class', 'start-circle').style('fill', this.f).attr('cx', startPoint[0]).attr('cy', startPoint[1]).attr('r', function () {
+	          var radius = _this2.r;
+	          radius = Math.ceil(radius * (linePercentage / 100) + radius);
+	          if (radius < MINIMUM_CIRCLE_RADIUS) {
+	            radius = MINIMUM_CIRCLE_RADIUS;
+	          }
+	          return radius;
+	        });
+	        start.attr('cx', startPoint[0]).attr('cy', startPoint[1]).attr('r', function () {
+	          var radius = _this2.r;
+	          radius = Math.ceil(radius * (linePercentage / 100) + radius);
+	          if (radius < MINIMUM_CIRCLE_RADIUS) {
+	            radius = MINIMUM_CIRCLE_RADIUS;
+	          }
+	          return radius;
+	        });
+	        start.exit().remove();
+	      } else {
+	        this.group.selectAll('.start-circle').remove();
+	      }
+	      if (linePercentage >= MINIMUM_LINE_THRESHOLD) {
+	        var line = this.group.selectAll('line').data([this], function (d) {
+	          return d.id;
+	        });
+	        line.enter().append('line').attr('x1', function () {
+	          if (linePairs[0][0] <= _this2.plot.axes.xScale.range()[0]) {
+	            return _this2.plot.axes.xScale.range()[0];
+	          }
+	          if (linePairs[0][0] >= _this2.plot.axes.xScale.range()[1]) {
+	            return null;
+	          }
+	          return linePairs[0][0];
+	        }).attr('y1', linePairs[0][1]).attr('x2', function () {
+	          if (linePairs[1][0] >= _this2.plot.axes.xScale.range()[1]) {
+	            return _this2.plot.axes.xScale.range()[1];
+	          }
+	          if (linePairs[1][0] <= _this2.plot.axes.xScale.range()[0]) {
+	            return null;
+	          }
+	          return linePairs[1][0];
+	        }).attr('y2', linePairs[1][1]).attr('stroke-width', function () {
+	          var height = _this2.h;
+	          height = Math.ceil(height * (linePercentage / 100) + height);
+	          if (height < MINIMUM_LINE_STROKE) {
+	            return MINIMUM_LINE_STROKE;
+	          }
+	          return height;
+	        }).attr('stroke', this.f);
+	        line.attr('x1', function () {
+	          if (linePairs[0][0] <= _this2.plot.axes.xScale.range()[0]) {
+	            return _this2.plot.axes.xScale.range()[0];
+	          }
+	          if (linePairs[0][0] >= _this2.plot.axes.xScale.range()[1]) {
+	            return null;
+	          }
+	          return linePairs[0][0];
+	        }).attr('y1', linePairs[0][1]).attr('x2', function () {
+	          if (linePairs[1][0] >= _this2.plot.axes.xScale.range()[1]) {
+	            return _this2.plot.axes.xScale.range()[1];
+	          }
+	          if (linePairs[1][0] <= _this2.plot.axes.xScale.range()[0]) {
+	            return null;
+	          }
+	          return linePairs[1][0];
+	        }).attr('y2', linePairs[1][1]).attr('stroke-width', function () {
+	          var height = _this2.h;
+	          height = Math.ceil(height * (linePercentage / 100) + height);
+	          if (height < MINIMUM_LINE_STROKE) {
+	            return MINIMUM_LINE_STROKE;
+	          }
+	          return height;
+	        });
+	      } else {
+	        this.group.selectAll('line').remove();
+	      }
+	      var endPoint = this.filteredOrderedPair([this.plot.axes.xScale(this.w), this.plot.axes.yScale(this.y)]);
+	      if (linePercentage >= MINIMUM_LINE_THRESHOLD) {
+	        if (endPoint[0] !== null && endPoint[1] !== null) {
+	          var end = this.group.selectAll('.end-circle').data([this], function (d) {
+	            return d.id;
+	          });
+	          end.enter().append('circle').attr('class', 'end-circle').attr('cx', endPoint[0]).attr('cy', endPoint[1]).attr('r', function () {
+	            var radius = _this2.r;
+	            radius = Math.ceil(radius * linePercentage / 100 + radius);
+	            if (radius < MINIMUM_CIRCLE_RADIUS) {
+	              radius = MINIMUM_CIRCLE_RADIUS;
+	            }
+	            return radius;
+	          }).style('fill', this.f);
+	          end.attr('class', 'end-circle').attr('cx', endPoint[0]).attr('cy', endPoint[1]).attr('r', function () {
+	            var radius = _this2.r;
+	            radius = Math.ceil(radius * linePercentage / 100 + radius);
+	            if (radius < MINIMUM_CIRCLE_RADIUS) {
+	              radius = MINIMUM_CIRCLE_RADIUS;
+	            }
+	            return radius;
+	          });
+	        } else {
+	          this.group.selectAll('.end-circle').remove();
+	        }
+	      } else {
+	        this.group.selectAll('.end-circle').remove();
+	      }
+	      return this;
+	    }
+	
+	    /*
+	    * detached - builds a detached svg group and returns the node
+	    * @return {object} node, the SVG node to append to the parent during .call()
+	    */
+	
+	  }, {
+	    key: 'detached',
+	    value: function detached() {
+	      this.remove();
+	      this.group = _d2.default.select(document.createElementNS(_d2.default.namespaces.svg, 'g')).attr('id', this.id).attr('class', 'node').attr('opacity', this.o).remove();
+	      this.update();
+	      this.group.node();
+	    }
+	
+	    /*
+	    * distance - determine the distance between two pairs
+	    */
+	
+	  }, {
+	    key: 'distance',
+	    value: function distance(pairs) {
+	      return Math.sqrt(Math.pow(Math.abs(pairs[0][0] - pairs[1][0]), 2) + Math.pow(Math.abs(pairs[0][1] - pairs[1][1]), 2));
+	    }
+	
+	    /*
+	    * groupOverlappingSegments - group overlapping segments together
+	    * @param {array} segments, an array of SegmentNode's
+	    * @return {object} groups, groups of overlapping segments
+	    */
+	
+	  }], [{
+	    key: 'groupOverlappingSegments',
+	    value: function groupOverlappingSegments(segments) {
+	      var groups = {};
+	      var segmentsByHeightAndCumulative = _underscore2.default.groupBy(segments, function (segment) {
+	        var c = false;
+	        if (typeof segment.meta.cumulative === 'undefined') {
+	          c = false;
+	        } else {
+	          c = segment.meta.cumulative;
+	        }
+	        return segment.y + ':' + c;
+	      });
+	      Object.keys(segmentsByHeightAndCumulative).forEach(function (key) {
+	        var values = segmentsByHeightAndCumulative[key];
+	        values.sort(function (a, b) {
+	          return a.x - b.x;
+	        });
+	        var i = 0;
+	        var points = [];
+	        while (i < values.length) {
+	          if (i === 0) {
+	            points[0] = values[0];
+	            var groupName = values[0].w + ':' + key;
+	            groups[groupName] = [values[0]];
+	            i++;
+	            continue; // eslint-disable-line no-continue
+	          }
+	          var lastIdx = points.length - 1;
+	          if (lastIdx < 0) {
+	            break;
+	          }
+	          var lastPoint = points[lastIdx];
+	          if (values[i].x >= lastPoint.x && values[i].w <= lastPoint.w) {
+	            var _groupName = lastPoint.w + ':' + key;
+	            var group = groups[_groupName];
+	            if (typeof group === 'undefined') {
+	              group = [];
+	            }
+	            group.push(values[i]);
+	            i++;
+	          } else {
+	            points[lastIdx + 1] = values[i];
+	            var _groupName2 = values[i].w + ':' + key;
+	            groups[_groupName2] = [values[i]];
+	            i++;
+	          }
+	        }
+	      });
+	      return groups;
+	    }
+	  }]);
+	
+	  return SegmentNode;
+	}(_Node3.default);
+	
+	module.exports = SegmentNode;
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	var _Axes = __webpack_require__(1);
 	
 	var _Axes2 = _interopRequireDefault(_Axes);
 	
-	var _Tooltip = __webpack_require__(10);
+	var _Tooltip = __webpack_require__(15);
 	
 	var _Tooltip2 = _interopRequireDefault(_Tooltip);
 	
-	var _Zoom = __webpack_require__(11);
+	var _Zoom = __webpack_require__(16);
 	
 	var _Zoom2 = _interopRequireDefault(_Zoom);
 	
@@ -1011,13 +1803,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	var d3 = __webpack_require__(3);
 	var _ = __webpack_require__(4);
 	
-	var MINIMUM_PLOT_HEIGHT = 300;
+	var MINIMUM_CHART_HEIGHT = 300;
 	
-	var Plot = function () {
+	var Chart = function () {
 	  /*
-	  * Plot - creates a new instance of a plot
-	  * @param {object} options, the options to create a ScatterPlot
-	  * @param {string} containerID, the id of the ScatterPlot container div
+	  * Chart - creates a new instance of a chart
+	  * @param {object} options, the options to create a chart
+	  * @param {string} containerID, the id of the container div
 	  * @param {string} svgcontainerClass, the desired class of the constructed svg element
 	  * @param {object} tooltip,
 	  * @param {number} tooltip.opacity, the background opacity for the tooltip
@@ -1026,8 +1818,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param {boolean} resize, resize the svg on window resize @default true
 	  * @returns {object} this, returns self
 	  */
-	  function Plot(options) {
-	    _classCallCheck(this, Plot);
+	  function Chart(options) {
+	    _classCallCheck(this, Chart);
 	
 	    this.options = options;
 	    this.drawn = false;
@@ -1037,13 +1829,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /*
-	  * init - method to initialize the plot, allows the plot to be re-initialized
-	  *  on resize while keeping the current plot data in memory
+	  * init - method to initialize the chart, allows the chart to be re-initialized
+	  *  on resize while keeping the current chart data in memory
 	  * @returns {object} this
 	  */
 	
 	
-	  _createClass(Plot, [{
+	  _createClass(Chart, [{
 	    key: 'init',
 	    value: function init() {
 	      this.setDimensions();
@@ -1061,11 +1853,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.zoom = new _Zoom2.default(this, this.options);
 	      }
 	      this.groups = this.container.append('g').attr('class', 'd3cf-groups').attr('transform', 'translate(' + this.margins.left + ', 0)');
+	      // this.update([]);
 	      return this;
 	    }
 	
 	    /*
-	    * setDimensions - method to set the dimensions of the plot based on the current window
+	    * setDimensions - method to set the dimensions of the chart based on the current window
 	    */
 	
 	  }, {
@@ -1079,8 +1872,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	      this.width = this.options.width || document.getElementById(this.options.containerID).offsetWidth - (this.margins.left + this.margins.right);
 	      this.height = this.options.height;
-	      if (this.height < MINIMUM_PLOT_HEIGHT) {
-	        this.height = MINIMUM_PLOT_HEIGHT;
+	      if (this.height < MINIMUM_CHART_HEIGHT) {
+	        this.height = MINIMUM_CHART_HEIGHT;
 	      }
 	      this.viewBoxWidth = this.width + this.margins.left + this.margins.right;
 	      this.viewBoxHeight = this.height + this.margins.top + this.margins.bottom;
@@ -1089,7 +1882,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /*
 	    * update - update the width and height attributes of the root and container
-	    *  elements. then call update on the plot axes
+	    *  elements. then call update on the chart axes
 	    * @param {array} nodes, an array of {object} for each node
 	    * @returns {object} this
 	    */
@@ -1101,16 +1894,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.root.attr('width', this.viewBoxWidth).attr('height', this.viewBoxHeight);
 	      this.container.attr('width', this.width).attr('height', this.height).attr('transform', 'translate(' + this.margins.left + ', ' + this.margins.top + ')');
 	      if (typeof nodes === 'undefined') {
-	        this.axes.update(this.getGroupsNodes());
+	        this.axes.update(this.getGroupsNodes(), false);
 	      } else {
 	        if (nodes instanceof Array) {
-	          this.axes.update(nodes);
+	          this.axes.update(nodes, true);
 	          if (this.axes.initialized === true) {
 	            this.axes.setInitialMinMax(this.axes.currentMinMax);
 	          }
 	        } else {
 	          var shouldSetInitialMinMax = this.mergeGroups(nodes);
-	          this.axes.update(this.getGroupsNodes(false));
+	          this.axes.update(this.getGroupsNodes(false), true);
 	          if (shouldSetInitialMinMax) {
 	            this.axes.setInitialMinMax(this.axes.currentMinMax);
 	          }
@@ -1120,7 +1913,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /*
-	    * draw - draws the markers on the plot
+	    * draw - draws the markers on the chart
 	    * @note this will automatically show/hide a warning message if the data
 	    * is empty. Do not call super() to override this behavior.
 	    * @param {array} nodes, an array of {object} for each marker
@@ -1162,62 +1955,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'defaultGroup',
-	    value: function defaultGroup(nodes) {
-	      var group = this.getGroups().find(function (g) {
-	        return g.id === 'default_';
-	      });
-	      if (typeof group === 'undefined') {
-	        if (this.options.group && this.options.group.onEnter) {
-	          group = new _Group2.default(this, { id: 'default_', onEnter: this.options.group.onEnter });
-	        } else {
-	          group = new _Group2.default(this, { id: 'default_' });
-	        }
-	      }
-	      nodes.forEach(function (d) {
-	        return group.addNode(d);
-	      });
-	      return group;
+	    value: function defaultGroup() {
+	      throw new Error('defaultGroup must be implemented.');
 	    }
 	
 	    /*
-	    * mergeGroups - merge groups from data passed directly to the draw method
-	    * @param {object} nodes, a grouping of nodes
-	    * @return {boolean} shouldReset, should the axes domain be reset to currentMinMax
+	    * applyFilters - apply any filters from the chart
+	    * @param {object} filters, an array of filters to apply
+	    * @returns {array} filtered, the filtered data
 	    */
 	
 	  }, {
-	    key: 'mergeGroups',
-	    value: function mergeGroups(groups) {
-	      var _this = this;
-	
-	      var notMerged = Object.keys(this.groups_);
-	      var hasNewGroup = false;
-	      Object.keys(groups).forEach(function (k) {
-	        var idx = -1;
-	        var group = _this.groups_[k];
-	        if (typeof group === 'undefined') {
-	          hasNewGroup = true;
-	          group = new _Group2.default(_this, { id: k, onEnter: _this.options.group.onEnter });
-	        } else {
-	          idx = notMerged.indexOf(k);
-	          if (idx >= 0) {
-	            notMerged.splice(idx, 1);
+	    key: 'applyFilters',
+	    value: function applyFilters(nodes, filters) {
+	      var filters_ = filters || this.filters;
+	      var filtered = [];
+	      if (nodes) {
+	        filtered = nodes.filter(function (d) {
+	          var valid = true;
+	          var keys = Object.keys(filters_);
+	          var i = 0;
+	          var keysLen = keys.length;
+	          while (i < keysLen) {
+	            var key = keys[i++];
+	            var f = filters_[key](d);
+	            if (typeof f === 'undefined') {
+	              valid = false;
+	              break;
+	            }
 	          }
-	        }
-	        groups[k].forEach(function (m) {
-	          group.addNode(m);
+	          if (valid) {
+	            return d;
+	          }
 	        });
-	      });
-	      if (notMerged.length > 0) {
-	        notMerged.forEach(function (k) {
-	          _this.removeGroup(k);
-	        });
-	        return true;
 	      }
-	      if (hasNewGroup && this.axes.initialized === true) {
-	        return true;
-	      }
-	      return false;
+	      return filtered;
 	    }
 	
 	    /*
@@ -1243,7 +2015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /*
-	    * showWarn - shows a warning message in the center of the plot
+	    * showWarn - shows a warning message in the center of the chart
 	    * @param {string} m, the message to display
 	    * @return {object} this
 	    */
@@ -1262,7 +2034,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /*
-	    * removeWarn - removes the warning message from the plot
+	    * removeWarn - removes the warning message from the chart
 	    * @return {object} this
 	    */
 	
@@ -1276,7 +2048,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /*
-	    * remove - removes the plot from the DOM and any event listeners
+	    * remove - removes the chart from the DOM and any event listeners
 	    * @return {object} this
 	    */
 	
@@ -1291,7 +2063,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /*
-	    * destroy - destroys the plot and any associated elements
+	    * destroy - destroys the chart and any associated elements
 	    */
 	
 	  }, {
@@ -1308,9 +2080,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /*
 	    * addGroup
-	    * @param {object} group, add a group to the plot
+	    * @param {object} group, add a group to the chart
 	    * @throws {InvalidGroupError} error
-	    * @return {Plot} this
+	    * @return {Chart} this
 	    */
 	
 	  }, {
@@ -1326,6 +2098,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /*
 	    * removeGroup
 	    * @param {string} id, the group to remove
+	    * @return {Chart} this
 	    */
 	
 	  }, {
@@ -1334,11 +2107,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.groups_.hasOwnProperty(id)) {
 	        delete this.groups_[id];
 	      }
+	      return this;
 	    }
 	
 	    /*
-	    * getGroups - returns the groups associated with this plot
-	    * @return {array} groups, the groups associated with this plot
+	    * getGroups - returns the groups associated with this chart
+	    * @return {array} groups, the groups associated with this chart
 	    */
 	
 	  }, {
@@ -1356,17 +2130,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'getGroupsSize',
 	    value: function getGroupsSize(shouldFilter) {
-	      var _this2 = this;
+	      var _this = this;
 	
-	      this.getGroups().reduce(function (prev, nextObj) {
+	      return this.getGroups().reduce(function (prev, nextObj) {
 	        if (shouldFilter) {
-	          return prev + nextObj.applyFilters().length;
+	          return prev + _this.applyFilters(nextObj.getNodes()).length;
 	        }
-	        var filters = Object.assign({}, _this2.filters);
+	        var filters = Object.assign({}, _this.filters);
 	        if (filters.hasOwnProperty('_domain')) {
 	          delete filters._domain;
 	        }
-	        return prev + nextObj.applyFilters(filters).length;
+	        return prev + _this.applyFilters(nextObj.getNodes(), filters).length;
 	      }, 0);
 	    }
 	
@@ -1379,22 +2153,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'getGroupsNodes',
 	    value: function getGroupsNodes(shouldFilter) {
-	      var _this3 = this;
+	      var _this2 = this;
 	
-	      this.getGroups().reduce(function (prevArr, nextObj) {
+	      return this.getGroups().reduce(function (prevArr, nextObj) {
 	        if (shouldFilter) {
-	          return prevArr.concat(nextObj.applyFilters());
+	          return prevArr.concat(_this2.applyFilters(nextObj.getNodes()));
 	        }
-	        var filters = Object.assign({}, _this3.filters);
+	        var filters = Object.assign({}, _this2.filters);
 	        if (filters.hasOwnProperty('_domain')) {
 	          delete filters._domain;
 	        }
-	        return prevArr.concat(nextObj.applyFilters(filters));
+	        return prevArr.concat(_this2.applyFilters(nextObj.getNodes(), filters));
 	      }, []);
 	    }
 	
 	    /*
-	    * addFilter - add a filter to the plot
+	    * mergeGroups - merge groups from data passed directly to the draw method
+	    * @param {object} nodes, a grouping of nodes
+	    * @return {boolean} shouldReset, should the axes domain be reset to currentMinMax
+	    */
+	
+	  }, {
+	    key: 'mergeGroups',
+	    value: function mergeGroups() {
+	      throw new Error('mergeGroups must be implemented.');
+	    }
+	
+	    /*
+	    * addFilter - add a filter to the chart
 	    * @param {string} name, the name of the filter
 	    * @param {function} fn, the function to be applied to the data
 	    * @return {object} this
@@ -1408,7 +2194,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /*
-	    * removeFilter - removes a filter from the plot
+	    * removeFilter - removes a filter from the chart
 	    * @param {string} name, the name of the filter
 	    * @return {object} this
 	    */
@@ -1421,15 +2207,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      return this;
 	    }
+	
+	    /*
+	    * resetZoom - resets the zoom of the axes
+	    */
+	
+	  }, {
+	    key: 'resetZoom',
+	    value: function resetZoom() {
+	      if (this.zoom) {
+	        return this.zoom.reset();
+	      }
+	    }
 	  }]);
 	
-	  return Plot;
+	  return Chart;
 	}();
 	
-	module.exports = Plot;
+	module.exports = Chart;
 
 /***/ },
-/* 10 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1456,7 +2254,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.tooltipOpts = options.tooltip || {
 	      'opacity': 1,
-	      'template': _.template('<span style="font-weight: bold;"><%= obj.id %></span><p>x1: <%= obj.x1 %> x2: <%= obj.x2 %> y: <%= obj.y1 %></p>')
+	      'template': _.template('<span style="font-weight: bold;"><%= obj.id %></span><p>x1: <%= obj.x1 %> x2: <% if (obj.x2) { %> <%= obj.x2 %> <% } %> y: <%= obj.y1 %></p>')
 	    };
 	    this.template = this.tooltipOpts.template || _.template('<span style="font-weight: bold;"><%= obj.id %></span><p>x1: <%= obj.x1 %> x2: <%= obj.x2 %> y: <%= obj.y1 %></p>');
 	    this.opacity = this.tooltipOpts.opacity || 1;
@@ -1515,7 +2313,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Tooltip;
 
 /***/ },
-/* 11 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1552,6 +2350,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.zoomGroup = plot.container.append('g').attr('class', 'd3cf-zoom');
 	    this.zoomBand = this.zoomGroup.append('rect').attr('width', 0).attr('height', 0).attr('x', 0).attr('y', 0).attr('class', 'd3cf-zoomBand');
 	    this.zoomOverlay = this.zoomGroup.append('rect').attr('width', plot.getWidth()).attr('height', plot.getHeight()).attr('transform', 'translate(' + plot.margins.left + ', 0)').attr('class', 'd3cf-zoomOverlay').call(this.drag);
+	    this.isZoomed = false;
 	    var self = this; // eslint-disable-line consistent-this
 	    this.drag.on('start.plot', function () {
 	      // eslint-disable-line func-names
@@ -1646,6 +2445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'zoom',
 	    value: function zoom() {
+	      this.isZoomed = true;
 	      this.plot.axes.zoom(this.zoomArea);
 	      this.plot.draw();
 	    }
@@ -1657,6 +2457,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'reset',
 	    value: function reset() {
+	      this.isZoomed = false;
 	      this.plot.axes.reset();
 	      this.plot.draw();
 	    }
@@ -1681,7 +2482,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Zoom;
 
 /***/ },
-/* 12 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1690,9 +2491,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
-	var _Plot2 = __webpack_require__(9);
+	var _Chart2 = __webpack_require__(14);
 	
-	var _Plot3 = _interopRequireDefault(_Plot2);
+	var _Chart3 = _interopRequireDefault(_Chart2);
+	
+	var _NodeGroup = __webpack_require__(10);
+	
+	var _NodeGroup2 = _interopRequireDefault(_NodeGroup);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -1704,8 +2509,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _ = __webpack_require__(4);
 	
-	var ScatterPlot = function (_Plot) {
-	  _inherits(ScatterPlot, _Plot);
+	var ScatterPlot = function (_Chart) {
+	  _inherits(ScatterPlot, _Chart);
 	
 	  /*
 	  * ScatterPlot - constructs the root SVG element to contain the ScatterPlot
@@ -1718,31 +2523,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param {boolean} scale, scale the svg on window resize @default false
 	  * @param {boolean} resize, resize the svg on window resize @default true
 	  * @returns {object} this, returns self
-	  * example usage:
-	  *  within your template add
-	  ```
-	   <div id="scatterPlot" class="scatterPlot-container">
-	  ```
-	  *  within your template helper, construct a new ScatterPlot instance
-	  ```
-	    plot = new ScatterPlot(options)
-	  ```
-	  * example datetime data:
-	  ```
-	    data = [
-	      {x: 1443380879164, y: 3, w: 1445972879164}, {x: 1467054386392, y: 31, w: 1467659186392}, {x: 1459105926404, y: 15, w: 1469646565130},
-	      {x: 1443380879164, y: 3, w: 1448654879164}, {x: 1467054386392, y: 31, w: 1468263986392}, {x: 1459105926404, y: 15, w: 1467659365130},
-	      {x: 1443380879164, y: 3, w: 1451246879164}, {x: 1467054386392, y: 31, w: 1468868786392}, {x: 1459105926404, y: 15, w: 1467918565130},
-	    ]
-	  ```
-	  * example numeric data:
-	  ```
-	    data = [
-	      {x: 0, y: 3, w: 4}, {x: 5, y: 31, w: 9}, {x: 11, y: 45, w: 15},
-	      {x: 1, y: 3, w: 4}, {x: 5, y: 31, w: 15}, {x: 12, y: 45, w: 14},
-	      {x: 2, y: 3, w: 4}, {x: 6, y: 31, w: 7}, {x: 12, y: 45, w: 17},
-	    ]
-	  ```
 	  */
 	  function ScatterPlot(options) {
 	    var _ret;
@@ -1793,6 +2573,84 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	      groups.exit().remove();
 	      return this;
+	    }
+	
+	    /*
+	    * defaultGroup - creates a default group if an array is passed to the draw method
+	    * @param {array} nodes, an array of Node's
+	    */
+	
+	  }, {
+	    key: 'defaultGroup',
+	    value: function defaultGroup(nodes) {
+	      var group = this.getGroups().find(function (g) {
+	        return g.id === 'default_';
+	      });
+	      if (typeof group === 'undefined') {
+	        if (this.options.group && this.options.group.onEnter) {
+	          group = new _NodeGroup2.default(this, { id: 'default_', onEnter: this.options.group.onEnter });
+	        } else {
+	          group = new _NodeGroup2.default(this, { id: 'default_' });
+	        }
+	      }
+	      nodes.forEach(function (d) {
+	        return group.addNode(d);
+	      });
+	      return group;
+	    }
+	
+	    /*
+	    * mergeGroups - merge groups from data passed directly to the draw method
+	    * @param {object} groups, a set of Groups
+	    * @return {boolean} shouldReset, should the axes domain be reset to currentMinMax
+	    */
+	
+	  }, {
+	    key: 'mergeGroups',
+	    value: function mergeGroups(groups) {
+	      var _this2 = this;
+	
+	      var notMerged = Object.keys(this.groups_);
+	      var addedNewGroup = false;
+	      Object.keys(groups).forEach(function (k) {
+	        var idx = -1;
+	        var group = _this2.groups_[k];
+	        if (typeof group === 'undefined') {
+	          addedNewGroup = true;
+	          if (groups[k] instanceof _NodeGroup2.default) {
+	            group = groups[k];
+	            _this2.addGroup(group);
+	          } else {
+	            // TODO: allow the user to pass in an object with `data` array
+	            throw new Error('Must be instance of a d3cf Group.');
+	          }
+	        } else {
+	          idx = notMerged.indexOf(k);
+	          if (idx >= 0) {
+	            notMerged.splice(idx, 1);
+	            // merge new group data into the existing group
+	            groups[k].getNodes().forEach(function (n) {
+	              group.addNode(n);
+	            });
+	          }
+	        }
+	      });
+	      // remove the groups that have not been sliced
+	      if (notMerged.length > 0) {
+	        notMerged.forEach(function (k) {
+	          _this2.removeGroup(k);
+	        });
+	        // if we have removed an existing group from the plot
+	        // then we should set the axes to the currentMinMax
+	        return true;
+	      }
+	      // if we have merged in new groups and the axes have been initialized
+	      // then we should set the axes to the currentMinMax
+	      if (addedNewGroup && this.axes.initialized === true) {
+	        return true;
+	      }
+	      // do not set the axes
+	      return false;
 	    }
 	
 	    /*
@@ -1849,147 +2707,229 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 	
 	  return ScatterPlot;
-	}(_Plot3.default);
+	}(_Chart3.default);
 	
 	module.exports = ScatterPlot;
 
 /***/ },
-/* 13 */
-/***/ function(module, exports) {
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
-	var Heapsort = function () {
-	  function Heapsort() {
-	    _classCallCheck(this, Heapsort);
-	  }
+	var _Chart2 = __webpack_require__(14);
 	
-	  _createClass(Heapsort, [{
-	    key: "heapify",
-	    value: function heapify(array, index, heapSize, cmp) {
-	      var left = 2 * index + 1;
-	      var right = 2 * index + 2;
-	      var largest = index;
+	var _Chart3 = _interopRequireDefault(_Chart2);
 	
-	      if (left < heapSize && cmp(array[left], array[index]) > 0) {
-	        largest = left;
-	      }
+	var _LineGroup = __webpack_require__(9);
 	
-	      if (right < heapSize && cmp(array[right], array[largest]) > 0) {
-	        largest = right;
-	      }
+	var _LineGroup2 = _interopRequireDefault(_LineGroup);
 	
-	      if (largest !== index) {
-	        var temp = array[index];
-	        array[index] = array[largest];
-	        array[largest] = temp;
-	        this.heapify(array, largest, heapSize, cmp);
-	      }
-	    }
-	  }, {
-	    key: "buildMaxHeap",
-	    value: function buildMaxHeap(array, cmp) {
-	      for (var i = Math.floor(array.length / 2); i >= 0; i -= 1) {
-	        this.heapify(array, i, array.length, cmp);
-	      }
-	      return array;
-	    }
-	  }, {
-	    key: "sort",
-	    value: function sort(array, cmp) {
-	      var comparator = cmp || this.comparator;
-	      var size = array.length;
-	      this.buildMaxHeap(array, comparator);
-	      for (var i = array.length - 1; i > 0; i -= 1) {
-	        var temp = array[0];
-	        array[0] = array[i];
-	        array[i] = temp;
-	        size -= 1;
-	        this.heapify(array, 0, size, comparator);
-	      }
-	      return array;
-	    }
-	  }, {
-	    key: "comparator",
-	    value: function comparator(a, b) {
-	      return a - b;
-	    }
-	  }]);
-	
-	  return Heapsort;
-	}();
-	
-	module.exports = Heapsort;
-
-/***/ },
-/* 14 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var HeapsortImmutable = function () {
-	  function HeapsortImmutable() {
-	    _classCallCheck(this, HeapsortImmutable);
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var _ = __webpack_require__(4);
+	
+	var LineChart = function (_Chart) {
+	  _inherits(LineChart, _Chart);
+	
+	  /*
+	  * LineChart - constructs the root SVG element to contain the LineChart
+	  * @param {object} options, the options to create a LineChart
+	  * @param {string} containerID, the id of the LineChart container div
+	  * @param {string} svgcontainerClass, the desired class of the constructed svg element
+	  * @param {object} tooltip,
+	  * @param {number} tooltip.opacity, the background opacity for the tooltip
+	  * @param {object} tooltip.template, the compiled template
+	  * @param {boolean} scale, scale the svg on window resize @default false
+	  * @param {boolean} resize, resize the svg on window resize @default true
+	  * @returns {object} this, returns self
+	  */
+	  function LineChart(options) {
+	    var _ret;
+	
+	    _classCallCheck(this, LineChart);
+	
+	    var _this = _possibleConstructorReturn(this, (LineChart.__proto__ || Object.getPrototypeOf(LineChart)).call(this, options));
+	
+	    _this.init();
+	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	  }
 	
-	  _createClass(HeapsortImmutable, [{
-	    key: "sort",
-	    value: function sort(list) {
-	      var _this = this;
+	  /*
+	  * init - method to set/re-set the resizeHandler
+	  * @returns {object} this
+	  */
 	
-	      var h = this.heapify(list);
-	      return h.reduce(function (state, listItem, index) {
-	        return [].concat(_toConsumableArray(state.slice(0, index + 1)), _toConsumableArray(_this.heapify(state.slice(index + 1))));
-	      }, h);
-	    }
-	  }, {
-	    key: "heapify",
-	    value: function heapify(list) {
-	      return list.reduceRight(this.reducer.bind(this), list);
-	    }
-	  }, {
-	    key: "reducer",
-	    value: function reducer(state, listItem, index) {
-	      var parentIndex = this.getParentIndex(index);
-	      if (parentIndex > -1 && state[parentIndex] < state[index]) {
-	        state = this.swap(state, parentIndex, index); // eslint-disable-line  no-param-reassign
+	
+	  _createClass(LineChart, [{
+	    key: 'init',
+	    value: function init() {
+	      _get(LineChart.prototype.__proto__ || Object.getPrototypeOf(LineChart.prototype), 'init', this).call(this);
+	      var resizeEnabled = this.options.resize || true;
+	      if (resizeEnabled) {
+	        this.resizeHandler = _.debounce(_.bind(this.resize, this), 500);
+	        return window.addEventListener('resize', this.resizeHandler);
 	      }
-	      return state;
 	    }
+	
+	    /*
+	    * draw - draw using d3 select.data.enter workflow
+	    * @param {array} data, an array of {object} for each marker
+	    * @returns {object} this
+	    */
+	
 	  }, {
-	    key: "swap",
-	    value: function swap(list, a, b) {
-	      return list.map(function (item, index) {
-	        if (index === a) {
-	          item = list[b]; // eslint-disable-line  no-param-reassign
-	        }
-	        if (index === b) {
-	          item = list[a]; // eslint-disable-line  no-param-reassign
-	        }
-	        return item;
+	    key: 'draw',
+	    value: function draw(data) {
+	      _get(LineChart.prototype.__proto__ || Object.getPrototypeOf(LineChart.prototype), 'draw', this).call(this, data);
+	      var groups = this.groups.selectAll('.group').data(this.getGroups(), function (d) {
+	        return d.id;
 	      });
+	      groups.enter().append(function (group) {
+	        return group.detached();
+	      });
+	      groups.each(function (group) {
+	        return group.update();
+	      });
+	      groups.exit().remove();
+	      return this;
 	    }
+	
+	    /*
+	    * defaultGroup - creates a default group if an array is passed to the draw method
+	    * @param {array} nodes, an array of Node's
+	    */
+	
 	  }, {
-	    key: "getParentIndex",
-	    value: function getParentIndex(n) {
-	      return Math.floor((n - 1) / 2);
+	    key: 'defaultGroup',
+	    value: function defaultGroup(nodes) {
+	      var group = this.getGroups().find(function (g) {
+	        return g.id === 'default_';
+	      });
+	      if (typeof group === 'undefined') {
+	        if (this.options.group && this.options.group.onEnter) {
+	          group = new _LineGroup2.default(this, { id: 'default_', onEnter: this.options.group.onEnter });
+	        } else {
+	          group = new _LineGroup2.default(this, { id: 'default_' });
+	        }
+	      }
+	      nodes.forEach(function (d) {
+	        return group.addNode(d);
+	      });
+	      return group;
+	    }
+	
+	    /*
+	    * mergeGroups - merge groups from data passed directly to the draw method
+	    * @override
+	    * @param {object} groups, a set of Groups
+	    * @return {boolean} shouldReset, should the axes domain be reset to currentMinMax
+	    */
+	
+	  }, {
+	    key: 'mergeGroups',
+	    value: function mergeGroups(groups) {
+	      var _this2 = this;
+	
+	      var notMerged = Object.keys(this.groups_);
+	      var addedNewGroup = false;
+	      Object.keys(groups).forEach(function (k) {
+	        var idx = -1;
+	        var group = _this2.groups_[k];
+	        if (typeof group === 'undefined') {
+	          addedNewGroup = true;
+	          if (groups[k] instanceof _LineGroup2.default) {
+	            group = groups[k];
+	            _this2.addGroup(group);
+	          } else {
+	            // TODO: allow the user to pass in an object with `data` array
+	            throw new Error('Must be instance of a d3cf Group.');
+	          }
+	        } else {
+	          idx = notMerged.indexOf(k);
+	          if (idx >= 0) {
+	            notMerged.splice(idx, 1);
+	            // merge new group data into the existing group
+	            groups[k].getNodes().forEach(function (n) {
+	              group.addNode(n);
+	            });
+	          }
+	        }
+	      });
+	      // remove the groups that have not been sliced
+	      if (notMerged.length > 0) {
+	        notMerged.forEach(function (k) {
+	          _this2.removeGroup(k);
+	        });
+	        // if we have removed an existing group from the plot
+	        // then we should set the axes to the currentMinMax
+	        return true;
+	      }
+	      // if we have merged in new groups and the axes have been initialized
+	      // then we should set the axes to the currentMinMax
+	      if (addedNewGroup && this.axes.initialized === true) {
+	        return true;
+	      }
+	      // do not set the axes
+	      return false;
+	    }
+	
+	    /*
+	    * update the dimensions of the chart (axes, gridlines, then redraw)
+	    * @param {array} data, an array of {object} for each marker
+	    * @returns {object} this
+	    */
+	
+	  }, {
+	    key: 'update',
+	    value: function update(data) {
+	      _get(LineChart.prototype.__proto__ || Object.getPrototypeOf(LineChart.prototype), 'update', this).call(this, data);
+	      this.draw(data);
+	      return this;
+	    }
+	
+	    /*
+	    * remove - removes the chart from the DOM and any event listeners
+	    * @return {object} this
+	    */
+	
+	  }, {
+	    key: 'remove',
+	    value: function remove() {
+	      _get(LineChart.prototype.__proto__ || Object.getPrototypeOf(LineChart.prototype), 'remove', this).call(this);
+	      if (this.resizeHandler) {
+	        window.removeEventListener('resize', this.resizeHandler);
+	      }
+	      return this;
+	    }
+	
+	    /*
+	    * resize - re-renders the chart
+	    * @return {object} this
+	    */
+	
+	  }, {
+	    key: 'resize',
+	    value: function resize() {
+	      this.update();
+	      return this;
 	    }
 	  }]);
 	
-	  return HeapsortImmutable;
-	}();
+	  return LineChart;
+	}(_Chart3.default);
 	
-	module.exports = HeapsortImmutable;
+	module.exports = LineChart;
 
 /***/ }
 /******/ ])

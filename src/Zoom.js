@@ -24,6 +24,7 @@ class Zoom {
     this.zoomGroup = plot.container.append('g').attr('class', 'd3cf-zoom');
     this.zoomBand = this.zoomGroup.append('rect').attr('width', 0).attr('height', 0).attr('x', 0).attr('y', 0).attr('class', 'd3cf-zoomBand');
     this.zoomOverlay = this.zoomGroup.append('rect').attr('width', plot.getWidth()).attr('height', plot.getHeight()).attr('transform', `translate(${plot.margins.left}, 0)`).attr('class', 'd3cf-zoomOverlay').call(this.drag);
+    this.isZoomed = false;
     const self = this; // eslint-disable-line consistent-this
     this.drag.on('start.plot', function() { // eslint-disable-line func-names
       // Note: @ (this) is not the Zoom class but the DOM event
@@ -105,6 +106,7 @@ class Zoom {
   * zoom - the zooming method called an the end of ondragend
   */
   zoom() {
+    this.isZoomed = true;
     this.plot.axes.zoom(this.zoomArea);
     this.plot.draw();
   }
@@ -113,6 +115,7 @@ class Zoom {
   * resetZoom - reset the plot zoom back to the original viewBox
   */
   reset() {
+    this.isZoomed = false;
     this.plot.axes.reset();
     this.plot.draw();
   }

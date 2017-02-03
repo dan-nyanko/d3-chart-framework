@@ -14,7 +14,7 @@ class Tooltip {
   constructor(plot, options) {
     this.tooltipOpts = options.tooltip || {
       'opacity': 1,
-      'template': _.template('<span style="font-weight: bold;"><%= obj.id %></span><p>x1: <%= obj.x1 %> x2: <%= obj.x2 %> y: <%= obj.y1 %></p>'),
+      'template': _.template('<span style="font-weight: bold;"><%= obj.id %></span><p>x1: <%= obj.x1 %> x2: <% if (obj.x2) { %> <%= obj.x2 %> <% } %> y: <%= obj.y1 %></p>'),
     };
     this.template = this.tooltipOpts.template || _.template('<span style="font-weight: bold;"><%= obj.id %></span><p>x1: <%= obj.x1 %> x2: <%= obj.x2 %> y: <%= obj.y1 %></p>');
     this.opacity = this.tooltipOpts.opacity || 1;

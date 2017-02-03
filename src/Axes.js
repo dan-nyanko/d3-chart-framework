@@ -24,8 +24,8 @@ function getDatetimeUnit(min, max) {
 class Axes {
   /*
   * Axes
-  * constructs 2d cartesian axes, appends to the container SVG element of the plot
-  * @param {object} plot, the plot to append the axis
+  * constructs 2d cartesian axes, appends to the container SVG element of the chart
+  * @param {object} chart, the chart to append the axis
   * @param {object} options, the properties for the axis
   * @param {boolean} grid, should the grid be displayed?
   * X axis properties
@@ -38,7 +38,7 @@ class Axes {
   * @param {string} options.axes.y.type, the datatype of the y axis {numeric, datetime}
   * @returns {object} this, returns self
   * example usage:
-  *  with an instance of a plot:
+  *  with an instance of a chart:
   ```
   axes = new Axes(plot, {
     axes: {
@@ -57,13 +57,14 @@ class Axes {
   })
   ```
   */
-  constructor(plot, options) {
-    this.plot = plot;
+  constructor(chart, options) {
+    this.chart = chart;
     this.options = options || {x: {title: 'x', type: 'numeric'}, y: {title: 'y', type: 'numeric'}, grid: true, filter: true};
     this.initialized = false;
+    this.useAutoPadding = options.useAutoPadding || false;
     this.initialMinMax = [[0, 0], [0, 0]];
     this.currentMinMax = [[0, 0], [0, 0]];
-    this.init();
+    this.draw();
   }
 
   /*
@@ -71,18 +72,18 @@ class Axes {
   * @param {array} xDomain, the zoom xDomain or undefined
   * @param {array} yDomain, the zoom yDomain or undefined
   */
-  init(xDomain, yDomain) {
+  draw(xDomain, yDomain) {
     if (this.options.x.type === 'datetime') {
       if (xDomain) {
-        this.xScale = d3.scaleTime().domain(xDomain).range([0, this.plot.getWidth()]).nice();
+        this.xScale = d3.scaleTime().domain(xDomain).range([0, this.chart.getWidth()]).nice();
       } else {
-        this.xScale = d3.scaleTime().domain(this.currentMinMax[0]).range([0, this.plot.getWidth()]).nice();
+        this.xScale = d3.scaleTime().domain(this.currentMinMax[0]).range([0, this.chart.getWidth()]).nice();
       }
     } else {
       if (xDomain) {
-        this.xScale = d3.scaleLinear().domain(xDomain).range([0, this.plot.getWidth()]);
+        this.xScale = d3.scaleLinear().domain(xDomain).range([0, this.chart.getWidth()]);
       } else {
-        this.xScale = d3.scaleLinear().domain(this.currentMinMax[0]).range([0, this.plot.getWidth()]);
+        this.xScale = d3.scaleLinear().domain(this.currentMinMax[0]).range([0, this.chart.getWidth()]);
       }
     }
     if (this.options.x.type === 'datetime') {
@@ -91,25 +92,70 @@ class Axes {
       this.xAxis = d3.axisBottom().scale(this.xScale).ticks(10);
     }
     if (this.options.x.type === 'datetime') {
-      this.xGroup = this.plot.container.append('g').attr('class', 'x d3cf-axis').attr('transform', `translate(${this.plot.margins.left}, ${this.plot.getHeight()})`).call(this.xAxis);
+      this.xGroup = this.chart.container.append('g').attr('class', 'x d3cf-axis').attr('transform', `translate(${this.chart.margins.left}, ${this.chart.getHeight()})`).call(this.xAxis);
       this.xGroup.selectAll('text').style('text-anchor', 'end').attr('dx', '-.8em').attr('dy', '.15em').attr('transform', () => {
         return 'rotate(-65)';
       });
-      this.xGroup.append('text').attr('class', 'd3cf-axis-label').attr('dx', (this.plot.width / 2) - ((this.plot.margins.right + this.plot.margins.left) / 2)).attr('dy', this.plot.margins.bottom + 30).style('text-anchor', 'middle').text(this.options.x.title);
     } else {
-      this.xGroup = this.plot.container.append('g').attr('class', 'd3cf-axis').attr('transform', `translate(${this.plot.margins.left}, ${this.plot.getHeight()})`).call(this.xAxis);
-      this.xGroup.append('text').attr('dx', (this.plot.width / 2) - ((this.plot.margins.right + this.plot.margins.left) / 2)).attr('dy', this.plot.margins.bottom).attr('class', 'd3cf-axis-label').style('text-anchor', 'middle').text(this.options.x.title);
+      this.xGroup = this.chart.container.append('g').attr('class', 'x d3cf-axis').attr('transform', `translate(${this.chart.margins.left}, ${this.chart.getHeight()})`).call(this.xAxis);
     }
+
     if (yDomain) {
-      this.yScale = d3.scaleLinear().domain(yDomain).range([this.plot.getHeight(), 0]);
+      this.yScale = d3.scaleLinear().domain(yDomain).range([this.chart.getHeight(), 0]);
     } else {
-      this.yScale = d3.scaleLinear().domain(this.currentMinMax[1]).range([this.plot.getHeight(), 0]);
+      this.yScale = d3.scaleLinear().domain(this.currentMinMax[1]).range([this.chart.getHeight(), 0]);
     }
     this.yAxis = d3.axisLeft().scale(this.yScale);
-    this.yGroup = this.plot.container.append('g').attr('class', 'y d3cf-axis').attr('transform', `translate(${this.plot.margins.left}, 0)`).call(this.yAxis);
-    this.yGroup.append('text').attr('transform', 'rotate(-90)').attr('dx', -(this.plot.height / 2) + ((this.plot.margins.top + this.plot.margins.bottom) / 2)).attr('dy', -this.plot.margins.left).attr('class', 'd3cf-axis-label').style('text-anchor', 'middle').text(this.options.y.title);
+    this.yGroup = this.chart.container.append('g').attr('class', 'y d3cf-axis').attr('transform', `translate(${this.chart.margins.left}, 0)`).call(this.yAxis);
     if (this.options.grid) {
-       this.grid = new Grid(this, this.plot);
+       this.grid = new Grid(this, this.chart);
+    }
+
+    let padding = 0;
+    if (this.options.x.type === 'datetime') {
+      padding = 45;
+    }
+
+    if (this.xLabel) {
+      // update
+      this.xLabel
+        .attr('dx', (this.chart.width / 2) - ((this.chart.margins.right + this.chart.margins.left) / 2))
+        .attr('dy', this.chart.margins.bottom);
+    } else {
+      // add
+      this.xLabel = this.chart.container
+        .append('g')
+          .attr('class', 'x d3cf-axis-label')
+          .attr('transform', `translate(${this.chart.margins.left}, ${this.chart.getHeight() + padding})`)
+        .append('text')
+          .attr('dx', (this.chart.width / 2) - ((this.chart.margins.right + this.chart.margins.left) / 2))
+          .attr('dy', this.chart.margins.bottom)
+          .attr('class', 'd3cf-axis-label')
+          .style('text-anchor', 'middle')
+          .text(() => {
+            return this.options.x.title || '';
+          });
+    }
+    if (this.yLabel) {
+      // update
+      this.yLabel
+        .attr('dx', -(this.chart.height / 2) + ((this.chart.margins.top + this.chart.margins.bottom) / 2))
+        .attr('dy', -this.chart.margins.left);
+    } else {
+      // add
+      this.yLabel = this.chart.container
+        .append('g')
+          .attr('class', 'y d3cf-axis-label')
+          .attr('transform', `translate(${this.chart.margins.left}, 0)`)
+        .append('text')
+          .attr('transform', 'rotate(-90)')
+          .attr('dx', -(this.chart.height / 2) + ((this.chart.margins.top + this.chart.margins.bottom) / 2))
+          .attr('dy', -this.chart.margins.left)
+          .attr('class', 'd3cf-axis-label')
+          .style('text-anchor', 'middle')
+          .text(() => {
+            return this.options.y.title;
+          });
     }
   }
 
@@ -121,29 +167,37 @@ class Axes {
     let xMin = 0;
     let xMax = 0;
     if (this.options.x.type === 'datetime') {
-      xMin = Axes.minDatetime(_.pluck(data, 'x1'));
+      const x1 = _.pluck(data, 'x1');
       const x2 = _.pluck(data, 'x2');
+      xMin = Axes.minDatetime(x1, this.useAutoPadding);
+      xMax = xMin;
       if (x2.length > 0) {
-        xMax = Axes.maxDatetime(_.pluck(data, 'x2'));
-      } else {
-        xMax = Axes.maxDatetime(_.pluck(data, 'x1'));
+        xMax = Axes.maxDatetime(x2, this.useAutoPadding);
+      }
+      if (isNaN(xMax)) {
+        xMax = Axes.maxDatetime(x1, this.useAutoPadding);
       }
     } else {
+      const x1 = _.pluck(data, 'x1');
       const x2 = _.pluck(data, 'x2');
+      xMin = Axes.minNumeric(x1, this.useAutoPadding);
+      xMax = xMin;
       if (x2.length > 0) {
-        xMax = Axes.maxNumeric(_.pluck(data, 'x2'));
-      } else {
-        xMax = Axes.maxNumeric(_.pluck(data, 'x1'));
+        xMax = Axes.maxNumeric(x2, this.useAutoPadding);
+      }
+      if (isNaN(xMax)) {
+        xMax = Axes.maxNumeric(x1, this.useAutoPadding);
       }
     }
+
     const yMin = 0;
-    const yMax = Axes.maxNumeric(_.pluck(data, 'y1'));
+    const yMax = Axes.maxNumeric(_.pluck(data, 'y1'), this.useAutoPadding);
     this.xScale.domain([xMin, xMax]);
     this.yScale.domain([yMin, yMax]);
     if (this.initialized === false) {
       this.initialMinMax = [[xMin, xMax], [yMin, yMax]];
       if (this.options.filter) {
-        this.plot.addFilter('_domain', (d) => {
+        this.chart.addFilter('_domain', (d) => {
           // TODO: should this scope be the Plot or the Axes?
           let x1 = this.xScale.domain()[0];
           if (x1 instanceof Date) {
@@ -160,7 +214,7 @@ class Axes {
               return d;
             }
           } else {
-            if ((d.x1 >= x1 && d.x2 <= x2) && (d.y1 >= y1 && d.y1 <= y2)) {
+            if ((d.x1 >= x1) && (d.y1 >= y1 && d.y1 <= y2)) {
               return d;
             }
           }
@@ -184,13 +238,14 @@ class Axes {
   /*
   * update - update the x,y axes using the zoom domain
   * @param {array} data, an array of {object} for each marker
+  * @param {boolean} shouldSetDomain, should the domain be set to data bounds
   */
-  update(data) {
+  update(data, shouldSetDomain) {
     this.remove();
-    if (data) {
+    if (data && shouldSetDomain) {
       this.setDomain(data);
     }
-    this.init(this.xScale.domain(), this.yScale.domain());
+    this.draw(this.xScale.domain(), this.yScale.domain());
     return this;
   }
 
@@ -199,7 +254,7 @@ class Axes {
   */
   reset() {
     this.remove();
-    this.init(this.initialMinMax[0], this.initialMinMax[1]);
+    this.draw(this.initialMinMax[0], this.initialMinMax[1]);
     return this;
   }
 
@@ -221,13 +276,13 @@ class Axes {
     } else {
       this.yScale.domain([zoomArea.y1, zoomArea.y2]);
     }
-    const trans = this.plot.container.transition().duration(750);
+    const trans = this.chart.container.transition().duration(750);
     this.xGroup.transition(trans).call(this.xAxis);
     this.xGroup.selectAll('g').selectAll('text').style('text-anchor', 'end').attr('dx', '-.8em').attr('dy', '.15em').attr('transform', 'rotate(-65)');
     this.yGroup.transition(trans).call(this.yAxis);
     if (this.grid) {
       this.grid.remove();
-      this.grid = new Grid(this, this.plot);
+      this.grid = new Grid(this, this.chart);
     }
     return this;
   }
@@ -262,14 +317,17 @@ class Axes {
   * @param {array} data, an array of positive integers
   * @return {number} max
   */
-  static maxNumeric(data) {
-    const m = _.max(data);
-    const l = String(m).split('').length;
-    if (l === 1) {
-      return 10;
+  static maxNumeric(data, useAutoPadding) {
+    const m = Math.floor(_.max(data));
+    if (useAutoPadding) {
+      const l = String(m).split('').length;
+      if (l === 1) {
+        return 10;
+      }
+      const p = (Math.pow(10, l)) / 10;
+      return m + p;
     }
-    const p = (Math.pow(10, l)) / 10;
-    return m + p;
+    return m;
   }
 
   /*
@@ -279,14 +337,17 @@ class Axes {
   * @param {array} data, an array of positive integers
   * @return {number} max
   */
-  static minNumeric(data) {
-    const m = _.min(data);
-    const l = String(m).split('').length;
-    if (l === 1) {
-      return 10;
+  static minNumeric(data, useAutoPadding) {
+    const m = Math.floor(_.min(data));
+    if (useAutoPadding) {
+      const l = String(m).split('').length;
+      if (l === 1) {
+        return 10;
+      }
+      const p = (Math.pow(10, l)) / 10;
+      return m + p;
     }
-    const p = (Math.pow(10, l)) / 10;
-    return m + p;
+    return m;
   }
 
   /*
@@ -294,11 +355,14 @@ class Axes {
   * @param {array} data, an array of timestamps in milliseconds
   * @return {number} max, maximum datetime value
   */
-  static maxDatetime(data) {
-    const min = moment(_.min(data));
+  static maxDatetime(data, useAutoPadding) {
     const max = moment(_.max(data));
-    const unit = getDatetimeUnit(min, max);
-    return moment(max).add(1, unit).valueOf();
+    if (useAutoPadding) {
+      const min = moment(_.min(data));
+      const unit = getDatetimeUnit(min, max);
+      return moment(max).add(1, unit).valueOf();
+    }
+    return max.valueOf();
   }
 
   /*
@@ -306,11 +370,14 @@ class Axes {
   * @param {array} data, an array of timestamps in milliseconds
   * @return {number} min, minimum datetime value
   */
-  static minDatetime(data) {
+  static minDatetime(data, useAutoPadding) {
     const min = moment(_.min(data));
-    const max = moment(_.max(data));
-    const unit = getDatetimeUnit(min, max);
-    return moment(min).subtract(1, unit).valueOf();
+    if (useAutoPadding) {
+      const max = moment(_.max(data));
+      const unit = getDatetimeUnit(min, max);
+      return moment(min).subtract(1, unit).valueOf();
+    }
+    return min.valueOf();
   }
 }
 

@@ -4,17 +4,17 @@ const _ = require('underscore');
 import Axes from './Axes';
 import Tooltip from './Tooltip';
 import Zoom from './Zoom';
-import Group from './Group';
+import Group from './groups/Group';
 import { InvalidGroupError } from './Errors';
 
 
-const MINIMUM_PLOT_HEIGHT = 300;
+const MINIMUM_CHART_HEIGHT = 300;
 
-class Plot {
+class Chart {
   /*
-  * Plot - creates a new instance of a plot
-  * @param {object} options, the options to create a ScatterPlot
-  * @param {string} containerID, the id of the ScatterPlot container div
+  * Chart - creates a new instance of a chart
+  * @param {object} options, the options to create a chart
+  * @param {string} containerID, the id of the container div
   * @param {string} svgcontainerClass, the desired class of the constructed svg element
   * @param {object} tooltip,
   * @param {number} tooltip.opacity, the background opacity for the tooltip
@@ -32,8 +32,8 @@ class Plot {
   }
 
   /*
-  * init - method to initialize the plot, allows the plot to be re-initialized
-  *  on resize while keeping the current plot data in memory
+  * init - method to initialize the chart, allows the chart to be re-initialized
+  *  on resize while keeping the current chart data in memory
   * @returns {object} this
   */
   init() {
@@ -52,11 +52,12 @@ class Plot {
       this.zoom = new Zoom(this, this.options);
     }
     this.groups = this.container.append('g').attr('class', 'd3cf-groups').attr('transform', `translate(${this.margins.left}, 0)`);
+    // this.update([]);
     return this;
   }
 
   /*
-  * setDimensions - method to set the dimensions of the plot based on the current window
+  * setDimensions - method to set the dimensions of the chart based on the current window
   */
   setDimensions() {
     this.margins = this.options.margins || {
@@ -67,8 +68,8 @@ class Plot {
     };
     this.width = this.options.width || document.getElementById(this.options.containerID).offsetWidth - (this.margins.left + this.margins.right);
     this.height = this.options.height;
-    if (this.height < MINIMUM_PLOT_HEIGHT) {
-      this.height = MINIMUM_PLOT_HEIGHT;
+    if (this.height < MINIMUM_CHART_HEIGHT) {
+      this.height = MINIMUM_CHART_HEIGHT;
     }
     this.viewBoxWidth = this.width + this.margins.left + this.margins.right;
     this.viewBoxHeight = this.height + this.margins.top + this.margins.bottom;
@@ -77,7 +78,7 @@ class Plot {
 
   /*
   * update - update the width and height attributes of the root and container
-  *  elements. then call update on the plot axes
+  *  elements. then call update on the chart axes
   * @param {array} nodes, an array of {object} for each node
   * @returns {object} this
   */
@@ -86,16 +87,16 @@ class Plot {
     this.root.attr('width', this.viewBoxWidth).attr('height', this.viewBoxHeight);
     this.container.attr('width', this.width).attr('height', this.height).attr('transform', `translate(${this.margins.left}, ${this.margins.top})`);
     if (typeof nodes === 'undefined') {
-      this.axes.update(this.getGroupsNodes());
+      this.axes.update(this.getGroupsNodes(), false);
     } else {
       if (nodes instanceof Array) {
-        this.axes.update(nodes);
+        this.axes.update(nodes, true);
         if (this.axes.initialized === true) {
           this.axes.setInitialMinMax(this.axes.currentMinMax);
         }
       } else {
         const shouldSetInitialMinMax = this.mergeGroups(nodes);
-        this.axes.update(this.getGroupsNodes(false));
+        this.axes.update(this.getGroupsNodes(false), true);
         if (shouldSetInitialMinMax) {
           this.axes.setInitialMinMax(this.axes.currentMinMax);
         }
@@ -105,7 +106,7 @@ class Plot {
   }
 
   /*
-  * draw - draws the markers on the plot
+  * draw - draws the markers on the chart
   * @note this will automatically show/hide a warning message if the data
   * is empty. Do not call super() to override this behavior.
   * @param {array} nodes, an array of {object} for each marker
@@ -141,57 +142,38 @@ class Plot {
   * defaultGroup - creates a default group if an array is passed to the draw method
   * @param {array} nodes, an array of Node's
   */
-  defaultGroup(nodes) {
-    let group = this.getGroups().find((g) => {
-      return g.id === 'default_';
-    });
-    if (typeof group === 'undefined') {
-      if (this.options.group && this.options.group.onEnter) {
-        group = new Group(this, {id: 'default_', onEnter: this.options.group.onEnter});
-      } else {
-        group = new Group(this, {id: 'default_'});
-      }
-    }
-    nodes.forEach((d) => {
-      return group.addNode(d);
-    });
-    return group;
+  defaultGroup() {
+    throw new Error('defaultGroup must be implemented.');
   }
 
   /*
-  * mergeGroups - merge groups from data passed directly to the draw method
-  * @param {object} nodes, a grouping of nodes
-  * @return {boolean} shouldReset, should the axes domain be reset to currentMinMax
+  * applyFilters - apply any filters from the chart
+  * @param {object} filters, an array of filters to apply
+  * @returns {array} filtered, the filtered data
   */
-  mergeGroups(groups) {
-    const notMerged = Object.keys(this.groups_);
-    let hasNewGroup = false;
-    Object.keys(groups).forEach((k) => {
-      let idx = -1;
-      let group = this.groups_[k];
-      if (typeof group === 'undefined') {
-        hasNewGroup = true;
-        group = new Group(this, {id: k, onEnter: this.options.group.onEnter});
-      } else {
-        idx = notMerged.indexOf(k);
-        if (idx >= 0) {
-          notMerged.splice(idx, 1);
+  applyFilters(nodes, filters) {
+    const filters_ = filters || this.filters;
+    let filtered = [];
+    if (nodes) {
+      filtered = nodes.filter((d) => {
+        let valid = true;
+        const keys = Object.keys(filters_);
+        let i = 0;
+        const keysLen = keys.length;
+        while (i < keysLen) {
+          const key = keys[i++];
+          const f = filters_[key](d);
+          if (typeof f === 'undefined') {
+            valid = false;
+            break;
+          }
         }
-      }
-      groups[k].forEach((m) => {
-        group.addNode(m);
+        if (valid) {
+          return d;
+        }
       });
-    });
-    if (notMerged.length > 0) {
-      notMerged.forEach((k) => {
-        this.removeGroup(k);
-      });
-      return true;
     }
-    if (hasNewGroup && this.axes.initialized === true) {
-      return true;
-    }
-    return false;
+    return filtered;
   }
 
   /*
@@ -211,7 +193,7 @@ class Plot {
   }
 
   /*
-  * showWarn - shows a warning message in the center of the plot
+  * showWarn - shows a warning message in the center of the chart
   * @param {string} m, the message to display
   * @return {object} this
   */
@@ -227,7 +209,7 @@ class Plot {
   }
 
   /*
-  * removeWarn - removes the warning message from the plot
+  * removeWarn - removes the warning message from the chart
   * @return {object} this
   */
   removeWarn() {
@@ -238,7 +220,7 @@ class Plot {
   }
 
   /*
-  * remove - removes the plot from the DOM and any event listeners
+  * remove - removes the chart from the DOM and any event listeners
   * @return {object} this
   */
   remove() {
@@ -250,7 +232,7 @@ class Plot {
   }
 
   /*
-  * destroy - destroys the plot and any associated elements
+  * destroy - destroys the chart and any associated elements
   */
   destroy() {
     this.remove();
@@ -264,9 +246,9 @@ class Plot {
 
   /*
   * addGroup
-  * @param {object} group, add a group to the plot
+  * @param {object} group, add a group to the chart
   * @throws {InvalidGroupError} error
-  * @return {Plot} this
+  * @return {Chart} this
   */
   addGroup(group) {
     if (group instanceof Group === false) {
@@ -279,16 +261,18 @@ class Plot {
   /*
   * removeGroup
   * @param {string} id, the group to remove
+  * @return {Chart} this
   */
   removeGroup(id) {
     if (this.groups_.hasOwnProperty(id)) {
       delete this.groups_[id];
     }
+    return this;
   }
 
   /*
-  * getGroups - returns the groups associated with this plot
-  * @return {array} groups, the groups associated with this plot
+  * getGroups - returns the groups associated with this chart
+  * @return {array} groups, the groups associated with this chart
   */
   getGroups() {
     return Object.values(this.groups_);
@@ -300,15 +284,15 @@ class Plot {
   * @return {Number} size, the size of all the groups
   */
   getGroupsSize(shouldFilter) {
-    this.getGroups().reduce((prev, nextObj) => {
+    return this.getGroups().reduce((prev, nextObj) => {
       if (shouldFilter) {
-        return prev + nextObj.applyFilters().length;
+        return prev + this.applyFilters(nextObj.getNodes()).length;
       }
       const filters = Object.assign({}, this.filters);
       if (filters.hasOwnProperty('_domain')) {
         delete filters._domain;
       }
-      return prev + nextObj.applyFilters(filters).length;
+      return prev + this.applyFilters(nextObj.getNodes(), filters).length;
     }, 0);
   }
 
@@ -318,20 +302,29 @@ class Plot {
   * @return {array} nodes, an array of nodes
   */
   getGroupsNodes(shouldFilter) {
-    this.getGroups().reduce((prevArr, nextObj) => {
+    return this.getGroups().reduce((prevArr, nextObj) => {
       if (shouldFilter) {
-        return prevArr.concat(nextObj.applyFilters());
+        return prevArr.concat(this.applyFilters(nextObj.getNodes()));
       }
       const filters = Object.assign({}, this.filters);
       if (filters.hasOwnProperty('_domain')) {
         delete filters._domain;
       }
-      return prevArr.concat(nextObj.applyFilters(filters));
+      return prevArr.concat(this.applyFilters(nextObj.getNodes(), filters));
     }, []);
   }
 
   /*
-  * addFilter - add a filter to the plot
+  * mergeGroups - merge groups from data passed directly to the draw method
+  * @param {object} nodes, a grouping of nodes
+  * @return {boolean} shouldReset, should the axes domain be reset to currentMinMax
+  */
+  mergeGroups() {
+    throw new Error('mergeGroups must be implemented.');
+  }
+
+  /*
+  * addFilter - add a filter to the chart
   * @param {string} name, the name of the filter
   * @param {function} fn, the function to be applied to the data
   * @return {object} this
@@ -342,7 +335,7 @@ class Plot {
   }
 
   /*
-  * removeFilter - removes a filter from the plot
+  * removeFilter - removes a filter from the chart
   * @param {string} name, the name of the filter
   * @return {object} this
   */
@@ -352,7 +345,16 @@ class Plot {
     }
     return this;
   }
+
+  /*
+  * resetZoom - resets the zoom of the axes
+  */
+  resetZoom() {
+    if (this.zoom) {
+      return this.zoom.reset();
+    }
+  }
 }
 
 
-module.exports = Plot;
+module.exports = Chart;

@@ -1,6 +1,6 @@
 const d3 = require('d3');
 
-import { Node } from 'd3-chart-framework';
+import Node from './Node';
 
 
 const MINIMUM_MARKER_WIDTH = 10;
@@ -106,45 +106,6 @@ class RectNode extends Node {
     rect.exit().remove();
     return this;
   }
-
-  /*
-  * static method to created an RectNode object from a database record
-  *
-  * @param {object} plot, an instance of the plot
-  * @param {object} incident, a database record to convert into a RectNode
-  * @return {object} rectNode, an instance of RectNode
-  */
-  static createFromIncident(plot, incident) {
-    let fill;
-    switch(incident.type) {
-      case 'warning':
-        fill = '#FFBB33';
-        break;
-      case 'success':
-        fill = '#00C851';
-        break;
-      case 'info':
-        fill = '#33B5E5';
-        break;
-      default:
-        break;
-    }
-    const opts = {
-      // DOM id should always begin with a letter, so we add a prefix
-      id: `node-${incident._id}`,
-      x1: incident.x1,
-      x2: incident.x2,
-      y1: incident.y1,
-      f: fill,
-      o: 0.5,
-      meta: {
-        // this could be any extra metadata from your database...
-        type: incident.type
-      },
-    };
-    return new RectNode(plot, opts);
-  }
-
 }
 
 

@@ -3,7 +3,7 @@ Provides an extensible, reusable approach to building charts with [D3js.org](htt
 
 
 ## TODO
- - Additional Chart.js class, with Line and Bar subclasses
+ - Add Bar chart
  - Finish API documentation
  - Eliminate external dependencies
  - Evaluate performance `.enter()`, `.exit()` workflow for `data.length === 1`
@@ -15,8 +15,7 @@ Provides an extensible, reusable approach to building charts with [D3js.org](htt
 ## Example of ScatterPlot with rectangle nodes
 
 TODO: Link a screenshot
-
-
+``
 See a live example of the react-meteor application on heroku:
 [chart-framework-app](https://chart-framework-app.herokuapp.com/)
 
@@ -25,6 +24,18 @@ See a live example of the react-meteor application on heroku:
 ```
 npm install d3-chart-framework
 ```
+
+
+## API
+TODO: build API documentation from [jsDoc3](https://github.com/jsdoc3/jsdoc) and link to this README
+
+See [documentation wiki](wiki/)
+
+
+## Integration Examples
+I have provided an example of using `d3-chart-framework` with meteor and react. This is a very powerful framework combination and is very easy to get working out-of-the-box. However, meteor does require MongoDB and this may or may not work for you. See [react-meteor](examples/react-meteor/README.md)
+
+As an alternative, you may use `webpack`, `browserify`, or even `<script>` tags combined with any server-side framework of your choosing, such as [django](https://www.djangoproject.com/), [ruby on rails](http://rubyonrails.org/), or [hapi](https://hapijs.com/).
 
 
 ## Why use `d3-chart-framework`?
@@ -51,12 +62,6 @@ Therefore to utilize `d3-chart-framework`, one only has to create one or more cu
 To further illustrate this concept, view the example of a `[RectNode](examples/shared/RectNode.js)` that display a rectangular marker on a `ScatterPlot`.
 
 
-## API
-TODO: build API documentation from [jsDoc3](https://github.com/jsdoc3/jsdoc) and link to this README
-
-See [documentation wiki](wiki/)
-
-
 ## Dependencies
 TODO: eliminate external dependencies
 
@@ -65,12 +70,6 @@ The current external dependencies are:
   - [d3](https://github.com/d3/d3)
   - [underscore](https://github.com/jashkenas/underscore)
   - [moment](https://github.com/moment/moment)
-
-
-## Integration Examples
-I have provided an example of using `d3-chart-framework` with meteor and react. This is a very powerful framework combination and is very easy to get working out-of-the-box. However, meteor does require MongoDB and this may or may not work for you. See [react-meteor](examples/react-meteor/README.md)
-
-As an alternative, you may use `webpack`, `browserify`, or even `<script>` tags combined with any server-side framework of your choosing, such as [django](https://www.djangoproject.com/), [ruby on rails](http://rubyonrails.org/), or [hapi](https://hapijs.com/).
 
 
 ## About

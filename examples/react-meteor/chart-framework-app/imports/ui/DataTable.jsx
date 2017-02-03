@@ -18,8 +18,6 @@ export default class DataTable extends Component {
       rowHeight: 40,
       rowCount: 0,
       scrollToIndex: undefined,
-      sortBy: 'y1',
-      sortDirection: SortDirection.ASC,
       useDynamicRowHeight: false,
     };
 
@@ -29,7 +27,6 @@ export default class DataTable extends Component {
     this._onRowCountChange = this._onRowCountChange.bind(this);
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this);
     this._rowClassName = this._rowClassName.bind(this);
-    this._sort = this._sort.bind(this);
 
     this.styles = {
       th: {
@@ -44,7 +41,7 @@ export default class DataTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({rowCount: nextProps.incidents.size})
+    this.setState({rowCount: nextProps.data.size})
   }
 
   render() {
@@ -57,24 +54,10 @@ export default class DataTable extends Component {
       rowHeight,
       rowCount,
       scrollToIndex,
-      sortBy,
-      sortDirection,
       useDynamicRowHeight
     } = this.state;
-    const list = this.props.incidents;
-    const sortedList = this._isSortEnabled()
-      ? list
-        .sortBy((item, sortBy) => {
-          return item[sortBy]
-        })
-        .update((list) => {
-          return sortDirection === SortDirection.DESC
-            ? list.reverse()
-            : list
-        })
-      : list;
-    const rowGetter = ({ index }) => this._getDatum(sortedList, index);
-
+    const list = this.props.data;
+    const rowGetter = ({ index }) => this._getDatum(list, index);
     return (
       <div>
         <header>
@@ -95,9 +78,6 @@ export default class DataTable extends Component {
                 rowGetter={rowGetter}
                 rowCount={rowCount}
                 scrollToIndex={scrollToIndex}
-                sort={this._sort}
-                sortBy={sortBy}
-                sortDirection={sortDirection}
                 width={width}
               >
                 {!hideIndexRow &&
@@ -113,13 +93,13 @@ export default class DataTable extends Component {
                 }
                 <Column
                   dataKey='_id'
-                  disableSort={!this._isSortEnabled()}
+                  disableSort={true}
                   label='id'
                   width={180}
                 />
                 <Column
                   width={75}
-                  disableSort={false}
+                  disableSort={true}
                   dataKey='x1'
                   label='x1'
                   className={this.styles.tableStyles.exampleColumn}
@@ -129,7 +109,7 @@ export default class DataTable extends Component {
                 <Column
                   width={75}
                   dataKey='x2'
-                  disableSort={false}
+                  disableSort={true}
                   label='x2'
                   className={this.styles.tableStyles.exampleColumn}
                   cellRenderer={this._localeDateRenderer}
@@ -137,7 +117,7 @@ export default class DataTable extends Component {
                 />
                 <Column
                   width={50}
-                  disableSort={false}
+                  disableSort={true}
                   dataKey='y1'
                   label='y1'
                   className={this.styles.tableStyles.exampleColumn}
@@ -146,7 +126,7 @@ export default class DataTable extends Component {
                 />
                 <Column
                   width={100}
-                  disableSort={false}
+                  disableSort={true}
                   dataKey='type'
                   label='type'
                   className={this.styles.tableStyles.exampleColumn}
@@ -161,7 +141,11 @@ export default class DataTable extends Component {
   }
 
   _localeDateRenderer({ cellData, columnData, dataKey, rowData, rowIndex }) {
-    return new Date(cellData).toLocaleDateString();
+    if (cellData) {
+      return new Date(cellData).toLocaleDateString();
+    } else {
+      return ''
+    }
   }
 
   _getDatum (list, index) {
@@ -169,7 +153,7 @@ export default class DataTable extends Component {
   }
 
   _getRowHeight ({ index }) {
-   const list = this.props.incidents;
+   const list = this.props.data;
    return this._getDatum(list, index).size
  }
 
@@ -189,12 +173,6 @@ export default class DataTable extends Component {
        }
      </div>
    )
- }
-
- _isSortEnabled () {
-   const list = this.props.incidents;
-   const { rowCount } = this.state;
-   return list.size ? rowCount <= list.size : true;
  }
 
  _noRowsRenderer () {
@@ -236,5 +214,5 @@ export default class DataTable extends Component {
 }
 
 DataTable.propTypes = {
-  incidents: PropTypes.instanceOf(Immutable.List).isRequired,
+  data: PropTypes.instanceOf(Immutable.List).isRequired,
 };

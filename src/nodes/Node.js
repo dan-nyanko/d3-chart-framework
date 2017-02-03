@@ -31,6 +31,13 @@ class Node {
   }
 
   /*
+  * update - updates one or more elements within the RectNode SVG group
+  */
+  update() {
+    return this;
+  }
+
+  /*
   * detached - builds a detached svg group and returns the node
   * @return {object} node, the SVG node to append to the parent during .call()
   */

@@ -12,7 +12,7 @@ export default class Toolbar extends Component {
   }
 
   resetZoom(event) {
-    this.props.plot.resetZoom();
+    this.props.chart.resetZoom();
     $(event.currentTarget).blur();
   }
 
@@ -29,19 +29,19 @@ export default class Toolbar extends Component {
     event.persist();
     // apply or remove the filter by type
     if (this.state.activeFilters[type]) {
-      this.props.plot.addFilter(type, (d) => {
+      this.props.chart.addFilter(type, (d) => {
         if (d.meta && d.meta.type && d.meta.type !== type) {
           return d;
         }
       });
     } else {
-      this.props.plot.removeFilter(type)
+      this.props.chart.removeFilter(type)
     }
-    // update the component state, update the plot, blur the event's target
+    // update the component state, update the chart, blur the event's target
     activeFilters = Object.assign({}, this.state.activeFilters);
     activeFilters[type] = !activeFilters[type];
     this.setState({activeFilters: activeFilters}, () => {
-      this.props.plot.update();
+      this.props.chart.update();
       $(event.currentTarget).blur();
     });
   }
@@ -74,5 +74,5 @@ export default class Toolbar extends Component {
 }
 
 Toolbar.propTypes = {
-  plot: PropTypes.object.isRequired,
+  chart: PropTypes.object.isRequired,
 };

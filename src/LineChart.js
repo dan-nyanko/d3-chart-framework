@@ -1,14 +1,14 @@
 const _ = require('underscore');
 
 import Chart from './Chart';
-import NodeGroup from './groups/NodeGroup';
+import LineGroup from './groups/LineGroup';
 
 
-class ScatterPlot extends Chart {
+class LineChart extends Chart {
   /*
-  * ScatterPlot - constructs the root SVG element to contain the ScatterPlot
-  * @param {object} options, the options to create a ScatterPlot
-  * @param {string} containerID, the id of the ScatterPlot container div
+  * LineChart - constructs the root SVG element to contain the LineChart
+  * @param {object} options, the options to create a LineChart
+  * @param {string} containerID, the id of the LineChart container div
   * @param {string} svgcontainerClass, the desired class of the constructed svg element
   * @param {object} tooltip,
   * @param {number} tooltip.opacity, the background opacity for the tooltip
@@ -66,9 +66,9 @@ class ScatterPlot extends Chart {
     });
     if (typeof group === 'undefined') {
       if (this.options.group && this.options.group.onEnter) {
-        group = new NodeGroup(this, {id: 'default_', onEnter: this.options.group.onEnter});
+        group = new LineGroup(this, {id: 'default_', onEnter: this.options.group.onEnter});
       } else {
-        group = new NodeGroup(this, {id: 'default_'});
+        group = new LineGroup(this, {id: 'default_'});
       }
     }
     nodes.forEach((d) => {
@@ -79,6 +79,7 @@ class ScatterPlot extends Chart {
 
   /*
   * mergeGroups - merge groups from data passed directly to the draw method
+  * @override
   * @param {object} groups, a set of Groups
   * @return {boolean} shouldReset, should the axes domain be reset to currentMinMax
   */
@@ -90,7 +91,7 @@ class ScatterPlot extends Chart {
       let group = this.groups_[k];
       if (typeof group === 'undefined') {
         addedNewGroup = true;
-        if (groups[k] instanceof NodeGroup) {
+        if (groups[k] instanceof LineGroup) {
           group = groups[k];
           this.addGroup(group);
         } else {
@@ -127,7 +128,7 @@ class ScatterPlot extends Chart {
   }
 
   /*
-  * update the dimensions of the plot (axes, gridlines, then redraw)
+  * update the dimensions of the chart (axes, gridlines, then redraw)
   * @param {array} data, an array of {object} for each marker
   * @returns {object} this
   */
@@ -138,10 +139,11 @@ class ScatterPlot extends Chart {
   }
 
   /*
-  * remove - removes the plot from the DOM and any event listeners
+  * remove - removes the chart from the DOM and any event listeners
   * @return {object} this
   */
   remove() {
+    super.remove();
     if (this.resizeHandler) {
       window.removeEventListener('resize', this.resizeHandler);
     }
@@ -149,23 +151,14 @@ class ScatterPlot extends Chart {
   }
 
   /*
-  * resize - re-renders the plot
+  * resize - re-renders the chart
   * @return {object} this
   */
   resize() {
     this.update();
     return this;
   }
-
-  /*
-  * resetZoom - resets the zoom of the axes
-  */
-  resetZoom() {
-    if (this.zoom) {
-      return this.zoom.reset();
-    }
-  }
 }
 
 
-module.exports = ScatterPlot;
+module.exports = LineChart;

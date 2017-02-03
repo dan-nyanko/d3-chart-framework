@@ -1,8 +1,8 @@
 const d3 = require('d3');
 const _ = require('underscore');
 
-import Node from './Node';
-import { InvalidNodeError } from './Errors';
+import Node from '../nodes/Node';
+import { InvalidNodeError } from '../Errors';
 
 
 function genId() {
@@ -12,7 +12,7 @@ function genId() {
 }
 
 class Group {
-  constructor(plot, options) {
+  constructor(chart, options) {
     this.options = options || {};
     this.id = this.options.id || genId();
     const onEnter = this.options.onEnter || Group.onEnter;
@@ -22,8 +22,7 @@ class Group {
     const onExit = this.options.onExit || Group.onExit;
     this.onExit = _.bind(onExit, this);
     this.nodes_ = {};
-    this.plot = plot;
-    this.plot.addGroup(this);
+    this.chart = chart;
     return this;
   }
 
@@ -42,7 +41,7 @@ class Group {
   * @return {Group} this
   */
   addNode(node) {
-    if (!node instanceof Node) {
+    if (typeof node === 'undefined' || !node instanceof Node) {
       throw new InvalidNodeError();
     }
     this.nodes_[node.id] = node;
@@ -74,22 +73,7 @@ class Group {
   * @return {object} this
   */
   update() {
-    if (typeof this.group === 'undefined') {
-      return;
-    }
-    const filtered = this.applyFilters();
-    const filteredLen = filtered.length;
-    this.group.attr('numNodes', filteredLen);
-    const nodes = this.group.selectAll('.node').data(filtered, (d) => {
-      return d.id;
-    });
-    nodes.enter().append((node) => {
-      return node.detached();
-    }).call(this.onEnter);
-    nodes.each((node) => {
-      return node.update();
-    }).call(this.onUpdate);
-    return nodes.exit().remove().call(this.onExit);
+    throw new Error('Update must be implemented.');
   }
 
   /*
@@ -101,36 +85,6 @@ class Group {
     this.group = d3.select(document.createElementNS(d3.namespaces.svg, 'g')).attr('id', this.id).attr('class', 'd3cf-group').remove();
     this.update();
     return this.group.node();
-  }
-
-  /*
-  * applyFilters - apply any filters from the plot
-  * @param {object} filters, an array of filters to apply
-  * @returns {array} filtered, the filtered data
-  */
-  applyFilters(filters) {
-    const filters_ = filters || this.plot.filters;
-    let filtered = [];
-    if (this.nodes_) {
-      filtered = this.getNodes().filter((d) => {
-        let valid = true;
-        const keys = Object.keys(filters_);
-        let i = 0;
-        const keysLen = keys.length;
-        while (i < keysLen) {
-          const key = keys[i++];
-          const f = filters_[key](d);
-          if (typeof f === 'undefined') {
-            valid = false;
-            break;
-          }
-        }
-        if (valid) {
-          return d;
-        }
-      });
-    }
-    return filtered;
   }
 
   /*
@@ -147,9 +101,9 @@ class Group {
   */
   destroy() {
     this.remove();
-    this.plot.removeLayer(this.id);
+    this.chart.removeLayer(this.id);
     this.nodes = null;
-    this.plot = null;
+    this.chart = null;
     this.group = null;
   }
 
