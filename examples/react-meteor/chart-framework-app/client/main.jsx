@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 
 import Axes from '../imports/api/build/d3-chart-framework'
 
-import '../node_modules/d3-chart-framework/build/stylesheets/d3cf-main.css';
+import '../imports/api/build/stylesheets/d3cf-main.css';
 
 import App from '../imports/ui/App.jsx';
 

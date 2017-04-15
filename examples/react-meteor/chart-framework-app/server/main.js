@@ -3,29 +3,29 @@ import { Incidents } from '../imports/api/incidents';
 import { Prices } from '../imports/api/prices';
 
 
-/*
+/**
 * Returns a random date
-* @param [Date] start, the start Date
-* @param [Date] end, the end Date
-* @return [Date] date, a random date between start and end date
+* @param {Date} start - the start Date
+* @param {Date} end - the end Date
+* @return {Date} date - a random date between start and end date
 */
 function randomDate(start, end) {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }
 
-/*
+/**
 * Returns a random float
-* @return [Number] number - a random number between 0.0 < x < 1.0
+* @return {Number} number - a random number between 0.0 < x < 1.0
 */
 function randomNumber() {
   return Math.random();
 }
 
-/*
+/**
 * Return a random price based on the previous price and volatility
-* @param [Number] oldPrice, the previous price
-* @param [Number] volatility, the current volatility
-* @return [Number] newPrice, the new price
+* @param {Number} oldPrice - the previous price
+* @param {Number} volatility - the current volatility
+* @return {Number} newPrice
 */
 function randomPrice(oldPrice, volatility) {
   const rnd = randomNumber();
@@ -38,11 +38,11 @@ function randomPrice(oldPrice, volatility) {
   return newPrice;
 }
 
-/*
+/**
 * Insert a random incident into a collection
-* @param [Array] types, the types of incidents ['info', 'success']
-* @param [Date] start, the start Date
-* @param [Date] end, the end Date
+* @param {Array} types - the types of incidents ['info', 'success']
+* @param {Date} start - the start Date
+* @param {Date} end - the end Date
 * @return None
 */
 function randomIncident(types, start, end) {
@@ -88,7 +88,7 @@ Meteor.startup(() => {
       prices.push(y1);
       Prices.insert({
         x1: x1.getTime(),
-        y1: y1,
+        y1: parseFloat(y1.toFixed(3)),
         type: types[t],
         volatility: vol,
       });

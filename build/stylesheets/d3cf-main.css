@@ -11,9 +11,6 @@
   margin: 5px;
   padding-left: 10px;
   padding-right: 10px;
-  background: #fff;
-  color: #7791ae;
-  border-color: #e3e8ee;
 }
 .d3cf-toolbar-button span {
   padding-left: 5px;
@@ -28,21 +25,11 @@
   background: #c6d1dd;
   color: #345e7e;
 }
-.d3cf-toolbar-button.active {
-  background: #345e7e;
-  color: #fff;
+.d3cf-toolbar-button.inactive {
+  border-color: #c6d1dd;
+  background: #f1f3f6;
   -webkit-box-shadow: none;
   box-shadow: none;
-  border-color: #345e7e;
-}
-.d3cf-toolbar-button.active:focus,
-.d3cf-toolbar-button.active:hover {
-  background: #345e7e;
-  color: #fff;
-  outline: 0;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  border-color: #345e7e;
 }
 .d3cf-container {
   overflow: hidden;

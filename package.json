@@ -1,6 +1,6 @@
 {
   "name": "d3-chart-framework",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Provides an extensible, reusable approach to building charts with D3js.org",
   "keywords": [
     "d3",

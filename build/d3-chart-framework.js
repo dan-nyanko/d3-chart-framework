@@ -1082,7 +1082,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var filtered = this.chart.applyFilters(this.getNodes());
 	      this.group.attr('numNodes', filtered.length);
 	
-	      var path = this.group.append('path').datum(filtered).attr('fill', 'none').attr('stroke', this.s).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round').attr('stroke-width', this.w).attr('class', 'd3cf-line').attr('d', function (d) {
+	      var path = this.group.append('path').datum(filtered).attr('fill', 'transparent').attr('stroke', this.s).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round').attr('stroke-width', this.w).attr('class', 'd3cf-line').attr('d', function (d) {
 	        return _this2.generator(d);
 	      }).call(this.onEnter);
 	      path.attr('stroke', this.s).attr('stroke-width', this.w).attr('d', function (d) {
@@ -1214,7 +1214,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _classCallCheck(this, LineNode);
 	
-	    var _this = _possibleConstructorReturn(this, (LineNode.__proto__ || Object.getPrototypeOf(LineNode)).call(this, chart, options));
+	    var _this = _possibleConstructorReturn(this, (LineNode.__proto__ || Object.getPrototypeOf(LineNode)).call(this, options));
 	
 	    _this.chart = chart;
 	    _this.x1 = options.x1;

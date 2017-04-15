@@ -16,8 +16,8 @@ export default class Toolbar extends Component {
     $(event.currentTarget).blur();
   }
 
-  buttonFilterClassNames(isActive) {
-    return `btn btn-xs btn-default d3cf-toolbar-button ${isActive ? 'active' : ''}`;
+  buttonFilterClassNames(isActive, bsContext) {
+    return `btn btn-xs btn-${bsContext} d3cf-toolbar-button ${isActive ? 'active' : 'inactive'}`;
   }
 
   iconFilterClassNames(isActive) {
@@ -25,8 +25,7 @@ export default class Toolbar extends Component {
   }
 
   toggleFilter(event, type) {
-    // persist the event since we will be using it within the callback of setState
-    event.persist();
+    const currentTarget = event.currentTarget;
     // apply or remove the filter by type
     if (this.state.activeFilters[type]) {
       this.props.chart.addFilter(type, (d) => {
@@ -42,7 +41,7 @@ export default class Toolbar extends Component {
     activeFilters[type] = !activeFilters[type];
     this.setState({activeFilters: activeFilters}, () => {
       this.props.chart.update();
-      $(event.currentTarget).blur();
+      $(currentTarget).blur();
     });
   }
 
@@ -51,11 +50,11 @@ export default class Toolbar extends Component {
       <div className="d3cf-toolbar">
         <div className="row" style={{paddingRight: 20}}>
           <div className="pull-left">
-            <button className={this.buttonFilterClassNames(this.state.activeFilters.info)} onClick={(event) => this.toggleFilter(event, 'info')}>
+            <button className={this.buttonFilterClassNames(this.state.activeFilters.info, 'info')} onClick={(event) => this.toggleFilter(event, 'info')}>
               <i className={this.iconFilterClassNames(this.state.activeFilters.info)}></i>
               <span>Info</span>
             </button>
-            <button className={this.buttonFilterClassNames(this.state.activeFilters.success)} onClick={(event) => this.toggleFilter(event, 'success')}>
+            <button className={this.buttonFilterClassNames(this.state.activeFilters.success, 'success')} onClick={(event) => this.toggleFilter(event, 'success')}>
               <i className={this.iconFilterClassNames(this.state.activeFilters.success)}></i>
               <span>Success</span>
             </button>

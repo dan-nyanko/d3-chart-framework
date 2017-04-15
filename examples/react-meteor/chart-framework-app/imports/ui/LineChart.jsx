@@ -108,8 +108,9 @@ export default class LineChartComponent extends Component {
         },
       };
       const nodeOpts = {
+        id: `node-${price._id}`,
         x1: price.x1,
-        y1: price.y1,
+        y1: parseFloat(price.y1),
         o: 0, // opacity
         r: 3, // radius
         meta: {
@@ -135,6 +136,7 @@ export default class LineChartComponent extends Component {
     }
     const groups = this.createFromPrices(this.state.chart, props.prices);
     this.state.chart.update(groups);
+    window.prices = props.prices;
     window.chart = this.state.chart;
   }
 

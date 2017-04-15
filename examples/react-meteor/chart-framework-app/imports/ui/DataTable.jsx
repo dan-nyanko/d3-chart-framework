@@ -58,6 +58,7 @@ export default class DataTable extends Component {
     } = this.state;
     const list = this.props.data;
     const rowGetter = ({ index }) => this._getDatum(list, index);
+    const showX2 = list.size > 0 ? list.get(-1).hasOwnProperty('x2') : false;
     return (
       <div>
         <header>
@@ -106,15 +107,17 @@ export default class DataTable extends Component {
                   cellRenderer={this._localeDateRenderer}
                   flexGrow={1}
                 />
-                <Column
-                  width={75}
-                  dataKey='x2'
-                  disableSort={true}
-                  label='x2'
-                  className={this.styles.tableStyles.exampleColumn}
-                  cellRenderer={this._localeDateRenderer}
-                  flexGrow={1}
-                />
+                {showX2 &&
+                  <Column
+                    width={75}
+                    dataKey='x2'
+                    disableSort={true}
+                    label='x2'
+                    className={this.styles.tableStyles.exampleColumn}
+                    cellRenderer={this._localeDateRenderer}
+                    flexGrow={1}
+                  />
+                }
                 <Column
                   width={50}
                   disableSort={true}

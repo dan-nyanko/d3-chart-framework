@@ -16,7 +16,7 @@ class LineNode extends Node {
   * @return {object} this
   */
   constructor(chart, options) {
-    super(chart, options);
+    super(options);
     this.chart = chart;
     this.x1 = options.x1;
     this.y1 = options.y1;

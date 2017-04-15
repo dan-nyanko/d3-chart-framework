@@ -2,7 +2,11 @@
 Provides an extensible, reusable approach to building charts with [D3js.org](https://d3js.org/)
 
 
+![alt tag](screenshots/LineChart.png)
+
+
 ## TODO
+
  - Add Bar chart
  - Finish API documentation
  - Eliminate external dependencies
@@ -14,8 +18,6 @@ Provides an extensible, reusable approach to building charts with [D3js.org](htt
 
 ## Example of ScatterPlot with rectangle nodes
 
-TODO: Link a screenshot
-``
 See a live example of the react-meteor application on heroku:
 [chart-framework-app](https://chart-framework-app.herokuapp.com/)
 
@@ -43,10 +45,8 @@ D3js is a powerful library for visualizing data with SVG, Canvas, and HTML. Ther
 
 This framework utilizes an object oriented approach, which at its core, promotes breaking code into smaller, isolated classes. As with any programming paradigm, there can always be the chance of 'too much of a good thing' and object oriented programming is no different. Therefore, `d3-chart-framework` has the following goals:
 
-  - KISS, avoid creating too many OOP layers
   - Use existing D3js workflow patterns `.enter()` and `.exit()`
   - Its OK to mix functional and object oriented programming
-  - Performance should not be an afterthought
   - Maintain a well-documented API
 
 Hopefully, this answers the why to `d3-chart-framework` and you begin to use it for your own charting visualizations!
@@ -67,6 +67,5 @@ TODO: eliminate external dependencies
 
 The current external dependencies are:
 
-  - [d3](https://github.com/d3/d3)
   - [underscore](https://github.com/jashkenas/underscore)
   - [moment](https://github.com/moment/moment)

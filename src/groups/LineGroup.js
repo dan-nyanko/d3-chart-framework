@@ -31,7 +31,7 @@ class LineGroup extends Group {
 
     const path = this.group.append('path')
       .datum(filtered)
-      .attr('fill', 'none')
+      .attr('fill', 'transparent')
       .attr('stroke', this.s)
       .attr('stroke-linejoin', 'round')
       .attr('stroke-linecap', 'round')
