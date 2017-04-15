@@ -2,7 +2,7 @@
 Provides an extensible, reusable approach to building charts with [D3js.org](https://d3js.org/)
 
 
-![Line Chart Screenshot](examples/screenshots/LineChart.png)
+![Line Chart Screenshot](screenshots/LineChart.png)
 
 
 ## Example of ScatterPlot with rectangle nodes
