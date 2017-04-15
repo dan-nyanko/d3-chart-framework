@@ -5,17 +5,6 @@ Provides an extensible, reusable approach to building charts with [D3js.org](htt
 ![Line Chart Screenshot](examples/screenshots/LineChart.png)
 
 
-## TODO
-
- - Add Bar chart
- - Finish API documentation
- - Eliminate external dependencies
- - Evaluate performance `.enter()`, `.exit()` workflow for `data.length === 1`
- - Axes should support negative values
- - More integration examples with server-side frameworks
- - Write tests, good starting point would be the merge operation
-
-
 ## Example of ScatterPlot with rectangle nodes
 
 See a live example of the react-meteor application on heroku:
