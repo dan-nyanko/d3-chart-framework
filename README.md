@@ -2,7 +2,7 @@
 Provides an extensible, reusable approach to building charts with [D3js.org](https://d3js.org/)
 
 
-![alt tag](screenshots/LineChart.png)
+![Line Chart Screenshot](examples/screenshots/LineChart.png)
 
 
 ## TODO
