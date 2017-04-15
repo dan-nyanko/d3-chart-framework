@@ -57,7 +57,7 @@ export default class LineChartComponent extends Component {
     super(props);
     // initialize the chart state to null
     this.state = {chart: null};
-    this.updateChart = _.debounce(this.updateChart, 250);
+    this.updateChart = _.debounce(this.updateChart, 50);
   }
 
   componentWillUnmount() {
