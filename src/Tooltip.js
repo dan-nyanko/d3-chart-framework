@@ -2,13 +2,14 @@ const d3 = require('d3');
 const _ = require('underscore');
 
 class Tooltip {
-  /*
+  /**
   * Tooltip - allows for an HTML div to be faded in/out on mouseover of a marker
-  * @param {object} plot, the plot append the tooltip
-  * @param {object} options, the options for the plot
-  * @param {object} options.tooltip, the options for the tooltip
-  * @param {number} options.opacity, the opacity of the tooltip
-  * @param {object} options.template, an underscore compiled template
+  *
+  * @param {object} plot - the plot append the tooltip
+  * @param {object} options - the options for the plot
+  * @param {object} options.tooltip - the options for the tooltip
+  * @param {number} options.opacity - the opacity of the tooltip
+  * @param {object} options.template - an underscore compiled template
   * @return {object} this
   */
   constructor(plot, options) {
@@ -22,11 +23,12 @@ class Tooltip {
     return this;
   }
 
-  /*
+  /**
   * mouseover - unbound method for mouseover event
-  * @param {object} d, the data
-  * @param {number} x, the x coordinate
-  * @param {number} y, the y coordinate
+  *
+  * @param {object} d - the data
+  * @param {number} x - the x coordinate
+  * @param {number} y - the y coordinate
   * @return {object} this
   */
   mouseover(d, x, y) {
@@ -40,8 +42,9 @@ class Tooltip {
     return this;
   }
 
-  /*
+  /**
   * mouseout - unbound method for mouseout event
+  *
   * @return {object} this
   */
   mouseout() {
@@ -49,8 +52,9 @@ class Tooltip {
     return this;
   }
 
-  /*
+  /**
   * remove - removes the element from the DOM
+  *
   */
   remove() {
     return this.element.remove();

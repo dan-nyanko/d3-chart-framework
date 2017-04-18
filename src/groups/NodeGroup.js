@@ -7,9 +7,10 @@ class NodeGroup extends Group {
     return this;
   }
 
-  /*
+  /**
   * update - handles updating the marker
   * @override
+  *
   * @return {object} this
   */
   update() {

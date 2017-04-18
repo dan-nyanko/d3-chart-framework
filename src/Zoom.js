@@ -4,10 +4,11 @@ const _ = require('underscore');
 const MINIMUM_ZOOM_THRESHOLD = 5;
 
 class Zoom {
-  /*
+  /**
   * Zoom - a zoomable interface for a plot
-  * @param {object} plot, the plot to enable the zooming interface
-  * @param {object} options, the object containing the passed in options to the plot constructor
+  *
+  * @param {object} plot - the plot to enable the zooming interface
+  * @param {object} options - the object containing the passed in options to the plot constructor
   * @return {object} this
   */
   constructor(plot, options) {
@@ -72,9 +73,10 @@ class Zoom {
     this.zoomBand.transition().duration(1).attr('width', Math.abs(this.bandPos[0] - pos[0])).attr('height', Math.abs(this.bandPos[1] - pos[1]));
   }
 
-  /*
+  /**
   * ondragend - the event handler for the ondragend event
-  * @param {array} pos, the x,y position of the mouse
+  *
+  * @param {array} pos - the x,y position of the mouse
   */
   ondragend(pos, zoom) {
     const x1 = this.plot.axes.xScale.invert(this.bandPos[0]);
@@ -102,8 +104,9 @@ class Zoom {
     }
   }
 
-  /*
+  /**
   * zoom - the zooming method called an the end of ondragend
+  *
   */
   zoom() {
     this.isZoomed = true;
@@ -111,8 +114,9 @@ class Zoom {
     this.plot.draw();
   }
 
-  /*
+  /**
   * resetZoom - reset the plot zoom back to the original viewBox
+  *
   */
   reset() {
     this.isZoomed = false;
@@ -120,8 +124,9 @@ class Zoom {
     this.plot.draw();
   }
 
-  /*
+  /**
   * remove - remove the zoom interface from a plot
+  *
   */
   remove() {
     this.zoomGroup.remove();

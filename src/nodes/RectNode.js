@@ -7,17 +7,18 @@ const MINIMUM_MARKER_WIDTH = 10;
 const MINIMUM_MARKER_HEIGHT = 10;
 
 class RectNode extends Node {
-  /*
+  /**
   * RectNode - a rectangular node
-  * @param {object} plot, an instance of a plot
-  * @param {object} options, the options used to construct the plot
-  * @param {number} options.x1, the value for x1 position
-  * @param {number} options.x2, the value for x2 position
-  * @param {number} options.y1, the value for y1 position
-  * @param {number} options.h, the value for the height
-  * @param {string} options.f, the fill of the marker
-  * @param {number} options.o, the opacity of the marker
-  * @param {object} options.meta, the optional meta data associated with the marker (e.g. used in the Tooltip)
+  *
+  * @param {object} plot - an instance of a plot
+  * @param {object} options - the options used to construct the plot
+  * @param {number} options.x1 - the value for x1 position
+  * @param {number} options.x2 - the value for x2 position
+  * @param {number} options.y1 - the value for y1 position
+  * @param {number} options.h - the value for the height
+  * @param {string} options.f - the fill of the marker
+  * @param {number} options.o - the opacity of the marker
+  * @param {object} options.meta - the optional meta data associated with the marker (e.g. used in the Tooltip)
   * @return {object} this
   */
   constructor(plot, options) {
@@ -33,8 +34,9 @@ class RectNode extends Node {
     return this;
   }
 
-  /*
+  /**
   * update - updates one or more elements within the RectNode SVG group
+  *
   */
   update() {
     if (typeof this.group === 'undefined') {

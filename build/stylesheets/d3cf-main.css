@@ -28,6 +28,7 @@
 .d3cf-toolbar-button.inactive {
   border-color: #c6d1dd;
   background: #f1f3f6;
+  color: #345e7e;
   -webkit-box-shadow: none;
   box-shadow: none;
 }

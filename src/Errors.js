@@ -1,7 +1,7 @@
-/*
+/**
 * InvalidNodeError - error thrown when an object is not instanceof Node
 *
-* @param {string} [message], (optional) the message to the user
+* @param {string} [message] - (optional) the message to the user
 */
 export class InvalidNodeError extends Error {
   constructor(message) {
@@ -10,10 +10,10 @@ export class InvalidNodeError extends Error {
   }
 }
 
-/*
+/**
 * InvalidGroupError - error thrown when an object is not instanceof Group
 *
-* @param {string} [message], (optional) the message to the user
+* @param {string} [message] - (optional) the message to the user
 */
 export class InvalidGroupError extends Error {
   constructor(message) {

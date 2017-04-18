@@ -18,8 +18,9 @@ class LineGroup extends Group {
     return this;
   }
 
-  /*
+  /**
   * update - handles updating the marker
+  *
   * @return {object} this
   */
   update() {

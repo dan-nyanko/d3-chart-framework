@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import Immutable from 'immutable';
 import _ from 'underscore';
 
-//import { LineChart, InvalidNodeError, LineNode, LineGroup } from 'd3-chart-framework';
-import { LineChart, InvalidNodeError, LineNode, LineGroup } from '../api/build/d3-chart-framework';
+import { LineChart, InvalidNodeError, LineNode, LineGroup } from 'd3-chart-framework';
+//import { LineChart, InvalidNodeError, LineNode, LineGroup } from '../api/build/d3-chart-framework';
 import Toolbar from './Toolbar';
 
 
@@ -57,7 +57,6 @@ export default class LineChartComponent extends Component {
     super(props);
     // initialize the chart state to null
     this.state = {chart: null};
-    this.updateChart = _.debounce(this.updateChart, 50);
   }
 
   componentWillUnmount() {

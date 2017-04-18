@@ -4,15 +4,16 @@ import Node from './Node';
 
 
 class LineNode extends Node {
-  /*
+  /**
   * LineNode - a data point for a path/line generator
-  * @param {object} chart, an instance of a chart
-  * @param {object} options, the options used to construct the plot
-  * @param {number} options.x1, the value for x1 position
-  * @param {number} options.y1, the value for y1 position
-  * @param {string} options.r, the radius of the circle
-  * @param {number} options.o, the opacity of the cirle
-  * @param {object} options.meta, the optional meta data associated with the circle (e.g. used in the Tooltip)
+  *
+  * @param {object} chart - an instance of a chart
+  * @param {object} options - the options used to construct the plot
+  * @param {number} options.x1 - the value for x1 position
+  * @param {number} options.y1 - the value for y1 position
+  * @param {string} options.r - the radius of the circle
+  * @param {number} options.o - the opacity of the cirle
+  * @param {object} options.meta - the optional meta data associated with the circle (e.g. used in the Tooltip)
   * @return {object} this
   */
   constructor(chart, options) {
@@ -45,16 +46,18 @@ class LineNode extends Node {
     return fill;
   }
 
-  /*
+  /**
   * update - updates one or more elements
+  *
   */
   update() {
     if (typeof this.group === 'undefined') {
       this.group = d3.select(`#${this.id}`);
     }
-    /*
+    /**
     * Each node of the line's `path` (see LineGroup) is a transparent circle in
     * order to have a mouseover event.
+    *
     * @see https://groups.google.com/forum/#!topic/d3-js/gHzOj91X2NA
     */
     // select

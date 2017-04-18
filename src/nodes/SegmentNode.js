@@ -7,17 +7,17 @@ const MINIMUM_CIRCLE_RADIUS = 5;
 const MINIMUM_LINE_THRESHOLD = 2;
 
 class SegmentNode extends Node {
-  /*
+  /**
   * SegmentNode - a line with beginning and end circles
-  * @param {object} plot, an instance of a plot
-  * @param {object} options, the options used to construct the SegmentNode
-  * @param {number} options.x, the value for x position
-  * @param {number} options.y, the value for y position
-  * @param {number} options.l, the value for the length of the line
-  * @param {number} options.h, the value for the height
-  * @param {string} options.f, the fill of the line
-  * @param {number} options.o, the opacity of the line
-  * @param {object} options.meta, the optional meta data associated with the node (e.g. used in the Tooltip)
+  * @param {object} plot - an instance of a plot
+  * @param {object} options - the options used to construct the SegmentNode
+  * @param {number} options.x - the value for x position
+  * @param {number} options.y - the value for y position
+  * @param {number} options.l - the value for the length of the line
+  * @param {number} options.h - the value for the height
+  * @param {string} options.f - the fill of the line
+  * @param {number} options.o - the opacity of the line
+  * @param {object} options.meta - the optional meta data associated with the node (e.g. used in the Tooltip)
   * @return {object} this
   */
   constructor(plot, options) {
@@ -34,8 +34,9 @@ class SegmentNode extends Node {
     return this;
   }
 
-  /*
+  /**
   * remove - removes the node from the DOM
+  *
   * @return {object} this
   */
   remove() {
@@ -44,8 +45,9 @@ class SegmentNode extends Node {
     }
   }
 
-  /*
+  /**
   * filteredOrderedPair - determine if the pair exists within the domain
+  *
   */
   filteredOrderedPair(orderedPair) {
     if (orderedPair[0] < this.plot.axes.xScale.range()[0]) {
@@ -63,8 +65,9 @@ class SegmentNode extends Node {
     return orderedPair;
   }
 
-  /*
+  /**
   * update - handles updating the node
+  *
   * @return {object} this
   */
   update() {
@@ -186,9 +189,10 @@ class SegmentNode extends Node {
     return this;
   }
 
-  /*
+  /**
   * detached - builds a detached svg group and returns the node
-  * @return {object} node, the SVG node to append to the parent during .call()
+  *
+  * @return {object} node - the SVG node to append to the parent during .call()
   */
   detached() {
     this.remove();
@@ -197,17 +201,19 @@ class SegmentNode extends Node {
     this.group.node();
   }
 
-  /*
+  /**
   * distance - determine the distance between two pairs
+  *
   */
   distance(pairs) {
     return Math.sqrt(Math.pow(Math.abs(pairs[0][0] - pairs[1][0]), 2) + Math.pow(Math.abs(pairs[0][1] - pairs[1][1]), 2));
   }
 
-  /*
+  /**
   * groupOverlappingSegments - group overlapping segments together
-  * @param {array} segments, an array of SegmentNode's
-  * @return {object} groups, groups of overlapping segments
+  *
+  * @param {array} segments - an array of SegmentNode's
+  * @return {object} groups - groups of overlapping segments
   */
   static groupOverlappingSegments(segments) {
     const groups = {};

@@ -5,7 +5,7 @@ import LineGroup from './groups/LineGroup';
 
 
 class LineChart extends Chart {
-  /*
+  /**
   * LineChart - constructs the root SVG element to contain the LineChart
   * @param {object} options, the options to create a LineChart
   * @param {string} containerID, the id of the LineChart container div
@@ -23,7 +23,7 @@ class LineChart extends Chart {
     return this;
   }
 
-  /*
+  /**
   * init - method to set/re-set the resizeHandler
   * @returns {object} this
   */
@@ -36,7 +36,7 @@ class LineChart extends Chart {
     }
   }
 
-  /*
+  /**
   * draw - draw using d3 select.data.enter workflow
   * @param {array} data, an array of {object} for each marker
   * @returns {object} this
@@ -56,7 +56,7 @@ class LineChart extends Chart {
     return this;
   }
 
-  /*
+  /**
   * defaultGroup - creates a default group if an array is passed to the draw method
   * @param {array} nodes, an array of Node's
   */
@@ -77,11 +77,11 @@ class LineChart extends Chart {
     return group;
   }
 
-  /*
+  /**
   * mergeGroups - merge groups from data passed directly to the draw method
   * @override
   * @param {object} groups, a set of Groups
-  * @return {boolean} shouldReset, should the axes domain be reset to currentMinMax
+  * @return {boolean} hasChanged
   */
   mergeGroups(groups) {
     const notMerged = Object.keys(this.groups_);
@@ -114,20 +114,18 @@ class LineChart extends Chart {
       notMerged.forEach((k) => {
         this.removeGroup(k);
       });
-      // if we have removed an existing group from the plot
-      // then we should set the axes to the currentMinMax
+      // if we have removed an existing group
       return true;
     }
-    // if we have merged in new groups and the axes have been initialized
-    // then we should set the axes to the currentMinMax
-    if (addedNewGroup && this.axes.initialized === true) {
+    // if we have merged in new groups
+    if (addedNewGroup) {
       return true;
     }
-    // do not set the axes
+    // otherwise no change
     return false;
   }
 
-  /*
+  /**
   * update the dimensions of the chart (axes, gridlines, then redraw)
   * @param {array} data, an array of {object} for each marker
   * @returns {object} this
@@ -138,7 +136,7 @@ class LineChart extends Chart {
     return this;
   }
 
-  /*
+  /**
   * remove - removes the chart from the DOM and any event listeners
   * @return {object} this
   */
@@ -150,7 +148,7 @@ class LineChart extends Chart {
     return this;
   }
 
-  /*
+  /**
   * resize - re-renders the chart
   * @return {object} this
   */

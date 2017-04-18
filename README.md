@@ -18,9 +18,8 @@ npm install d3-chart-framework
 
 
 ## API
-TODO: build API documentation from [jsDoc3](https://github.com/jsdoc3/jsdoc) and link to this README
 
-See [documentation wiki](wiki/)
+TODO: build API documentation from [jsDoc3](https://github.com/jsdoc3/jsdoc) and link to this README
 
 
 ## Integration Examples

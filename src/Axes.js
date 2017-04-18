@@ -4,8 +4,9 @@ const moment = require('moment');
 
 import Grid from './Grid';
 
-/*
+/**
 * getDatetimeUnit - determine the unit of time for padding the axis
+*
 * @param {object} min, the min moment datetime object
 * @param {object} max, the max moment datetime object
 * @return {string} the datetime unit {day, week, month}
@@ -22,22 +23,23 @@ function getDatetimeUnit(min, max) {
 }
 
 class Axes {
-  /*
+  /**
   * Axes
   * constructs 2d cartesian axes, appends to the container SVG element of the chart
-  * @param {object} chart, the chart to append the axis
-  * @param {object} options, the properties for the axis
-  * @param {boolean} grid, should the grid be displayed?
+  *
+  * @param {object} chart - the chart to append the axis
+  * @param {object} options - the properties for the axis
+  * @param {boolean} grid - should the grid be displayed?
   * X axis properties
-  * @param {object} options.axes.x, the properties for x axis
-  * @param {string} options.axes.x.title, the title of the x axis
-  * @param {string} options.axes.x.type, the datatype of the x axis {numeric, datetime}
+  * @param {object} options.axes.x - the properties for x axis
+  * @param {string} options.axes.x.title - the title of the x axis
+  * @param {string} options.axes.x.type - the datatype of the x axis {numeric, datetime}
   * Y axis properties
-  * @param {object} options.axes.y, the properties for y axis
-  * @param {string} options.axes.y.title, the title of the y axis
-  * @param {string} options.axes.y.type, the datatype of the y axis {numeric, datetime}
-  * @returns {object} this, returns self
-  * example usage:
+  * @param {object} options.axes.y - the properties for y axis
+  * @param {string} options.axes.y.title - the title of the y axis
+  * @param {string} options.axes.y.type - the datatype of the y axis {numeric, datetime}
+  * @returns {object} this - returns self
+  * @example usage:
   *  with an instance of a chart:
   ```
   axes = new Axes(plot, {
@@ -60,30 +62,29 @@ class Axes {
   constructor(chart, options) {
     this.chart = chart;
     this.options = options || {x: {title: 'x', type: 'numeric'}, y: {title: 'y', type: 'numeric'}, grid: true, filter: true};
-    this.initialized = false;
     this.useAutoPadding = options.useAutoPadding || false;
-    this.initialMinMax = [[0, 0], [0, 0]];
-    this.currentMinMax = [[0, 0], [0, 0]];
+    this.defaultMinMax = [[0, 0], [0, 0]];
     this.draw();
   }
 
-  /*
+  /**
   * init - initialize the plot x,y axes
-  * @param {array} xDomain, the zoom xDomain or undefined
-  * @param {array} yDomain, the zoom yDomain or undefined
+  *
+  * @param {array} xDomain - the zoom xDomain or undefined
+  * @param {array} yDomain - the zoom yDomain or undefined
   */
   draw(xDomain, yDomain) {
     if (this.options.x.type === 'datetime') {
       if (xDomain) {
         this.xScale = d3.scaleTime().domain(xDomain).range([0, this.chart.getWidth()]).nice();
       } else {
-        this.xScale = d3.scaleTime().domain(this.currentMinMax[0]).range([0, this.chart.getWidth()]).nice();
+        this.xScale = d3.scaleTime().domain(this.defaultMinMax[0]).range([0, this.chart.getWidth()]).nice();
       }
     } else {
       if (xDomain) {
         this.xScale = d3.scaleLinear().domain(xDomain).range([0, this.chart.getWidth()]);
       } else {
-        this.xScale = d3.scaleLinear().domain(this.currentMinMax[0]).range([0, this.chart.getWidth()]);
+        this.xScale = d3.scaleLinear().domain(this.defaultMinMax[0]).range([0, this.chart.getWidth()]);
       }
     }
     if (this.options.x.type === 'datetime') {
@@ -103,7 +104,7 @@ class Axes {
     if (yDomain) {
       this.yScale = d3.scaleLinear().domain(yDomain).range([this.chart.getHeight(), 0]);
     } else {
-      this.yScale = d3.scaleLinear().domain(this.currentMinMax[1]).range([this.chart.getHeight(), 0]);
+      this.yScale = d3.scaleLinear().domain(this.defaultMinMax[1]).range([this.chart.getHeight(), 0]);
     }
     this.yAxis = d3.axisLeft().scale(this.yScale);
     this.yGroup = this.chart.container.append('g').attr('class', 'y d3cf-axis').attr('transform', `translate(${this.chart.margins.left}, 0)`).call(this.yAxis);
@@ -159,86 +160,46 @@ class Axes {
     }
   }
 
-  /*
-  * setDomain - sets the x, y domains based on the passed in data
-  * @param {array} data, an array of {object} for each marker
+  /**
+  * setDomain - sets the x, y domains based on the current chart data
+  *
   */
-  setDomain(data) {
-    let xMin = 0;
-    let xMax = 0;
-    if (this.options.x.type === 'datetime') {
-      const x1 = _.pluck(data, 'x1');
-      const x2 = _.pluck(data, 'x2');
-      xMin = Axes.minDatetime(x1, this.useAutoPadding);
-      xMax = xMin;
-      if (x2.length > 0) {
-        xMax = Axes.maxDatetime(x2, this.useAutoPadding);
-      }
-      if (isNaN(xMax)) {
-        xMax = Axes.maxDatetime(x1, this.useAutoPadding);
-      }
-    } else {
-      const x1 = _.pluck(data, 'x1');
-      const x2 = _.pluck(data, 'x2');
-      xMin = Axes.minNumeric(x1, this.useAutoPadding);
-      xMax = xMin;
-      if (x2.length > 0) {
-        xMax = Axes.maxNumeric(x2, this.useAutoPadding);
-      }
-      if (isNaN(xMax)) {
-        xMax = Axes.maxNumeric(x1, this.useAutoPadding);
-      }
+  setDomain() {
+    const minMax = this.calcMinMax(false);
+    this.xScale.domain(minMax[0]);
+    this.yScale.domain(minMax[1]);
+    if (this.options.filter) {
+      this.chart.removeFilter('_domain').addFilter('_domain', (d) => {
+        // TODO: should this scope be the Plot or the Axes?
+        let x1 = this.xScale.domain()[0];
+        if (x1 instanceof Date) {
+          x1 = x1.getTime();
+        }
+        let x2 = this.xScale.domain()[1];
+        if (x2 instanceof Date) {
+          x2 = x2.getTime();
+        }
+        const y1 = this.yScale.domain()[0];
+        const y2 = this.yScale.domain()[1];
+        if (d.hasOwnProperty('x2')) {
+          if ((d.x1 >= x1 && d.x2 <= x2) && (d.y1 >= y1 && d.y1 <= y2)) {
+            return d;
+          }
+        } else {
+          if ((d.x1 >= x1) && (d.y1 >= y1 && d.y1 <= y2)) {
+            return d;
+          }
+        }
+      });
     }
-
-    const yMin = 0;
-    const yMax = Axes.maxNumeric(_.pluck(data, 'y1'), this.useAutoPadding);
-    this.xScale.domain([xMin, xMax]);
-    this.yScale.domain([yMin, yMax]);
-    if (this.initialized === false) {
-      this.initialMinMax = [[xMin, xMax], [yMin, yMax]];
-      if (this.options.filter) {
-        this.chart.addFilter('_domain', (d) => {
-          // TODO: should this scope be the Plot or the Axes?
-          let x1 = this.xScale.domain()[0];
-          if (x1 instanceof Date) {
-            x1 = x1.getTime();
-          }
-          let x2 = this.xScale.domain()[1];
-          if (x2 instanceof Date) {
-            x2 = x2.getTime();
-          }
-          const y1 = this.yScale.domain()[0];
-          const y2 = this.yScale.domain()[1];
-          if (d.hasOwnProperty('x2')) {
-            if ((d.x1 >= x1 && d.x2 <= x2) && (d.y1 >= y1 && d.y1 <= y2)) {
-              return d;
-            }
-          } else {
-            if ((d.x1 >= x1) && (d.y1 >= y1 && d.y1 <= y2)) {
-              return d;
-            }
-          }
-        });
-      }
-    } else {
-      this.currentMinMax = [[xMin, xMax], [yMin, yMax]];
-    }
-    this.initialized = true;
   }
 
-  /*
-  * setDomain - sets the x, y domains based on the passed in data
-  * @note this will overwrite the original x,y minMax options to the plot
-  * @param {array} data, an array of {object} for each marker
-  */
-  setInitialMinMax(newMinMax) {
-    this.initialMinMax = newMinMax;
-  }
-
-  /*
+  /**
   * update - update the x,y axes using the zoom domain
-  * @param {array} data, an array of {object} for each marker
-  * @param {boolean} shouldSetDomain, should the domain be set to data bounds
+  *
+  * @param {array} data - an array of {object} for each marker
+  * @param {boolean} shouldSetDomain - should the domain be set to data bounds
+  * @return {object} this
   */
   update(data, shouldSetDomain) {
     this.remove();
@@ -249,17 +210,64 @@ class Axes {
     return this;
   }
 
-  /*
+  /**
+  * the minMax for all nodes without the domain filters
+  *
+  * @param {boolean} shouldFilterDomain
+  * @return {array} minMax
+  */
+  calcMinMax(shouldFilterDomain) {
+      const data = this.chart.getGroupsNodes(shouldFilterDomain);
+      if (data.length === 0) {
+          return [[0, 0], [0, 0]];
+      }
+      let xMin = 0;
+      let xMax = 0;
+      if (this.options.x.type === 'datetime') {
+        const x1 = _.pluck(data, 'x1');
+        const x2 = _.pluck(data, 'x2');
+        xMin = Axes.minDatetime(x1, this.useAutoPadding);
+        xMax = xMin;
+        if (x2.length > 0) {
+          xMax = Axes.maxDatetime(x2, this.useAutoPadding);
+        }
+        if (isNaN(xMax)) {
+          xMax = Axes.maxDatetime(x1, this.useAutoPadding);
+        }
+      } else {
+        const x1 = _.pluck(data, 'x1');
+        const x2 = _.pluck(data, 'x2');
+        xMin = Axes.minNumeric(x1, this.useAutoPadding);
+        xMax = xMin;
+        if (x2.length > 0) {
+          xMax = Axes.maxNumeric(x2, this.useAutoPadding);
+        }
+        if (isNaN(xMax)) {
+          xMax = Axes.maxNumeric(x1, this.useAutoPadding);
+        }
+      }
+      const yMin = 0;
+      const yMax = Axes.maxNumeric(_.pluck(data, 'y1'), this.useAutoPadding);
+      return [[xMin, xMax], [yMin, yMax]];
+  }
+
+  /**
   * reset - resets the x,y axes back to the original domain
+  *
   */
   reset() {
+    const minMax = this.calcMinMax(false);
+    if (minMax[0][0] === 0 && minMax[0][1] === 0 && minMax[1][0] === 0 && minMax[1][1] === 0) {
+        return;
+    }
     this.remove();
-    this.draw(this.initialMinMax[0], this.initialMinMax[1]);
+    this.draw(minMax[0], minMax[1]);
     return this;
   }
 
-  /*
-  * zoom - zooms the x,y axes based on the zoomArea object
+  /**
+  * zoom - zooms the x, y axes based on the zoomArea object
+  *
   * @param {object} zoomArea, an object containing a bounding box of x,y coordinates
   */
   zoom(zoomArea) {
@@ -287,8 +295,9 @@ class Axes {
     return this;
   }
 
-  /*
+  /**
   * remove - removes the x,y axis groups from the plot
+  *
   */
   remove() {
     this.xGroup.remove();
@@ -298,8 +307,9 @@ class Axes {
     }
   }
 
-  /*
+  /**
   * formatDate - a method that formats the axis date label
+  *
   */
   formatDate() {
     const xDomain = this.xScale.domain();
@@ -310,11 +320,12 @@ class Axes {
     return '%b %d, %Y';
   }
 
-  /*
+  /**
   * maxNumeric - determine the maximum value with padding. Padding is determined
   * by the number of digits ^ 10 / 10, unless number of digets == 10 then return
   * 10
-  * @param {array} data, an array of positive integers
+  *
+  * @param {array} data - an array of positive integers
   * @return {number} max
   */
   static maxNumeric(data, useAutoPadding) {
@@ -330,11 +341,12 @@ class Axes {
     return m;
   }
 
-  /*
+  /**
   * minNumeric - determine the minimum value with padding. Padding is determined
   * by the number of digits ^ 10 / 10, unless number of digets == 10 then return
   * 10
-  * @param {array} data, an array of positive integers
+  *
+  * @param {array} data - an array of positive integers
   * @return {number} max
   */
   static minNumeric(data, useAutoPadding) {
@@ -350,10 +362,11 @@ class Axes {
     return m;
   }
 
-  /*
+  /**
   * maxDatetime - determine the maximum value with padding
-  * @param {array} data, an array of timestamps in milliseconds
-  * @return {number} max, maximum datetime value
+  *
+  * @param {array} data - an array of timestamps in milliseconds
+  * @return {number} max - maximum datetime value
   */
   static maxDatetime(data, useAutoPadding) {
     const max = moment(_.max(data));
@@ -365,10 +378,11 @@ class Axes {
     return max.valueOf();
   }
 
-  /*
+  /**
   * minDatetime - determine the minimum value with padding
-  * @param {array} data, an array of timestamps in milliseconds
-  * @return {number} min, minimum datetime value
+  *
+  * @param {array} data - an array of timestamps in milliseconds
+  * @return {number} min - minimum datetime value
   */
   static minDatetime(data, useAutoPadding) {
     const min = moment(_.min(data));

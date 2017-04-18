@@ -11,17 +11,18 @@ import { InvalidGroupError } from './Errors';
 const MINIMUM_CHART_HEIGHT = 300;
 
 class Chart {
-  /*
+  /**
   * Chart - creates a new instance of a chart
-  * @param {object} options, the options to create a chart
-  * @param {string} containerID, the id of the container div
-  * @param {string} svgcontainerClass, the desired class of the constructed svg element
-  * @param {object} tooltip,
-  * @param {number} tooltip.opacity, the background opacity for the tooltip
-  * @param {object} tooltip.template, the compiled template
-  * @param {boolean} scale, scale the svg on window resize @default false
-  * @param {boolean} resize, resize the svg on window resize @default true
-  * @returns {object} this, returns self
+  *
+  * @param {object} options - the options to create a chart
+  * @param {string} containerID - the id of the container div
+  * @param {string} svgcontainerClass - the desired class of the constructed svg element
+  * @param {object} tooltip
+  * @param {number} tooltip.opacity - the background opacity for the tooltip
+  * @param {object} tooltip.template - the compiled template
+  * @param {boolean} scale - scale the svg on window resize @default false
+  * @param {boolean} resize -resize the svg on window resize @default true
+  * @return {object} returns self
   */
   constructor(options) {
     this.options = options;
@@ -31,10 +32,11 @@ class Chart {
     return this;
   }
 
-  /*
+  /**
   * init - method to initialize the chart, allows the chart to be re-initialized
   *  on resize while keeping the current chart data in memory
-  * @returns {object} this
+  *
+  * @return {object} this
   */
   init() {
     this.setDimensions();
@@ -52,12 +54,12 @@ class Chart {
       this.zoom = new Zoom(this, this.options);
     }
     this.groups = this.container.append('g').attr('class', 'd3cf-groups').attr('transform', `translate(${this.margins.left}, 0)`);
-    // this.update([]);
     return this;
   }
 
-  /*
+  /**
   * setDimensions - method to set the dimensions of the chart based on the current window
+  *
   */
   setDimensions() {
     this.margins = this.options.margins || {
@@ -76,11 +78,12 @@ class Chart {
     return this;
   }
 
-  /*
+  /**
   * update - update the width and height attributes of the root and container
   *  elements. then call update on the chart axes
-  * @param {array} nodes, an array of {object} for each node
-  * @returns {object} this
+  *
+  * @param {array} nodes - an array of {object} for each node
+  * @return {object} this
   */
   update(nodes) {
     this.setDimensions();
@@ -91,25 +94,21 @@ class Chart {
     } else {
       if (nodes instanceof Array) {
         this.axes.update(nodes, true);
-        if (this.axes.initialized === true) {
-          this.axes.setInitialMinMax(this.axes.currentMinMax);
-        }
       } else {
-        const shouldSetInitialMinMax = this.mergeGroups(nodes);
+        this.mergeGroups(nodes);
         this.axes.update(this.getGroupsNodes(false), true);
-        if (shouldSetInitialMinMax) {
-          this.axes.setInitialMinMax(this.axes.currentMinMax);
-        }
       }
     }
     return this;
   }
 
-  /*
+  /**
   * draw - draws the markers on the chart
-  * @note this will automatically show/hide a warning message if the data
+  *
+  * @see this will automatically show/hide a warning message if the data
   * is empty. Do not call super() to override this behavior.
-  * @param {array} nodes, an array of {object} for each marker
+  *
+  * @param {array} nodes - an array of {object} for each marker
   */
   draw(nodes) {
     if (!this.drawn) {
@@ -138,18 +137,20 @@ class Chart {
     this.removeWarn();
   }
 
-  /*
+  /**
   * defaultGroup - creates a default group if an array is passed to the draw method
-  * @param {array} nodes, an array of Node's
+  *
+  * @param {array} nodes - an array of Node's
   */
   defaultGroup() {
     throw new Error('defaultGroup must be implemented.');
   }
 
-  /*
+  /**
   * applyFilters - apply any filters from the chart
-  * @param {object} filters, an array of filters to apply
-  * @returns {array} filtered, the filtered data
+  *
+  * @param {object} filters - an array of filters to apply
+  * @return {array} filtered, the filtered data
   */
   applyFilters(nodes, filters) {
     const filters_ = filters || this.filters;
@@ -176,25 +177,28 @@ class Chart {
     return filtered;
   }
 
-  /*
+  /**
   * getWidth
-  * @return {number} width (excluding margins) for the root svg
+  *
+  * @return {number} width - (excluding margins) for the root svg
   */
   getWidth() {
     return this.width - (this.margins.left + this.margins.right);
   }
 
-  /*
+  /**
   * getHeigth
-  * @return {number} width (excluding margins) for the root svg
+  *
+  * @return {number} width - (excluding margins) for the root svg
   */
   getHeight() {
     return this.height - (this.margins.top + this.margins.bottom);
   }
 
-  /*
+  /**
   * showWarn - shows a warning message in the center of the chart
-  * @param {string} m, the message to display
+  *
+  * @param {string} m - the message to display
   * @return {object} this
   */
   showWarn(m) {
@@ -208,8 +212,9 @@ class Chart {
     return this;
   }
 
-  /*
+  /**
   * removeWarn - removes the warning message from the chart
+  *
   * @return {object} this
   */
   removeWarn() {
@@ -219,8 +224,9 @@ class Chart {
     return this;
   }
 
-  /*
+  /**
   * remove - removes the chart from the DOM and any event listeners
+  *
   * @return {object} this
   */
   remove() {
@@ -231,8 +237,9 @@ class Chart {
     this.root.remove();
   }
 
-  /*
+  /**
   * destroy - destroys the chart and any associated elements
+  *
   */
   destroy() {
     this.remove();
@@ -244,9 +251,10 @@ class Chart {
     this.resizeHandler = null;
   }
 
-  /*
+  /**
   * addGroup
-  * @param {object} group, add a group to the chart
+  *
+  * @param {object} group - add a group to the chart
   * @throws {InvalidGroupError} error
   * @return {Chart} this
   */
@@ -258,9 +266,10 @@ class Chart {
     return this;
   }
 
-  /*
+  /**
   * removeGroup
-  * @param {string} id, the group to remove
+  *
+  * @param {string} id - the group to remove
   * @return {Chart} this
   */
   removeGroup(id) {
@@ -270,18 +279,20 @@ class Chart {
     return this;
   }
 
-  /*
+  /**
   * getGroups - returns the groups associated with this chart
-  * @return {array} groups, the groups associated with this chart
+  *
+  * @return {array} groups - the groups associated with this chart
   */
   getGroups() {
     return Object.values(this.groups_);
   }
 
-  /*
+  /**
   * getGroups - returns the size of all the groups
-  * @param {boolean} shouldFilter, should the nodes be filtered by domain
-  * @return {Number} size, the size of all the groups
+  *
+  * @param {boolean} shouldFilter - should the nodes be filtered by domain
+  * @return {Number} size - the size of all the groups
   */
   getGroupsSize(shouldFilter) {
     return this.getGroups().reduce((prev, nextObj) => {
@@ -296,10 +307,11 @@ class Chart {
     }, 0);
   }
 
-  /*
+  /**
   * getGroupsNodes - returns all the nodes for each group
-  * @param {boolean} shouldFilter, should the nodes be filtered by domain
-  * @return {array} nodes, an array of nodes
+  *
+  * @param {boolean} shouldFilter - should the nodes be filtered by domain
+  * @return {array} nodes - an array of nodes
   */
   getGroupsNodes(shouldFilter) {
     return this.getGroups().reduce((prevArr, nextObj) => {
@@ -314,19 +326,20 @@ class Chart {
     }, []);
   }
 
-  /*
+  /**
   * mergeGroups - merge groups from data passed directly to the draw method
-  * @param {object} nodes, a grouping of nodes
-  * @return {boolean} shouldReset, should the axes domain be reset to currentMinMax
+  *
+  * @param {object} nodes - a grouping of nodes
   */
   mergeGroups() {
     throw new Error('mergeGroups must be implemented.');
   }
 
-  /*
+  /**
   * addFilter - add a filter to the chart
-  * @param {string} name, the name of the filter
-  * @param {function} fn, the function to be applied to the data
+  *
+  * @param {string} name - the name of the filter
+  * @param {function} fn - the function to be applied to the data
   * @return {object} this
   */
   addFilter(name, fn) {
@@ -334,9 +347,10 @@ class Chart {
     return this;
   }
 
-  /*
+  /**
   * removeFilter - removes a filter from the chart
-  * @param {string} name, the name of the filter
+  *
+  * @param {string} name - the name of the filter
   * @return {object} this
   */
   removeFilter(name) {
@@ -346,8 +360,9 @@ class Chart {
     return this;
   }
 
-  /*
+  /**
   * resetZoom - resets the zoom of the axes
+  *
   */
   resetZoom() {
     if (this.zoom) {

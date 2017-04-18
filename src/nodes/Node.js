@@ -8,10 +8,11 @@ function genId() {
 }
 
 class Node {
-  /*
+  /**
   * Node - base class
-  * @param {object} options, the options used to construct the SegmentMarker
-  * @param {object} options.meta, the optional meta data associated with the node (e.g. used in the Tooltip)
+  *
+  * @param {object} options - the options used to construct the SegmentMarker
+  * @param {object} options.meta - the optional meta data associated with the node (e.g. used in the Tooltip)
   * @return {object} this
   */
   constructor(options) {
@@ -21,8 +22,9 @@ class Node {
     return this;
   }
 
-  /*
+  /**
   * remove - removes the marker from the DOM
+  *
   */
   remove() {
     if (this.group) {
@@ -30,16 +32,18 @@ class Node {
     }
   }
 
-  /*
+  /**
   * update - updates one or more elements within the RectNode SVG group
+  *
   */
   update() {
     return this;
   }
 
-  /*
+  /**
   * detached - builds a detached svg group and returns the node
-  * @return {object} node, the SVG node to append to the parent during .call()
+  *
+  * @return {object} node - the SVG node to append to the parent during .call()
   */
   detached() {
     this.remove();

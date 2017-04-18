@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import Immutable from 'immutable'
 
-//import { ScatterPlot, InvalidNodeError, RectNode, NodeGroup } from 'd3-chart-framework';
-import { ScatterPlot, InvalidNodeError, RectNode, NodeGroup } from '../api/build/d3-chart-framework';
+import { ScatterPlot, InvalidNodeError, RectNode, NodeGroup } from 'd3-chart-framework';
+//import { ScatterPlot, InvalidNodeError, RectNode, NodeGroup } from '../api/build/d3-chart-framework';
 import Toolbar from './Toolbar';
 
 
@@ -127,7 +127,6 @@ export default class ScatterPlotComponent extends Component {
     }
     const groups = this.createFromIncidents(this.state.chart, props.incidents);
     this.state.chart.update(groups);
-    window.chart = this.state.chart;
   }
 
   componentDidMount() {

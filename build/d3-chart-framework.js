@@ -223,8 +223,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _ = __webpack_require__(4);
 	var moment = __webpack_require__(5);
 	
-	/*
+	/**
 	* getDatetimeUnit - determine the unit of time for padding the axis
+	*
 	* @param {object} min, the min moment datetime object
 	* @param {object} max, the max moment datetime object
 	* @return {string} the datetime unit {day, week, month}
@@ -241,22 +242,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	var Axes = function () {
-	  /*
+	  /**
 	  * Axes
 	  * constructs 2d cartesian axes, appends to the container SVG element of the chart
-	  * @param {object} chart, the chart to append the axis
-	  * @param {object} options, the properties for the axis
-	  * @param {boolean} grid, should the grid be displayed?
+	  *
+	  * @param {object} chart - the chart to append the axis
+	  * @param {object} options - the properties for the axis
+	  * @param {boolean} grid - should the grid be displayed?
 	  * X axis properties
-	  * @param {object} options.axes.x, the properties for x axis
-	  * @param {string} options.axes.x.title, the title of the x axis
-	  * @param {string} options.axes.x.type, the datatype of the x axis {numeric, datetime}
+	  * @param {object} options.axes.x - the properties for x axis
+	  * @param {string} options.axes.x.title - the title of the x axis
+	  * @param {string} options.axes.x.type - the datatype of the x axis {numeric, datetime}
 	  * Y axis properties
-	  * @param {object} options.axes.y, the properties for y axis
-	  * @param {string} options.axes.y.title, the title of the y axis
-	  * @param {string} options.axes.y.type, the datatype of the y axis {numeric, datetime}
-	  * @returns {object} this, returns self
-	  * example usage:
+	  * @param {object} options.axes.y - the properties for y axis
+	  * @param {string} options.axes.y.title - the title of the y axis
+	  * @param {string} options.axes.y.type - the datatype of the y axis {numeric, datetime}
+	  * @returns {object} this - returns self
+	  * @example usage:
 	  *  with an instance of a chart:
 	  ```
 	  axes = new Axes(plot, {
@@ -281,17 +283,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.chart = chart;
 	    this.options = options || { x: { title: 'x', type: 'numeric' }, y: { title: 'y', type: 'numeric' }, grid: true, filter: true };
-	    this.initialized = false;
 	    this.useAutoPadding = options.useAutoPadding || false;
-	    this.initialMinMax = [[0, 0], [0, 0]];
-	    this.currentMinMax = [[0, 0], [0, 0]];
+	    this.defaultMinMax = [[0, 0], [0, 0]];
 	    this.draw();
 	  }
 	
-	  /*
+	  /**
 	  * init - initialize the plot x,y axes
-	  * @param {array} xDomain, the zoom xDomain or undefined
-	  * @param {array} yDomain, the zoom yDomain or undefined
+	  *
+	  * @param {array} xDomain - the zoom xDomain or undefined
+	  * @param {array} yDomain - the zoom yDomain or undefined
 	  */
 	
 	
@@ -304,13 +305,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (xDomain) {
 	          this.xScale = d3.scaleTime().domain(xDomain).range([0, this.chart.getWidth()]).nice();
 	        } else {
-	          this.xScale = d3.scaleTime().domain(this.currentMinMax[0]).range([0, this.chart.getWidth()]).nice();
+	          this.xScale = d3.scaleTime().domain(this.defaultMinMax[0]).range([0, this.chart.getWidth()]).nice();
 	        }
 	      } else {
 	        if (xDomain) {
 	          this.xScale = d3.scaleLinear().domain(xDomain).range([0, this.chart.getWidth()]);
 	        } else {
-	          this.xScale = d3.scaleLinear().domain(this.currentMinMax[0]).range([0, this.chart.getWidth()]);
+	          this.xScale = d3.scaleLinear().domain(this.defaultMinMax[0]).range([0, this.chart.getWidth()]);
 	        }
 	      }
 	      if (this.options.x.type === 'datetime') {
@@ -330,7 +331,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (yDomain) {
 	        this.yScale = d3.scaleLinear().domain(yDomain).range([this.chart.getHeight(), 0]);
 	      } else {
-	        this.yScale = d3.scaleLinear().domain(this.currentMinMax[1]).range([this.chart.getHeight(), 0]);
+	        this.yScale = d3.scaleLinear().domain(this.defaultMinMax[1]).range([this.chart.getHeight(), 0]);
 	      }
 	      this.yAxis = d3.axisLeft().scale(this.yScale);
 	      this.yGroup = this.chart.container.append('g').attr('class', 'y d3cf-axis').attr('transform', 'translate(' + this.chart.margins.left + ', 0)').call(this.yAxis);
@@ -363,16 +364,78 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	
-	    /*
-	    * setDomain - sets the x, y domains based on the passed in data
-	    * @param {array} data, an array of {object} for each marker
+	    /**
+	    * setDomain - sets the x, y domains based on the current chart data
+	    *
 	    */
 	
 	  }, {
 	    key: 'setDomain',
-	    value: function setDomain(data) {
+	    value: function setDomain() {
 	      var _this2 = this;
 	
+	      var minMax = this.calcMinMax(false);
+	      this.xScale.domain(minMax[0]);
+	      this.yScale.domain(minMax[1]);
+	      if (this.options.filter) {
+	        this.chart.removeFilter('_domain').addFilter('_domain', function (d) {
+	          // TODO: should this scope be the Plot or the Axes?
+	          var x1 = _this2.xScale.domain()[0];
+	          if (x1 instanceof Date) {
+	            x1 = x1.getTime();
+	          }
+	          var x2 = _this2.xScale.domain()[1];
+	          if (x2 instanceof Date) {
+	            x2 = x2.getTime();
+	          }
+	          var y1 = _this2.yScale.domain()[0];
+	          var y2 = _this2.yScale.domain()[1];
+	          if (d.hasOwnProperty('x2')) {
+	            if (d.x1 >= x1 && d.x2 <= x2 && d.y1 >= y1 && d.y1 <= y2) {
+	              return d;
+	            }
+	          } else {
+	            if (d.x1 >= x1 && d.y1 >= y1 && d.y1 <= y2) {
+	              return d;
+	            }
+	          }
+	        });
+	      }
+	    }
+	
+	    /**
+	    * update - update the x,y axes using the zoom domain
+	    *
+	    * @param {array} data - an array of {object} for each marker
+	    * @param {boolean} shouldSetDomain - should the domain be set to data bounds
+	    * @return {object} this
+	    */
+	
+	  }, {
+	    key: 'update',
+	    value: function update(data, shouldSetDomain) {
+	      this.remove();
+	      if (data && shouldSetDomain) {
+	        this.setDomain(data);
+	      }
+	      this.draw(this.xScale.domain(), this.yScale.domain());
+	      return this;
+	    }
+	
+	    /**
+	    * the minMax for all nodes without the domain filters
+	    *
+	    * @param {boolean} shouldFilterDomain
+	    * @return {array} minMax
+	    */
+	
+	  }, {
+	    key: 'calcMinMax',
+	    value: function calcMinMax(shouldFilterDomain) {
+	      var data = this.chart.getGroupsNodes(shouldFilterDomain);
+	      if (data.length === 0) {
+	        return [[0, 0], [0, 0]];
+	      }
 	      var xMin = 0;
 	      var xMax = 0;
 	      if (this.options.x.type === 'datetime') {
@@ -398,86 +461,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	          xMax = Axes.maxNumeric(_x, this.useAutoPadding);
 	        }
 	      }
-	
 	      var yMin = 0;
 	      var yMax = Axes.maxNumeric(_.pluck(data, 'y1'), this.useAutoPadding);
-	      this.xScale.domain([xMin, xMax]);
-	      this.yScale.domain([yMin, yMax]);
-	      if (this.initialized === false) {
-	        this.initialMinMax = [[xMin, xMax], [yMin, yMax]];
-	        if (this.options.filter) {
-	          this.chart.addFilter('_domain', function (d) {
-	            // TODO: should this scope be the Plot or the Axes?
-	            var x1 = _this2.xScale.domain()[0];
-	            if (x1 instanceof Date) {
-	              x1 = x1.getTime();
-	            }
-	            var x2 = _this2.xScale.domain()[1];
-	            if (x2 instanceof Date) {
-	              x2 = x2.getTime();
-	            }
-	            var y1 = _this2.yScale.domain()[0];
-	            var y2 = _this2.yScale.domain()[1];
-	            if (d.hasOwnProperty('x2')) {
-	              if (d.x1 >= x1 && d.x2 <= x2 && d.y1 >= y1 && d.y1 <= y2) {
-	                return d;
-	              }
-	            } else {
-	              if (d.x1 >= x1 && d.y1 >= y1 && d.y1 <= y2) {
-	                return d;
-	              }
-	            }
-	          });
-	        }
-	      } else {
-	        this.currentMinMax = [[xMin, xMax], [yMin, yMax]];
-	      }
-	      this.initialized = true;
+	      return [[xMin, xMax], [yMin, yMax]];
 	    }
 	
-	    /*
-	    * setDomain - sets the x, y domains based on the passed in data
-	    * @note this will overwrite the original x,y minMax options to the plot
-	    * @param {array} data, an array of {object} for each marker
-	    */
-	
-	  }, {
-	    key: 'setInitialMinMax',
-	    value: function setInitialMinMax(newMinMax) {
-	      this.initialMinMax = newMinMax;
-	    }
-	
-	    /*
-	    * update - update the x,y axes using the zoom domain
-	    * @param {array} data, an array of {object} for each marker
-	    * @param {boolean} shouldSetDomain, should the domain be set to data bounds
-	    */
-	
-	  }, {
-	    key: 'update',
-	    value: function update(data, shouldSetDomain) {
-	      this.remove();
-	      if (data && shouldSetDomain) {
-	        this.setDomain(data);
-	      }
-	      this.draw(this.xScale.domain(), this.yScale.domain());
-	      return this;
-	    }
-	
-	    /*
+	    /**
 	    * reset - resets the x,y axes back to the original domain
+	    *
 	    */
 	
 	  }, {
 	    key: 'reset',
 	    value: function reset() {
+	      var minMax = this.calcMinMax(false);
+	      if (minMax[0][0] === 0 && minMax[0][1] === 0 && minMax[1][0] === 0 && minMax[1][1] === 0) {
+	        return;
+	      }
 	      this.remove();
-	      this.draw(this.initialMinMax[0], this.initialMinMax[1]);
+	      this.draw(minMax[0], minMax[1]);
 	      return this;
 	    }
 	
-	    /*
-	    * zoom - zooms the x,y axes based on the zoomArea object
+	    /**
+	    * zoom - zooms the x, y axes based on the zoomArea object
+	    *
 	    * @param {object} zoomArea, an object containing a bounding box of x,y coordinates
 	    */
 	
@@ -508,8 +516,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * remove - removes the x,y axis groups from the plot
+	    *
 	    */
 	
 	  }, {
@@ -522,8 +531,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	
-	    /*
+	    /**
 	    * formatDate - a method that formats the axis date label
+	    *
 	    */
 	
 	  }, {
@@ -537,11 +547,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return '%b %d, %Y';
 	    }
 	
-	    /*
+	    /**
 	    * maxNumeric - determine the maximum value with padding. Padding is determined
 	    * by the number of digits ^ 10 / 10, unless number of digets == 10 then return
 	    * 10
-	    * @param {array} data, an array of positive integers
+	    *
+	    * @param {array} data - an array of positive integers
 	    * @return {number} max
 	    */
 	
@@ -560,11 +571,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return m;
 	    }
 	
-	    /*
+	    /**
 	    * minNumeric - determine the minimum value with padding. Padding is determined
 	    * by the number of digits ^ 10 / 10, unless number of digets == 10 then return
 	    * 10
-	    * @param {array} data, an array of positive integers
+	    *
+	    * @param {array} data - an array of positive integers
 	    * @return {number} max
 	    */
 	
@@ -583,10 +595,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return m;
 	    }
 	
-	    /*
+	    /**
 	    * maxDatetime - determine the maximum value with padding
-	    * @param {array} data, an array of timestamps in milliseconds
-	    * @return {number} max, maximum datetime value
+	    *
+	    * @param {array} data - an array of timestamps in milliseconds
+	    * @return {number} max - maximum datetime value
 	    */
 	
 	  }, {
@@ -601,10 +614,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return max.valueOf();
 	    }
 	
-	    /*
+	    /**
 	    * minDatetime - determine the minimum value with padding
-	    * @param {array} data, an array of timestamps in milliseconds
-	    * @return {number} min, minimum datetime value
+	    *
+	    * @param {array} data - an array of timestamps in milliseconds
+	    * @return {number} min - minimum datetime value
 	    */
 	
 	  }, {
@@ -638,11 +652,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	var d3 = __webpack_require__(3);
 	
 	var Grid = function () {
-	  /*
+	  /**
 	  * Grid - constructs grids lines for the plot
-	  * @param {object} axes, the axes to determine xScale, yScale
-	  * @param {object} plot, the plot to append the axis
-	  * @param {object} options, the properties for the axis
+	  *
+	  * @param {object} axes - the axes to determine xScale, yScale
+	  * @param {object} plot - the plot to append the axis
+	  * @param {object} options - the properties for the axis
 	  * @returns {object} this
 	  */
 	  function Grid(axes, plot, options) {
@@ -657,6 +672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  /*
 	  * init - initialize the x,y grid lines for a plot
+	  *
 	  */
 	
 	
@@ -671,6 +687,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /*
 	    * remove - removed the grid lines from the plot
+	    *
 	    */
 	
 	  }, {
@@ -720,10 +737,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	/*
+	/**
 	* InvalidNodeError - error thrown when an object is not instanceof Node
 	*
-	* @param {string} [message], (optional) the message to the user
+	* @param {string} [message] - (optional) the message to the user
 	*/
 	var InvalidNodeError = exports.InvalidNodeError = function (_Error) {
 	  _inherits(InvalidNodeError, _Error);
@@ -738,10 +755,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return InvalidNodeError;
 	}(Error);
 	
-	/*
+	/**
 	* InvalidGroupError - error thrown when an object is not instanceof Group
 	*
-	* @param {string} [message], (optional) the message to the user
+	* @param {string} [message] - (optional) the message to the user
 	*/
 	
 	
@@ -802,9 +819,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  }
 	
-	  /*
+	  /**
 	  * size - returns the size of the Group's nodes
-	  * @return {number} size, the size of the group
+	  *
+	  * @return {number} size - the size of the group
 	  */
 	
 	
@@ -814,9 +832,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return Object.values(this.nodes_).length;
 	    }
 	
-	    /*
+	    /**
 	    * addNode - adds a node to this group
-	    * @param {object} node, the node to add
+	    *
+	    * @param {object} node - the node to add
 	    * @throws {InvalidGroupError} error
 	    * @return {Group} this
 	    */
@@ -831,9 +850,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * removeNode - removes a node from this group
-	    * @param {string} id, the id to remove
+	    *
+	    * @param {string} id - the id to remove
 	    * @return {object} this
 	    */
 	
@@ -846,9 +866,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * getNodes - returns the nodes associated with this group
-	    * @return {array} nodes, the nodes associated with this group
+	    *
+	    * @return {array} nodes - the nodes associated with this group
 	    */
 	
 	  }, {
@@ -857,8 +878,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return Object.values(this.nodes_);
 	    }
 	
-	    /*
+	    /**
 	    * update - handles updating the marker
+	    *
 	    * @return {object} this
 	    */
 	
@@ -868,9 +890,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      throw new Error('Update must be implemented.');
 	    }
 	
-	    /*
+	    /**
 	    * detached - builds a detached svg group and returns the node
-	    * @return {object} node, the SVG node to append to the parent during .call()
+	    *
+	    * @return {object} node - the SVG node to append to the parent during .call()
 	    */
 	
 	  }, {
@@ -882,8 +905,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this.group.node();
 	    }
 	
-	    /*
+	    /**
 	    * remove - removes the group from the DOM
+	    *
 	    */
 	
 	  }, {
@@ -894,8 +918,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	
-	    /*
+	    /**
 	    * destroy - destroys the group and any associated elements
+	    *
 	    */
 	
 	  }, {
@@ -908,9 +933,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.group = null;
 	    }
 	
-	    /*
+	    /**
 	    * onEnter - the default event handler for a group. This may be overridden or
 	    *   a new event handler passed into the constructor as `options.onEnter`
+	    *
 	    * @param {object} selections - the d3 selection object containing the children for this group
 	    */
 	
@@ -918,9 +944,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'onEnter',
 	    value: function onEnter() {}
 	
-	    /*
+	    /**
 	    * onUpdate - the default event handler for a group. This may be overridden or
 	    *   a new event handler passed into the constructor as `options.onUpdate`
+	    *
 	    * @param {object} selections - the d3 selection object for this group
 	    */
 	
@@ -928,9 +955,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'onUpdate',
 	    value: function onUpdate() {}
 	
-	    /*
+	    /**
 	    * onExit - the default event handler for a group. This may be overridden or
 	    *   a new event handler passed into the constructor as `options.onExit`
+	    *
 	    * @param {object} selections - the d3 selection object for this group
 	    */
 	
@@ -963,10 +991,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	var Node = function () {
-	  /*
+	  /**
 	  * Node - base class
-	  * @param {object} options, the options used to construct the SegmentMarker
-	  * @param {object} options.meta, the optional meta data associated with the node (e.g. used in the Tooltip)
+	  *
+	  * @param {object} options - the options used to construct the SegmentMarker
+	  * @param {object} options.meta - the optional meta data associated with the node (e.g. used in the Tooltip)
 	  * @return {object} this
 	  */
 	  function Node(options) {
@@ -978,8 +1007,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  }
 	
-	  /*
+	  /**
 	  * remove - removes the marker from the DOM
+	  *
 	  */
 	
 	
@@ -991,8 +1021,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	
-	    /*
+	    /**
 	    * update - updates one or more elements within the RectNode SVG group
+	    *
 	    */
 	
 	  }, {
@@ -1001,9 +1032,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * detached - builds a detached svg group and returns the node
-	    * @return {object} node, the SVG node to append to the parent during .call()
+	    *
+	    * @return {object} node - the SVG node to append to the parent during .call()
 	    */
 	
 	  }, {
@@ -1065,8 +1097,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	  }
 	
-	  /*
+	  /**
 	  * update - handles updating the marker
+	  *
 	  * @return {object} this
 	  */
 	
@@ -1140,9 +1173,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	  }
 	
-	  /*
+	  /**
 	  * update - handles updating the marker
 	  * @override
+	  *
 	  * @return {object} this
 	  */
 	
@@ -1198,15 +1232,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	var LineNode = function (_Node) {
 	  _inherits(LineNode, _Node);
 	
-	  /*
+	  /**
 	  * LineNode - a data point for a path/line generator
-	  * @param {object} chart, an instance of a chart
-	  * @param {object} options, the options used to construct the plot
-	  * @param {number} options.x1, the value for x1 position
-	  * @param {number} options.y1, the value for y1 position
-	  * @param {string} options.r, the radius of the circle
-	  * @param {number} options.o, the opacity of the cirle
-	  * @param {object} options.meta, the optional meta data associated with the circle (e.g. used in the Tooltip)
+	  *
+	  * @param {object} chart - an instance of a chart
+	  * @param {object} options - the options used to construct the plot
+	  * @param {number} options.x1 - the value for x1 position
+	  * @param {number} options.y1 - the value for y1 position
+	  * @param {string} options.r - the radius of the circle
+	  * @param {number} options.o - the opacity of the cirle
+	  * @param {object} options.meta - the optional meta data associated with the circle (e.g. used in the Tooltip)
 	  * @return {object} this
 	  */
 	  function LineNode(chart, options) {
@@ -1246,8 +1281,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return fill;
 	    }
 	
-	    /*
+	    /**
 	    * update - updates one or more elements
+	    *
 	    */
 	
 	  }, {
@@ -1258,9 +1294,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (typeof this.group === 'undefined') {
 	        this.group = d3.select('#' + this.id);
 	      }
-	      /*
+	      /**
 	      * Each node of the line's `path` (see LineGroup) is a transparent circle in
 	      * order to have a mouseover event.
+	      *
 	      * @see https://groups.google.com/forum/#!topic/d3-js/gHzOj91X2NA
 	      */
 	      // select
@@ -1334,17 +1371,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	var RectNode = function (_Node) {
 	  _inherits(RectNode, _Node);
 	
-	  /*
+	  /**
 	  * RectNode - a rectangular node
-	  * @param {object} plot, an instance of a plot
-	  * @param {object} options, the options used to construct the plot
-	  * @param {number} options.x1, the value for x1 position
-	  * @param {number} options.x2, the value for x2 position
-	  * @param {number} options.y1, the value for y1 position
-	  * @param {number} options.h, the value for the height
-	  * @param {string} options.f, the fill of the marker
-	  * @param {number} options.o, the opacity of the marker
-	  * @param {object} options.meta, the optional meta data associated with the marker (e.g. used in the Tooltip)
+	  *
+	  * @param {object} plot - an instance of a plot
+	  * @param {object} options - the options used to construct the plot
+	  * @param {number} options.x1 - the value for x1 position
+	  * @param {number} options.x2 - the value for x2 position
+	  * @param {number} options.y1 - the value for y1 position
+	  * @param {number} options.h - the value for the height
+	  * @param {string} options.f - the fill of the marker
+	  * @param {number} options.o - the opacity of the marker
+	  * @param {object} options.meta - the optional meta data associated with the marker (e.g. used in the Tooltip)
 	  * @return {object} this
 	  */
 	  function RectNode(plot, options) {
@@ -1365,8 +1403,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	  }
 	
-	  /*
+	  /**
 	  * update - updates one or more elements within the RectNode SVG group
+	  *
 	  */
 	
 	
@@ -1486,17 +1525,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	var SegmentNode = function (_Node) {
 	  _inherits(SegmentNode, _Node);
 	
-	  /*
+	  /**
 	  * SegmentNode - a line with beginning and end circles
-	  * @param {object} plot, an instance of a plot
-	  * @param {object} options, the options used to construct the SegmentNode
-	  * @param {number} options.x, the value for x position
-	  * @param {number} options.y, the value for y position
-	  * @param {number} options.l, the value for the length of the line
-	  * @param {number} options.h, the value for the height
-	  * @param {string} options.f, the fill of the line
-	  * @param {number} options.o, the opacity of the line
-	  * @param {object} options.meta, the optional meta data associated with the node (e.g. used in the Tooltip)
+	  * @param {object} plot - an instance of a plot
+	  * @param {object} options - the options used to construct the SegmentNode
+	  * @param {number} options.x - the value for x position
+	  * @param {number} options.y - the value for y position
+	  * @param {number} options.l - the value for the length of the line
+	  * @param {number} options.h - the value for the height
+	  * @param {string} options.f - the fill of the line
+	  * @param {number} options.o - the opacity of the line
+	  * @param {object} options.meta - the optional meta data associated with the node (e.g. used in the Tooltip)
 	  * @return {object} this
 	  */
 	  function SegmentNode(plot, options) {
@@ -1518,8 +1557,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	  }
 	
-	  /*
+	  /**
 	  * remove - removes the node from the DOM
+	  *
 	  * @return {object} this
 	  */
 	
@@ -1532,8 +1572,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	
-	    /*
+	    /**
 	    * filteredOrderedPair - determine if the pair exists within the domain
+	    *
 	    */
 	
 	  }, {
@@ -1554,8 +1595,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return orderedPair;
 	    }
 	
-	    /*
+	    /**
 	    * update - handles updating the node
+	    *
 	    * @return {object} this
 	    */
 	
@@ -1682,9 +1724,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * detached - builds a detached svg group and returns the node
-	    * @return {object} node, the SVG node to append to the parent during .call()
+	    *
+	    * @return {object} node - the SVG node to append to the parent during .call()
 	    */
 	
 	  }, {
@@ -1696,8 +1739,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.group.node();
 	    }
 	
-	    /*
+	    /**
 	    * distance - determine the distance between two pairs
+	    *
 	    */
 	
 	  }, {
@@ -1706,10 +1750,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return Math.sqrt(Math.pow(Math.abs(pairs[0][0] - pairs[1][0]), 2) + Math.pow(Math.abs(pairs[0][1] - pairs[1][1]), 2));
 	    }
 	
-	    /*
+	    /**
 	    * groupOverlappingSegments - group overlapping segments together
-	    * @param {array} segments, an array of SegmentNode's
-	    * @return {object} groups, groups of overlapping segments
+	    *
+	    * @param {array} segments - an array of SegmentNode's
+	    * @return {object} groups - groups of overlapping segments
 	    */
 	
 	  }], [{
@@ -1806,17 +1851,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	var MINIMUM_CHART_HEIGHT = 300;
 	
 	var Chart = function () {
-	  /*
+	  /**
 	  * Chart - creates a new instance of a chart
-	  * @param {object} options, the options to create a chart
-	  * @param {string} containerID, the id of the container div
-	  * @param {string} svgcontainerClass, the desired class of the constructed svg element
-	  * @param {object} tooltip,
-	  * @param {number} tooltip.opacity, the background opacity for the tooltip
-	  * @param {object} tooltip.template, the compiled template
-	  * @param {boolean} scale, scale the svg on window resize @default false
-	  * @param {boolean} resize, resize the svg on window resize @default true
-	  * @returns {object} this, returns self
+	  *
+	  * @param {object} options - the options to create a chart
+	  * @param {string} containerID - the id of the container div
+	  * @param {string} svgcontainerClass - the desired class of the constructed svg element
+	  * @param {object} tooltip
+	  * @param {number} tooltip.opacity - the background opacity for the tooltip
+	  * @param {object} tooltip.template - the compiled template
+	  * @param {boolean} scale - scale the svg on window resize @default false
+	  * @param {boolean} resize -resize the svg on window resize @default true
+	  * @return {object} returns self
 	  */
 	  function Chart(options) {
 	    _classCallCheck(this, Chart);
@@ -1828,10 +1874,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  }
 	
-	  /*
+	  /**
 	  * init - method to initialize the chart, allows the chart to be re-initialized
 	  *  on resize while keeping the current chart data in memory
-	  * @returns {object} this
+	  *
+	  * @return {object} this
 	  */
 	
 	
@@ -1853,12 +1900,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.zoom = new _Zoom2.default(this, this.options);
 	      }
 	      this.groups = this.container.append('g').attr('class', 'd3cf-groups').attr('transform', 'translate(' + this.margins.left + ', 0)');
-	      // this.update([]);
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * setDimensions - method to set the dimensions of the chart based on the current window
+	    *
 	    */
 	
 	  }, {
@@ -1880,11 +1927,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * update - update the width and height attributes of the root and container
 	    *  elements. then call update on the chart axes
-	    * @param {array} nodes, an array of {object} for each node
-	    * @returns {object} this
+	    *
+	    * @param {array} nodes - an array of {object} for each node
+	    * @return {object} this
 	    */
 	
 	  }, {
@@ -1898,25 +1946,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else {
 	        if (nodes instanceof Array) {
 	          this.axes.update(nodes, true);
-	          if (this.axes.initialized === true) {
-	            this.axes.setInitialMinMax(this.axes.currentMinMax);
-	          }
 	        } else {
-	          var shouldSetInitialMinMax = this.mergeGroups(nodes);
+	          this.mergeGroups(nodes);
 	          this.axes.update(this.getGroupsNodes(false), true);
-	          if (shouldSetInitialMinMax) {
-	            this.axes.setInitialMinMax(this.axes.currentMinMax);
-	          }
 	        }
 	      }
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * draw - draws the markers on the chart
-	    * @note this will automatically show/hide a warning message if the data
+	    *
+	    * @see this will automatically show/hide a warning message if the data
 	    * is empty. Do not call super() to override this behavior.
-	    * @param {array} nodes, an array of {object} for each marker
+	    *
+	    * @param {array} nodes - an array of {object} for each marker
 	    */
 	
 	  }, {
@@ -1948,9 +1992,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.removeWarn();
 	    }
 	
-	    /*
+	    /**
 	    * defaultGroup - creates a default group if an array is passed to the draw method
-	    * @param {array} nodes, an array of Node's
+	    *
+	    * @param {array} nodes - an array of Node's
 	    */
 	
 	  }, {
@@ -1959,10 +2004,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      throw new Error('defaultGroup must be implemented.');
 	    }
 	
-	    /*
+	    /**
 	    * applyFilters - apply any filters from the chart
-	    * @param {object} filters, an array of filters to apply
-	    * @returns {array} filtered, the filtered data
+	    *
+	    * @param {object} filters - an array of filters to apply
+	    * @return {array} filtered, the filtered data
 	    */
 	
 	  }, {
@@ -1992,9 +2038,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return filtered;
 	    }
 	
-	    /*
+	    /**
 	    * getWidth
-	    * @return {number} width (excluding margins) for the root svg
+	    *
+	    * @return {number} width - (excluding margins) for the root svg
 	    */
 	
 	  }, {
@@ -2003,9 +2050,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this.width - (this.margins.left + this.margins.right);
 	    }
 	
-	    /*
+	    /**
 	    * getHeigth
-	    * @return {number} width (excluding margins) for the root svg
+	    *
+	    * @return {number} width - (excluding margins) for the root svg
 	    */
 	
 	  }, {
@@ -2014,9 +2062,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this.height - (this.margins.top + this.margins.bottom);
 	    }
 	
-	    /*
+	    /**
 	    * showWarn - shows a warning message in the center of the chart
-	    * @param {string} m, the message to display
+	    *
+	    * @param {string} m - the message to display
 	    * @return {object} this
 	    */
 	
@@ -2033,8 +2082,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * removeWarn - removes the warning message from the chart
+	    *
 	    * @return {object} this
 	    */
 	
@@ -2047,8 +2097,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * remove - removes the chart from the DOM and any event listeners
+	    *
 	    * @return {object} this
 	    */
 	
@@ -2062,8 +2113,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.root.remove();
 	    }
 	
-	    /*
+	    /**
 	    * destroy - destroys the chart and any associated elements
+	    *
 	    */
 	
 	  }, {
@@ -2078,9 +2130,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.resizeHandler = null;
 	    }
 	
-	    /*
+	    /**
 	    * addGroup
-	    * @param {object} group, add a group to the chart
+	    *
+	    * @param {object} group - add a group to the chart
 	    * @throws {InvalidGroupError} error
 	    * @return {Chart} this
 	    */
@@ -2095,9 +2148,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * removeGroup
-	    * @param {string} id, the group to remove
+	    *
+	    * @param {string} id - the group to remove
 	    * @return {Chart} this
 	    */
 	
@@ -2110,9 +2164,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * getGroups - returns the groups associated with this chart
-	    * @return {array} groups, the groups associated with this chart
+	    *
+	    * @return {array} groups - the groups associated with this chart
 	    */
 	
 	  }, {
@@ -2121,10 +2176,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return Object.values(this.groups_);
 	    }
 	
-	    /*
+	    /**
 	    * getGroups - returns the size of all the groups
-	    * @param {boolean} shouldFilter, should the nodes be filtered by domain
-	    * @return {Number} size, the size of all the groups
+	    *
+	    * @param {boolean} shouldFilter - should the nodes be filtered by domain
+	    * @return {Number} size - the size of all the groups
 	    */
 	
 	  }, {
@@ -2144,10 +2200,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }, 0);
 	    }
 	
-	    /*
+	    /**
 	    * getGroupsNodes - returns all the nodes for each group
-	    * @param {boolean} shouldFilter, should the nodes be filtered by domain
-	    * @return {array} nodes, an array of nodes
+	    *
+	    * @param {boolean} shouldFilter - should the nodes be filtered by domain
+	    * @return {array} nodes - an array of nodes
 	    */
 	
 	  }, {
@@ -2167,10 +2224,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }, []);
 	    }
 	
-	    /*
+	    /**
 	    * mergeGroups - merge groups from data passed directly to the draw method
-	    * @param {object} nodes, a grouping of nodes
-	    * @return {boolean} shouldReset, should the axes domain be reset to currentMinMax
+	    *
+	    * @param {object} nodes - a grouping of nodes
 	    */
 	
 	  }, {
@@ -2179,10 +2236,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      throw new Error('mergeGroups must be implemented.');
 	    }
 	
-	    /*
+	    /**
 	    * addFilter - add a filter to the chart
-	    * @param {string} name, the name of the filter
-	    * @param {function} fn, the function to be applied to the data
+	    *
+	    * @param {string} name - the name of the filter
+	    * @param {function} fn - the function to be applied to the data
 	    * @return {object} this
 	    */
 	
@@ -2193,9 +2251,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * removeFilter - removes a filter from the chart
-	    * @param {string} name, the name of the filter
+	    *
+	    * @param {string} name - the name of the filter
 	    * @return {object} this
 	    */
 	
@@ -2208,8 +2267,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * resetZoom - resets the zoom of the axes
+	    *
 	    */
 	
 	  }, {
@@ -2240,13 +2300,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _ = __webpack_require__(4);
 	
 	var Tooltip = function () {
-	  /*
+	  /**
 	  * Tooltip - allows for an HTML div to be faded in/out on mouseover of a marker
-	  * @param {object} plot, the plot append the tooltip
-	  * @param {object} options, the options for the plot
-	  * @param {object} options.tooltip, the options for the tooltip
-	  * @param {number} options.opacity, the opacity of the tooltip
-	  * @param {object} options.template, an underscore compiled template
+	  *
+	  * @param {object} plot - the plot append the tooltip
+	  * @param {object} options - the options for the plot
+	  * @param {object} options.tooltip - the options for the tooltip
+	  * @param {number} options.opacity - the opacity of the tooltip
+	  * @param {object} options.template - an underscore compiled template
 	  * @return {object} this
 	  */
 	  function Tooltip(plot, options) {
@@ -2262,11 +2323,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  }
 	
-	  /*
+	  /**
 	  * mouseover - unbound method for mouseover event
-	  * @param {object} d, the data
-	  * @param {number} x, the x coordinate
-	  * @param {number} y, the y coordinate
+	  *
+	  * @param {object} d - the data
+	  * @param {number} x - the x coordinate
+	  * @param {number} y - the y coordinate
 	  * @return {object} this
 	  */
 	
@@ -2284,8 +2346,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * mouseout - unbound method for mouseout event
+	    *
 	    * @return {object} this
 	    */
 	
@@ -2296,8 +2359,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * remove - removes the element from the DOM
+	    *
 	    */
 	
 	  }, {
@@ -2328,10 +2392,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var MINIMUM_ZOOM_THRESHOLD = 5;
 	
 	var Zoom = function () {
-	  /*
+	  /**
 	  * Zoom - a zoomable interface for a plot
-	  * @param {object} plot, the plot to enable the zooming interface
-	  * @param {object} options, the object containing the passed in options to the plot constructor
+	  *
+	  * @param {object} plot - the plot to enable the zooming interface
+	  * @param {object} options - the object containing the passed in options to the plot constructor
 	  * @return {object} this
 	  */
 	  function Zoom(plot, options) {
@@ -2405,9 +2470,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.zoomBand.transition().duration(1).attr('width', Math.abs(this.bandPos[0] - pos[0])).attr('height', Math.abs(this.bandPos[1] - pos[1]));
 	    }
 	
-	    /*
+	    /**
 	    * ondragend - the event handler for the ondragend event
-	    * @param {array} pos, the x,y position of the mouse
+	    *
+	    * @param {array} pos - the x,y position of the mouse
 	    */
 	
 	  }, {
@@ -2438,8 +2504,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	
-	    /*
+	    /**
 	    * zoom - the zooming method called an the end of ondragend
+	    *
 	    */
 	
 	  }, {
@@ -2450,8 +2517,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.plot.draw();
 	    }
 	
-	    /*
+	    /**
 	    * resetZoom - reset the plot zoom back to the original viewBox
+	    *
 	    */
 	
 	  }, {
@@ -2462,8 +2530,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.plot.draw();
 	    }
 	
-	    /*
+	    /**
 	    * remove - remove the zoom interface from a plot
+	    *
 	    */
 	
 	  }, {
@@ -2512,17 +2581,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ScatterPlot = function (_Chart) {
 	  _inherits(ScatterPlot, _Chart);
 	
-	  /*
+	  /**
 	  * ScatterPlot - constructs the root SVG element to contain the ScatterPlot
-	  * @param {object} options, the options to create a ScatterPlot
-	  * @param {string} containerID, the id of the ScatterPlot container div
-	  * @param {string} svgcontainerClass, the desired class of the constructed svg element
-	  * @param {object} tooltip,
-	  * @param {number} tooltip.opacity, the background opacity for the tooltip
-	  * @param {object} tooltip.template, the compiled template
-	  * @param {boolean} scale, scale the svg on window resize @default false
-	  * @param {boolean} resize, resize the svg on window resize @default true
-	  * @returns {object} this, returns self
+	  *
+	  * @param {object} options - the options to create a ScatterPlot
+	  * @param {string} containerID - the id of the ScatterPlot container div
+	  * @param {string} svgcontainerClass - the desired class of the constructed svg element
+	  * @param {object} tooltip
+	  * @param {number} tooltip.opacity - the background opacity for the tooltip
+	  * @param {object} tooltip.template - the compiled template
+	  * @param {boolean} scale - scale the svg on window resize @default false
+	  * @param {boolean} resize - resize the svg on window resize @default true
+	  * @returns {object} this - returns self
 	  */
 	  function ScatterPlot(options) {
 	    var _ret;
@@ -2535,8 +2605,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	  }
 	
-	  /*
+	  /**
 	  * init - method to set/re-set the resizeHandler
+	  *
 	  * @returns {object} this
 	  */
 	
@@ -2552,9 +2623,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	
-	    /*
+	    /**
 	    * draw - draw using d3 select.data.enter workflow
-	    * @param {array} data, an array of {object} for each marker
+	    *
+	    * @param {array} data - an array of {object} for each marker
 	    * @returns {object} this
 	    */
 	
@@ -2575,9 +2647,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * defaultGroup - creates a default group if an array is passed to the draw method
-	    * @param {array} nodes, an array of Node's
+	    *
+	    * @param {array} nodes - an array of Node's
 	    */
 	
 	  }, {
@@ -2599,10 +2672,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return group;
 	    }
 	
-	    /*
+	    /**
 	    * mergeGroups - merge groups from data passed directly to the draw method
-	    * @param {object} groups, a set of Groups
-	    * @return {boolean} shouldReset, should the axes domain be reset to currentMinMax
+	    *
+	    * @param {object} groups - a set of Groups
+	    * @return {boolean} shouldReset - should the axes domain be reset to currentMinMax
 	    */
 	
 	  }, {
@@ -2653,9 +2727,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return false;
 	    }
 	
-	    /*
+	    /**
 	    * update the dimensions of the plot (axes, gridlines, then redraw)
-	    * @param {array} data, an array of {object} for each marker
+	    *
+	    * @param {array} data - an array of {object} for each marker
 	    * @returns {object} this
 	    */
 	
@@ -2667,8 +2742,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * remove - removes the plot from the DOM and any event listeners
+	    *
 	    * @return {object} this
 	    */
 	
@@ -2681,8 +2757,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * resize - re-renders the plot
+	    *
 	    * @return {object} this
 	    */
 	
@@ -2695,6 +2772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /*
 	    * resetZoom - resets the zoom of the axes
+	    *
 	    */
 	
 	  }, {
@@ -2742,7 +2820,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var LineChart = function (_Chart) {
 	  _inherits(LineChart, _Chart);
 	
-	  /*
+	  /**
 	  * LineChart - constructs the root SVG element to contain the LineChart
 	  * @param {object} options, the options to create a LineChart
 	  * @param {string} containerID, the id of the LineChart container div
@@ -2765,7 +2843,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	  }
 	
-	  /*
+	  /**
 	  * init - method to set/re-set the resizeHandler
 	  * @returns {object} this
 	  */
@@ -2782,7 +2860,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	
-	    /*
+	    /**
 	    * draw - draw using d3 select.data.enter workflow
 	    * @param {array} data, an array of {object} for each marker
 	    * @returns {object} this
@@ -2805,7 +2883,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * defaultGroup - creates a default group if an array is passed to the draw method
 	    * @param {array} nodes, an array of Node's
 	    */
@@ -2829,11 +2907,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return group;
 	    }
 	
-	    /*
+	    /**
 	    * mergeGroups - merge groups from data passed directly to the draw method
 	    * @override
 	    * @param {object} groups, a set of Groups
-	    * @return {boolean} shouldReset, should the axes domain be reset to currentMinMax
+	    * @return {boolean} hasChanged
 	    */
 	
 	  }, {
@@ -2871,20 +2949,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        notMerged.forEach(function (k) {
 	          _this2.removeGroup(k);
 	        });
-	        // if we have removed an existing group from the plot
-	        // then we should set the axes to the currentMinMax
+	        // if we have removed an existing group
 	        return true;
 	      }
-	      // if we have merged in new groups and the axes have been initialized
-	      // then we should set the axes to the currentMinMax
-	      if (addedNewGroup && this.axes.initialized === true) {
+	      // if we have merged in new groups
+	      if (addedNewGroup) {
 	        return true;
 	      }
-	      // do not set the axes
+	      // otherwise no change
 	      return false;
 	    }
 	
-	    /*
+	    /**
 	    * update the dimensions of the chart (axes, gridlines, then redraw)
 	    * @param {array} data, an array of {object} for each marker
 	    * @returns {object} this
@@ -2898,7 +2974,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * remove - removes the chart from the DOM and any event listeners
 	    * @return {object} this
 	    */
@@ -2913,7 +2989,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
+	    /**
 	    * resize - re-renders the chart
 	    * @return {object} this
 	    */
