@@ -8,7 +8,7 @@ export { default as Node } from './nodes/Node';
 export { default as LineNode } from './nodes/LineNode';
 export { default as RectNode } from './nodes/RectNode';
 export { default as SegmentNode } from './nodes/SegmentNode';
-export { default as Plot } from './Chart';
+export { default as Chart } from './Chart';
 export { default as ScatterPlot } from './ScatterPlot';
 export { default as LineChart } from './LineChart';
 export { default as Tooltip } from './Tooltip';

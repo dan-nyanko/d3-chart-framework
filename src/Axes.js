@@ -182,11 +182,11 @@ class Axes {
         const y1 = this.yScale.domain()[0];
         const y2 = this.yScale.domain()[1];
         if (d.hasOwnProperty('x2')) {
-          if ((d.x1 >= x1 && d.x2 <= x2) && (d.y1 >= y1 && d.y1 <= y2)) {
+          if ((Math.floor(d.x1) >= x1 && Math.floor(d.x2) <= x2) && (Math.floor(d.y1) >= y1 && Math.floor(d.y1) <= y2)) {
             return d;
           }
         } else {
-          if ((d.x1 >= x1) && (d.y1 >= y1 && d.y1 <= y2)) {
+          if ((Math.floor(d.x1) >= x1) && (Math.floor(d.y1) >= y1 && Math.floor(d.y1) <= y2)) {
             return d;
           }
         }
@@ -338,7 +338,7 @@ class Axes {
       const p = (Math.pow(10, l)) / 10;
       return m + p;
     }
-    return m;
+    return Math.ceil(m);
   }
 
   /**
@@ -359,7 +359,7 @@ class Axes {
       const p = (Math.pow(10, l)) / 10;
       return m + p;
     }
-    return m;
+    return Math.ceil(m);
   }
 
   /**
