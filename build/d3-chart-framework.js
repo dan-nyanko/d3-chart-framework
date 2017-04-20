@@ -1113,10 +1113,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	      }
 	      /**
-	      * comparator function for sorting by y1 ascending
+	      * comparator function for sorting by x1 ascending
+	      *
+	      * @param {object} a - LineNode object
+	      * @param {object} b - LineNode object
+	      * @return {number}
 	      */
 	      function cmp(a, b) {
-	        return a.y1 - b.y1;
+	        return a.x1 - b.x1;
 	      }
 	      var filtered = this.chart.applyFilters(this.getNodes()).sort(cmp);
 	      this.group.attr('numNodes', filtered.length);
