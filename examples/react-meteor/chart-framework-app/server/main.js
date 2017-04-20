@@ -65,34 +65,36 @@ Meteor.startup(() => {
   startDate.setMonth(endDate.getMonth() - 12);
 
   // generate 25 random incidents
-  Incidents.remove({});
-  for (let i = 0; i < 25; i++) {
-    randomIncident(types, startDate, endDate);
-  }
-
-  // generate 220 random prices for each type
-  Prices.remove({});
-  for (let t = 0; t <= 1; t++) {
-    const startPrice = (Math.random() * 50) + 10;
-    const prices = [startPrice];
-    for (let i = 1; i <= 220; i++) {
-      const x1 = new Date(startDate);
-      x1.setDate(x1.getDate() + i);
-      let vol = 0.0;
-      if (t == 0) {
-        vol = (Math.floor(Math.random() * 10) + 1) / 100;
-      } else {
-        vol = (Math.floor(Math.random() * 30) + 1) / 100;
+  Incidents.remove({}, () => {
+      for (let i = 0; i < 25; i++) {
+        randomIncident(types, startDate, endDate);
       }
-      const y1 = randomPrice(prices[i-1], vol);
-      prices.push(y1);
-      Prices.insert({
-        x1: x1.getTime(),
-        y1: parseFloat(y1.toFixed(3)),
-        type: types[t],
-        volatility: vol,
-      });
-    }
-  }
+  });
+
+  // generate 365 random prices for each type
+  Prices.remove({}, () => {
+      for (let t = 0; t <= 1; t++) {
+        const startPrice = (Math.random() * 50) + 10;
+        const prices = [startPrice];
+        for (let i = 1; i <= 365; i++) {
+          const x1 = new Date(startDate);
+          x1.setDate(x1.getDate() + i);
+          let vol = 0.0;
+          if (t == 0) {
+            vol = (Math.floor(Math.random() * 10) + 1) / 100;
+          } else {
+            vol = (Math.floor(Math.random() * 30) + 1) / 100;
+          }
+          const y1 = randomPrice(prices[i-1], vol);
+          prices.push(y1);
+          Prices.insert({
+            x1: x1.getTime(),
+            y1: parseFloat(y1.toFixed(3)),
+            type: types[t],
+            volatility: vol,
+          });
+        }
+      }
+  });
 
 });
