@@ -35,7 +35,7 @@ class LineGroup extends Group {
     if (path.empty()) {
       // enter
       this.group.append('path')
-        .datum(filtered, function(d) {
+        .datum(filtered, (d) => {
           return d.id;
         })
         .attr('fill', 'transparent')
@@ -57,7 +57,6 @@ class LineGroup extends Group {
       }).call(this.onUpdate);
     // exit
     path.exit().remove().call(this.onExit);
-
     const nodes = this.group.selectAll('.node').data(filtered, (d) => {
       return d.id;
     });

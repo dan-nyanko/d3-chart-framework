@@ -1131,7 +1131,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }).call(this.onUpdate);
 	      // exit
 	      path.exit().remove().call(this.onExit);
-	
 	      var nodes = this.group.selectAll('.node').data(filtered, function (d) {
 	        return d.id;
 	      });
