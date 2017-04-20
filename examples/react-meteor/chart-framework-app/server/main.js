@@ -70,12 +70,12 @@ Meteor.startup(() => {
     randomIncident(types, startDate, endDate);
   }
 
-  // generate 160 random prices for each type
+  // generate 220 random prices for each type
   Prices.remove({});
   for (let t = 0; t <= 1; t++) {
     const startPrice = (Math.random() * 50) + 10;
     const prices = [startPrice];
-    for (let i = 1; i <= 160; i++) {
+    for (let i = 1; i <= 220; i++) {
       const x1 = new Date(startDate);
       x1.setDate(x1.getDate() + i);
       let vol = 0.0;
