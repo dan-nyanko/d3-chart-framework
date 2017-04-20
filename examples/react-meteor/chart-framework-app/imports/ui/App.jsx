@@ -63,6 +63,6 @@ App.propTypes = {
 export default createContainer(() => {
   return {
     incidents: Immutable.List(Incidents.find({}).fetch()),
-    prices: Immutable.List(Prices.find({}).fetch()),
+    prices: Immutable.List(Prices.find({}, {$sort: {y1: 1}}).fetch()),
   };
 }, App);
