@@ -27,9 +27,14 @@ class LineGroup extends Group {
     if (typeof this.group === 'undefined') {
       return;
     }
-    const filtered = this.chart.applyFilters(this.getNodes());
+    /**
+    * comparator function for sorting by y1 ascending
+    */
+    function cmp(a, b) {
+      return a.y1 - b.y1;
+    }
+    const filtered = this.chart.applyFilters(this.getNodes()).sort(cmp);
     this.group.attr('numNodes', filtered.length);
-
     // select
     const path = this.group.select('.d3cf-line');
     if (path.empty()) {

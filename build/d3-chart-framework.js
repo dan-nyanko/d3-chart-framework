@@ -1112,9 +1112,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (typeof this.group === 'undefined') {
 	        return;
 	      }
-	      var filtered = this.chart.applyFilters(this.getNodes());
+	      /**
+	      * comparator function for sorting by y1 ascending
+	      */
+	      function cmp(a, b) {
+	        return a.y1 - b.y1;
+	      }
+	      var filtered = this.chart.applyFilters(this.getNodes()).sort(cmp);
 	      this.group.attr('numNodes', filtered.length);
-	
 	      // select
 	      var path = this.group.select('.d3cf-line');
 	      if (path.empty()) {
