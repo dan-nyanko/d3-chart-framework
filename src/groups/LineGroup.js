@@ -30,24 +30,34 @@ class LineGroup extends Group {
     const filtered = this.chart.applyFilters(this.getNodes());
     this.group.attr('numNodes', filtered.length);
 
-    const path = this.group.append('path')
-      .datum(filtered)
-      .attr('fill', 'transparent')
-      .attr('stroke', this.s)
-      .attr('stroke-linejoin', 'round')
-      .attr('stroke-linecap', 'round')
-      .attr('stroke-width', this.w)
-      .attr('class', 'd3cf-line')
-      .attr('d', (d) => {
-        return this.generator(d);
-      })
-      .call(this.onEnter);
+    // select
+    const path = this.group.select('.d3cf-line');
+    if (path.empty()) {
+      // enter
+      this.group.append('path')
+        .datum(filtered, function(d) {
+          return d.id;
+        })
+        .attr('fill', 'transparent')
+        .attr('stroke', this.s)
+        .attr('stroke-linejoin', 'round')
+        .attr('stroke-linecap', 'round')
+        .attr('stroke-width', this.w)
+        .attr('class', 'd3cf-line')
+        .attr('d', (d) => {
+          return this.generator(d);
+        })
+        .call(this.onEnter);
+    }
+    // update
     path.attr('stroke', this.s)
       .attr('stroke-width', this.w)
       .attr('d', (d) => {
         return this.generator(d);
       }).call(this.onUpdate);
+    // exit
     path.exit().remove().call(this.onExit);
+
     const nodes = this.group.selectAll('.node').data(filtered, (d) => {
       return d.id;
     });

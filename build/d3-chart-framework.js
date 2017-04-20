@@ -1115,13 +1115,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var filtered = this.chart.applyFilters(this.getNodes());
 	      this.group.attr('numNodes', filtered.length);
 	
-	      var path = this.group.append('path').datum(filtered).attr('fill', 'transparent').attr('stroke', this.s).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round').attr('stroke-width', this.w).attr('class', 'd3cf-line').attr('d', function (d) {
-	        return _this2.generator(d);
-	      }).call(this.onEnter);
+	      // select
+	      var path = this.group.select('.d3cf-line');
+	      if (path.empty()) {
+	        // enter
+	        this.group.append('path').datum(filtered, function (d) {
+	          return d.id;
+	        }).attr('fill', 'transparent').attr('stroke', this.s).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round').attr('stroke-width', this.w).attr('class', 'd3cf-line').attr('d', function (d) {
+	          return _this2.generator(d);
+	        }).call(this.onEnter);
+	      }
+	      // update
 	      path.attr('stroke', this.s).attr('stroke-width', this.w).attr('d', function (d) {
 	        return _this2.generator(d);
 	      }).call(this.onUpdate);
+	      // exit
 	      path.exit().remove().call(this.onExit);
+	
 	      var nodes = this.group.selectAll('.node').data(filtered, function (d) {
 	        return d.id;
 	      });
