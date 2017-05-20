@@ -29,7 +29,7 @@ As an alternative, you may use `webpack`, `browserify`, or even `<script>` tags 
 
 
 ## Why use `d3-chart-framework`?
-D3js is a powerful library for visualizing data with SVG, Canvas, and HTML. There are many [examples](http://bl.ocks.org/mbostock), but each one is intended for a single use. They are inspiring, but building something that is maintainable usually involves creating a framework, to keep our code extensible and reusable. The concept of reusability has been discussed by others [bocoup.com](https://bocoup.com/weblog/reusability-with-d3), [bost.ocks.org](https://bost.ocks.org/mike/chart/).
+D3js is a powerful library for visualizing data with SVG, Canvas, and HTML. There are many [examples](http://bl.ocks.org/mbostock), but each one is intended for a single use. They are inspiring, but building something that is maintainable usually involves creating a framework, to keep our code extensible and reusable. The concept of reusability has been discussed by others, such as [bocoup.com](https://bocoup.com/weblog/reusability-with-d3) and [bost.ocks.org](https://bost.ocks.org/mike/chart/).
 
 This framework utilizes an object oriented approach, which at its core, promotes breaking code into smaller, isolated classes. As with any programming paradigm, there can always be the chance of 'too much of a good thing' and object oriented programming is no different. Therefore, `d3-chart-framework` has the following goals:
 
