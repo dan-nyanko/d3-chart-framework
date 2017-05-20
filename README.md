@@ -43,11 +43,11 @@ Hopefully, this answers the why to `d3-chart-framework` and you begin to use it 
 ## Hows does it work?
 The main idea behind `d3-chart-framework` is to create *detached* `Node` class(es), which are an SVG group that are not immediately attached to the DOM. The key word here is *detached*. This simple, yet effective method allows for custom, *reusable*, *extendable* `Node` classes that utilize the D3js [workflow](https://github.com/d3/d3-selection/blob/master/README.md#joining-data).
 
-A `Node` can be any visualization, for example, a single 'circle' SVG element or a more sophisticated group of SVG elements, such as a line segment that contains two circles for the start and end points, connected by a 'line', such as the [SegmentNode.js](examples/shared/nodes/SegmentNode.js).
+A `Node` can be any visualization, for example, a single 'circle' SVG element or a more sophisticated group of SVG elements, such as a line segment that contains two circles for the start and end points, connected by a 'line', such as the [SegmentNode.js](src/nodes/SegmentNode.js).
 
 Therefore to utilize `d3-chart-framework`, one only has to create one or more custom nodes and provide them to a Chart or Plot.
 
-To further illustrate this concept, view the example of a [RectNode.js](examples/shared/RectNode.js) that displays a rectangular marker on a `ScatterPlot`.
+To further illustrate this concept, view the example of a [RectNode.js](src/nodes/RectNode.js) that displays a rectangular marker on a `ScatterPlot`.
 
 
 ## Dependencies
