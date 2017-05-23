@@ -29,7 +29,7 @@ class LineNode extends Node {
   }
 
   getFill(type) {
-    let fill = '#33B5E';
+    let fill = '#33B5E5';
     switch (type) {
       case 'warning':
         fill = '#FFBB33';

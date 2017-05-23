@@ -4,8 +4,10 @@ import Immutable from 'immutable'
 
 import { Incidents } from '../api/incidents';
 import { Prices } from '../api/prices';
+import { Counts } from '../api/counts';
 import ScatterPlot from './ScatterPlot';
 import LineChart from './LineChart';
+import BarChart from './BarChart';
 import DataTable from './DataTable';
 
 class App extends Component {
@@ -27,6 +29,9 @@ class App extends Component {
     if (this.state.chartType == 'LineChart') {
       return <LineChart prices={this.props.prices} />
     }
+    if (this.state.chartType == 'BarChart') {
+      return <BarChart counts={this.props.counts} />
+    }
   }
 
   renderDataTable() {
@@ -35,6 +40,9 @@ class App extends Component {
     }
     if (this.state.chartType == 'LineChart') {
       return <DataTable data={this.props.prices} />
+    }
+    if (this.state.chartType == 'BarChart') {
+      return <DataTable data={this.props.counts} />
     }
   }
 
@@ -46,6 +54,7 @@ class App extends Component {
           <select ref='selectChart' defaultValue={this.state.chartType} onChange={(event) => this.handleChange(event)}>
             <option>ScatterPlot</option>
             <option>LineChart</option>
+            <option>BarChart</option>
           </select>
         </div>
         { this.renderChart() }
@@ -58,11 +67,13 @@ class App extends Component {
 App.propTypes = {
   incidents: PropTypes.instanceOf(Immutable.List).isRequired,
   prices: PropTypes.instanceOf(Immutable.List).isRequired,
+  counts: PropTypes.instanceOf(Immutable.List).isRequired,
 };
 
 export default createContainer(() => {
   return {
     incidents: Immutable.List(Incidents.find({}).fetch()),
     prices: Immutable.List(Prices.find({}).fetch()),
+    counts: Immutable.List(Counts.find({}).fetch()),
   };
 }, App);

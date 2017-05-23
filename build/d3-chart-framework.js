@@ -102,7 +102,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _LineGroup = __webpack_require__(9);
+	var _BarGroup = __webpack_require__(9);
+	
+	Object.defineProperty(exports, 'BarGroup', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_BarGroup).default;
+	  }
+	});
+	
+	var _LineGroup = __webpack_require__(10);
 	
 	Object.defineProperty(exports, 'LineGroup', {
 	  enumerable: true,
@@ -111,7 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _NodeGroup = __webpack_require__(10);
+	var _NodeGroup = __webpack_require__(11);
 	
 	Object.defineProperty(exports, 'NodeGroup', {
 	  enumerable: true,
@@ -129,7 +138,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _LineNode = __webpack_require__(11);
+	var _BarNode = __webpack_require__(12);
+	
+	Object.defineProperty(exports, 'BarNode', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_BarNode).default;
+	  }
+	});
+	
+	var _LineNode = __webpack_require__(13);
 	
 	Object.defineProperty(exports, 'LineNode', {
 	  enumerable: true,
@@ -138,7 +156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _RectNode = __webpack_require__(12);
+	var _RectNode = __webpack_require__(14);
 	
 	Object.defineProperty(exports, 'RectNode', {
 	  enumerable: true,
@@ -147,7 +165,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _SegmentNode = __webpack_require__(13);
+	var _SegmentNode = __webpack_require__(15);
 	
 	Object.defineProperty(exports, 'SegmentNode', {
 	  enumerable: true,
@@ -156,7 +174,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _Chart = __webpack_require__(14);
+	var _Chart = __webpack_require__(16);
 	
 	Object.defineProperty(exports, 'Chart', {
 	  enumerable: true,
@@ -165,7 +183,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _ScatterPlot = __webpack_require__(17);
+	var _BarChart = __webpack_require__(19);
+	
+	Object.defineProperty(exports, 'BarChart', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_BarChart).default;
+	  }
+	});
+	
+	var _ScatterPlot = __webpack_require__(20);
 	
 	Object.defineProperty(exports, 'ScatterPlot', {
 	  enumerable: true,
@@ -174,7 +201,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _LineChart = __webpack_require__(18);
+	var _LineChart = __webpack_require__(21);
 	
 	Object.defineProperty(exports, 'LineChart', {
 	  enumerable: true,
@@ -183,7 +210,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _Tooltip = __webpack_require__(15);
+	var _Tooltip = __webpack_require__(17);
 	
 	Object.defineProperty(exports, 'Tooltip', {
 	  enumerable: true,
@@ -192,7 +219,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 	
-	var _Zoom = __webpack_require__(16);
+	var _Zoom = __webpack_require__(18);
 	
 	Object.defineProperty(exports, 'Zoom', {
 	  enumerable: true,
@@ -291,8 +318,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  /**
 	  * init - initialize the plot x,y axes
 	  *
-	  * @param {array} xDomain - the zoom xDomain or undefined
-	  * @param {array} yDomain - the zoom yDomain or undefined
+	  * @param {array=} xDomain - the zoom xDomain or undefined
+	  * @param {array=} yDomain - the zoom yDomain or undefined
 	  */
 	
 	
@@ -307,6 +334,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else {
 	          this.xScale = d3.scaleTime().domain(this.defaultMinMax[0]).range([0, this.chart.getWidth()]).nice();
 	        }
+	      } else if (this.options.x.type === 'band') {
+	        if (xDomain) {
+	          this.xScale = d3.scaleBand().domain(['info', 'success', 'muted', 'primary', 'warning', 'danger']).rangeRound([0, this.chart.getWidth()]).padding(0.1);
+	        } else {
+	          this.xScale = d3.scaleBand().rangeRound([0, this.chart.getWidth()]).padding(0.1);
+	        }
 	      } else {
 	        if (xDomain) {
 	          this.xScale = d3.scaleLinear().domain(xDomain).range([0, this.chart.getWidth()]);
@@ -316,6 +349,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      if (this.options.x.type === 'datetime') {
 	        this.xAxis = d3.axisBottom().scale(this.xScale).ticks(10).tickFormat(d3.timeFormat(this.formatDate()));
+	      } else if (this.options.x.type === 'band') {
+	        this.xAxis = d3.axisBottom().scale(this.xScale);
 	      } else {
 	        this.xAxis = d3.axisBottom().scale(this.xScale).ticks(10);
 	      }
@@ -1073,6 +1108,70 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
+	var BarGroup = function (_Group) {
+	  _inherits(BarGroup, _Group);
+	
+	  function BarGroup(chart, options) {
+	    var _ret;
+	
+	    _classCallCheck(this, BarGroup);
+	
+	    var _this = _possibleConstructorReturn(this, (BarGroup.__proto__ || Object.getPrototypeOf(BarGroup)).call(this, chart, options));
+	
+	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
+	  }
+	
+	  /**
+	  * update - handles updating the marker
+	  *
+	  * @return {object} this
+	  */
+	
+	
+	  _createClass(BarGroup, [{
+	    key: 'update',
+	    value: function update() {
+	      var filtered = this.chart.applyFilters(this.getNodes());
+	      console.log('filtered: ', filtered);
+	      this.group.attr('numNodes', filtered.length);
+	      var nodes = this.group.selectAll('.d3cf-node').data(filtered, function (d) {
+	        return d.id;
+	      });
+	      nodes.enter().append(function (node) {
+	        return node.detached();
+	      }).call(this.onEnter);
+	      nodes.each(function (node) {
+	        return node.update();
+	      }).call(this.onUpdate);
+	      nodes.exit().remove().call(this.onExit);
+	    }
+	  }]);
+	
+	  return BarGroup;
+	}(_Group3.default);
+	
+	module.exports = BarGroup;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _Group2 = __webpack_require__(7);
+	
+	var _Group3 = _interopRequireDefault(_Group2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
 	var d3 = __webpack_require__(3);
 	
 	var LineGroup = function (_Group) {
@@ -1159,7 +1258,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = LineGroup;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1226,7 +1325,150 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = NodeGroup;
 
 /***/ },
-/* 11 */
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _Node2 = __webpack_require__(8);
+	
+	var _Node3 = _interopRequireDefault(_Node2);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var d3 = __webpack_require__(3);
+	
+	var BarNode = function (_Node) {
+	  _inherits(BarNode, _Node);
+	
+	  /**
+	  * BarNode - a data point for a path/line generator
+	  *
+	  * @param {object} chart - an instance of a chart
+	  * @param {object} options - the options used to construct the chart
+	  * @param {string} options.x1 - the category for x1 position
+	  * @param {number} options.y1 - the value for y1 position
+	  * @param {string} options.f - the fill of the bar
+	  * @param {number} options.o - the opacity of the bar
+	  * @param {object=} options.meta - the optional meta data associated with the circle (e.g. used in the Tooltip)
+	  * @return {object} this
+	  */
+	  function BarNode(chart, options) {
+	    var _ret;
+	
+	    _classCallCheck(this, BarNode);
+	
+	    var _this = _possibleConstructorReturn(this, (BarNode.__proto__ || Object.getPrototypeOf(BarNode)).call(this, options));
+	
+	    _this.chart = chart;
+	    _this.x1 = options.x1;
+	    _this.y1 = options.y1;
+	    _this.f = options.r || '#345e7e';
+	    _this.o = options.o || 0;
+	    _this.style = options.style || 'd3cf-node';
+	    _this.meta = options.meta || {};
+	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
+	  }
+	
+	  _createClass(BarNode, [{
+	    key: 'getFill',
+	    value: function getFill(type) {
+	      var fill = '#33B5E5';
+	      switch (type) {
+	        case 'info':
+	          fill = '#33B5E5';
+	          break;
+	        case 'success':
+	          fill = '#00C851';
+	          break;
+	        case 'muted':
+	          fill = '#636c72';
+	          break;
+	        case 'primary':
+	          fill = '#0275d8';
+	          break;
+	        case 'warning':
+	          fill = '#FFBB33';
+	          break;
+	        case 'danger':
+	          fill = '#d9534f';
+	          break;
+	        default:
+	          break;
+	      }
+	      return fill;
+	    }
+	
+	    /**
+	    * update - updates one or more elements
+	    * @returns {object} this
+	    */
+	
+	  }, {
+	    key: 'update',
+	    value: function update() {
+	      var _this2 = this;
+	
+	      if (typeof this.group === 'undefined') {
+	        this.group = d3.select('#' + this.id);
+	      }
+	      // select
+	      var rect = this.group.selectAll('rect').data([this], function (d) {
+	        return d.id;
+	      });
+	      // create
+	      rect.enter().append('rect').attr('class', this.style).attr('x', function () {
+	        return _this2.chart.axes.xScale(_this2.x1);
+	      }).attr('y', function () {
+	        return _this2.chart.axes.yScale(_this2.y1);
+	      }).attr('width', function () {
+	        return _this2.chart.axes.xScale.bandwidth();
+	      }).attr('height', function () {
+	        return _this2.chart.getHeight() - _this2.chart.axes.yScale(_this2.y1);
+	      }).style('fill', function () {
+	        return _this2.f;
+	      }).style('opacity', function () {
+	        return _this2.o;
+	      }).on('mouseover', function () {
+	        if (_this2.chart.tooltip) {
+	          return _this2.chart.tooltip.mouseover(_this2, d3.event.pageX, d3.event.pageY);
+	        }
+	      }).on('mouseout', function () {
+	        if (_this2.chart.tooltip) {
+	          return _this2.chart.tooltip.mouseout();
+	        }
+	      });
+	      // update
+	      rect.attr('x', function () {
+	        return _this2.chart.axes.xScale(_this2.x1);
+	      }).attr('y', function () {
+	        return _this2.chart.axes.yScale(_this2.y1);
+	      }).attr('width', function () {
+	        return _this2.chart.axes.xScale.bandwidth();
+	      }).attr('height', function () {
+	        return _this2.chart.getHeight() - _this2.chart.axes.yScale(_this2.y1);
+	      });
+	      // remove
+	      rect.exit().remove();
+	      return this;
+	    }
+	  }]);
+	
+	  return BarNode;
+	}(_Node3.default);
+	
+	module.exports = BarNode;
+
+/***/ },
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1282,7 +1524,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(LineNode, [{
 	    key: 'getFill',
 	    value: function getFill(type) {
-	      var fill = '#33B5E';
+	      var fill = '#33B5E5';
 	      switch (type) {
 	        case 'warning':
 	          fill = '#FFBB33';
@@ -1362,7 +1604,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = LineNode;
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1509,7 +1751,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = RectNode;
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1834,7 +2076,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = SegmentNode;
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1845,11 +2087,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _Axes2 = _interopRequireDefault(_Axes);
 	
-	var _Tooltip = __webpack_require__(15);
+	var _Tooltip = __webpack_require__(17);
 	
 	var _Tooltip2 = _interopRequireDefault(_Tooltip);
 	
-	var _Zoom = __webpack_require__(16);
+	var _Zoom = __webpack_require__(18);
 	
 	var _Zoom2 = _interopRequireDefault(_Zoom);
 	
@@ -2124,11 +2366,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'remove',
 	    value: function remove() {
-	      this.zoom.remove();
-	      this.tooltip.remove();
-	      this.axes.remove();
-	      this.container.remove();
-	      this.root.remove();
+	      if (this.zoom && typeof this.zoom.remove === 'function') this.zoom.remove();
+	      if (this.tooltip && typeof this.tooltip.remove === 'function') this.tooltip.remove();
+	      if (this.axes && typeof this.axes.remove === 'function') this.axes.remove();
+	      if (this.container && typeof this.container.remove === 'function') this.container.remove();
+	      if (this.root && typeof this.root.remove === 'function') this.root.remove();
 	    }
 	
 	    /**
@@ -2305,7 +2547,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Chart;
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2395,7 +2637,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Tooltip;
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2569,7 +2811,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Zoom;
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2578,11 +2820,229 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
-	var _Chart2 = __webpack_require__(14);
+	var _Chart2 = __webpack_require__(16);
 	
 	var _Chart3 = _interopRequireDefault(_Chart2);
 	
-	var _NodeGroup = __webpack_require__(10);
+	var _BarGroup = __webpack_require__(9);
+	
+	var _BarGroup2 = _interopRequireDefault(_BarGroup);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var _ = __webpack_require__(4);
+	
+	var BarChart = function (_Chart) {
+	  _inherits(BarChart, _Chart);
+	
+	  /**
+	  * BarChart - constructs the root SVG element to contain the BarChart
+	  * @param {object} options, the options to create a BarChart
+	  * @param {string} containerID, the id of the BarChart container div
+	  * @param {string} svgcontainerClass, the desired class of the constructed svg element
+	  * @param {object} tooltip,
+	  * @param {number} tooltip.opacity, the background opacity for the tooltip
+	  * @param {object} tooltip.template, the compiled template
+	  * @param {boolean} scale, scale the svg on window resize @default false
+	  * @param {boolean} resize, resize the svg on window resize @default true
+	  * @returns {object} this, returns self
+	  */
+	  function BarChart(options) {
+	    var _ret;
+	
+	    _classCallCheck(this, BarChart);
+	
+	    var _this = _possibleConstructorReturn(this, (BarChart.__proto__ || Object.getPrototypeOf(BarChart)).call(this, options));
+	
+	    _this.init();
+	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
+	  }
+	
+	  /**
+	  * init - method to set/re-set the resizeHandler
+	  * @returns {object} this
+	  */
+	
+	
+	  _createClass(BarChart, [{
+	    key: 'init',
+	    value: function init() {
+	      _get(BarChart.prototype.__proto__ || Object.getPrototypeOf(BarChart.prototype), 'init', this).call(this);
+	      var resizeEnabled = this.options.resize || true;
+	      if (resizeEnabled) {
+	        this.resizeHandler = _.debounce(_.bind(this.resize, this), 500);
+	        return window.addEventListener('resize', this.resizeHandler);
+	      }
+	    }
+	
+	    /**
+	    * draw - draw using d3 select.data.enter workflow
+	    * @param {array} data, an array of {object} for each marker
+	    * @returns {object} this
+	    */
+	
+	  }, {
+	    key: 'draw',
+	    value: function draw(data) {
+	      _get(BarChart.prototype.__proto__ || Object.getPrototypeOf(BarChart.prototype), 'draw', this).call(this, data);
+	      var groups = this.groups.selectAll('.group').data(this.getGroups(), function (d) {
+	        return d.id;
+	      });
+	      groups.enter().append(function (group) {
+	        return group.detached();
+	      });
+	      groups.each(function (group) {
+	        return group.update();
+	      });
+	      groups.exit().remove();
+	      return this;
+	    }
+	
+	    /**
+	    * defaultGroup - creates a default group if an array is passed to the draw method
+	    * @param {array} nodes, an array of Node's
+	    */
+	
+	  }, {
+	    key: 'defaultGroup',
+	    value: function defaultGroup(nodes) {
+	      var group = this.getGroups().find(function (g) {
+	        return g.id === 'default_';
+	      });
+	      if (typeof group === 'undefined') {
+	        if (this.options.group && this.options.group.onEnter) {
+	          group = new _BarGroup2.default(this, { id: 'default_', onEnter: this.options.group.onEnter });
+	        } else {
+	          group = new _BarGroup2.default(this, { id: 'default_' });
+	        }
+	      }
+	      nodes.forEach(function (d) {
+	        return group.addNode(d);
+	      });
+	      return group;
+	    }
+	
+	    /**
+	    * mergeGroups - merge groups from data passed directly to the draw method
+	    * @override
+	    * @param {object} groups, a set of Groups
+	    * @return {boolean} hasChanged
+	    */
+	
+	  }, {
+	    key: 'mergeGroups',
+	    value: function mergeGroups(groups) {
+	      var _this2 = this;
+	
+	      var notMerged = Object.keys(this.groups_);
+	      var addedNewGroup = false;
+	      Object.keys(groups).forEach(function (k) {
+	        var idx = -1;
+	        var group = _this2.groups_[k];
+	        if (typeof group === 'undefined') {
+	          addedNewGroup = true;
+	          if (groups[k] instanceof _BarGroup2.default) {
+	            group = groups[k];
+	            _this2.addGroup(group);
+	          } else {
+	            // TODO: allow the user to pass in an object with `data` array
+	            throw new Error('Must be instance of a d3cf Group.');
+	          }
+	        } else {
+	          idx = notMerged.indexOf(k);
+	          if (idx >= 0) {
+	            notMerged.splice(idx, 1);
+	            // merge new group data into the existing group
+	            groups[k].getNodes().forEach(function (n) {
+	              group.addNode(n);
+	            });
+	          }
+	        }
+	      });
+	      // remove the groups that have not been sliced
+	      if (notMerged.length > 0) {
+	        notMerged.forEach(function (k) {
+	          _this2.removeGroup(k);
+	        });
+	        // if we have removed an existing group
+	        return true;
+	      }
+	      // if we have merged in new groups
+	      if (addedNewGroup) {
+	        return true;
+	      }
+	      // otherwise no change
+	      return false;
+	    }
+	
+	    /**
+	    * update the dimensions of the chart (axes, gridlines, then redraw)
+	    * @param {array} data, an array of {object} for each marker
+	    * @returns {object} this
+	    */
+	
+	  }, {
+	    key: 'update',
+	    value: function update(data) {
+	      _get(BarChart.prototype.__proto__ || Object.getPrototypeOf(BarChart.prototype), 'update', this).call(this, data);
+	      this.draw(data);
+	      return this;
+	    }
+	
+	    /**
+	    * remove - removes the chart from the DOM and any event listeners
+	    * @return {object} this
+	    */
+	
+	  }, {
+	    key: 'remove',
+	    value: function remove() {
+	      _get(BarChart.prototype.__proto__ || Object.getPrototypeOf(BarChart.prototype), 'remove', this).call(this);
+	      if (this.resizeHandler) {
+	        window.removeEventListener('resize', this.resizeHandler);
+	      }
+	      return this;
+	    }
+	
+	    /**
+	    * resize - re-renders the chart
+	    * @return {object} this
+	    */
+	
+	  }, {
+	    key: 'resize',
+	    value: function resize() {
+	      this.update();
+	      return this;
+	    }
+	  }]);
+	
+	  return BarChart;
+	}(_Chart3.default);
+	
+	module.exports = BarChart;
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+	
+	var _Chart2 = __webpack_require__(16);
+	
+	var _Chart3 = _interopRequireDefault(_Chart2);
+	
+	var _NodeGroup = __webpack_require__(11);
 	
 	var _NodeGroup2 = _interopRequireDefault(_NodeGroup);
 	
@@ -2808,7 +3268,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ScatterPlot;
 
 /***/ },
-/* 18 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2817,11 +3277,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
-	var _Chart2 = __webpack_require__(14);
+	var _Chart2 = __webpack_require__(16);
 	
 	var _Chart3 = _interopRequireDefault(_Chart2);
 	
-	var _LineGroup = __webpack_require__(9);
+	var _LineGroup = __webpack_require__(10);
 	
 	var _LineGroup2 = _interopRequireDefault(_LineGroup);
 	

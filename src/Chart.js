@@ -230,11 +230,11 @@ class Chart {
   * @return {object} this
   */
   remove() {
-    this.zoom.remove();
-    this.tooltip.remove();
-    this.axes.remove();
-    this.container.remove();
-    this.root.remove();
+    if (this.zoom && typeof this.zoom.remove === 'function') this.zoom.remove();
+    if (this.tooltip && typeof this.tooltip.remove === 'function') this.tooltip.remove();
+    if (this.axes && typeof this.axes.remove === 'function') this.axes.remove();
+    if (this.container && typeof this.container.remove === 'function') this.container.remove();
+    if (this.root && typeof this.root.remove === 'function') this.root.remove();
   }
 
   /**

@@ -70,8 +70,8 @@ class Axes {
   /**
   * init - initialize the plot x,y axes
   *
-  * @param {array} xDomain - the zoom xDomain or undefined
-  * @param {array} yDomain - the zoom yDomain or undefined
+  * @param {array=} xDomain - the zoom xDomain or undefined
+  * @param {array=} yDomain - the zoom yDomain or undefined
   */
   draw(xDomain, yDomain) {
     if (this.options.x.type === 'datetime') {
@@ -79,6 +79,12 @@ class Axes {
         this.xScale = d3.scaleTime().domain(xDomain).range([0, this.chart.getWidth()]).nice();
       } else {
         this.xScale = d3.scaleTime().domain(this.defaultMinMax[0]).range([0, this.chart.getWidth()]).nice();
+      }
+    } else if (this.options.x.type === 'band') {
+      if (xDomain) {
+        this.xScale = d3.scaleBand().domain(['info', 'success', 'muted', 'primary', 'warning', 'danger']).rangeRound([0, this.chart.getWidth()]).padding(0.1);
+      } else {
+        this.xScale = d3.scaleBand().rangeRound([0, this.chart.getWidth()]).padding(0.1);
       }
     } else {
       if (xDomain) {
@@ -89,6 +95,8 @@ class Axes {
     }
     if (this.options.x.type === 'datetime') {
       this.xAxis = d3.axisBottom().scale(this.xScale).ticks(10).tickFormat(d3.timeFormat(this.formatDate()));
+    } else if (this.options.x.type === 'band') {
+      this.xAxis = d3.axisBottom().scale(this.xScale);
     } else {
       this.xAxis = d3.axisBottom().scale(this.xScale).ticks(10);
     }

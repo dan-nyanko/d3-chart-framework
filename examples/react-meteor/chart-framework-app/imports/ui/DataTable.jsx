@@ -145,9 +145,13 @@ export default class DataTable extends Component {
 
   _localeDateRenderer({ cellData, columnData, dataKey, rowData, rowIndex }) {
     if (cellData) {
-      return new Date(cellData).toLocaleDateString();
+      const d = new Date(cellData);
+      if (d.toString() === 'Invalid Date') {
+          return cellData;
+      }
+      return d.toLocaleDateString();
     } else {
-      return ''
+      return '';
     }
   }
 
