@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Incidents } from '../imports/api/incidents';
 import { Prices } from '../imports/api/prices';
-
+import { Counts } from '../imports/api/counts';
 
 /**
 * Returns a random date
@@ -59,7 +59,7 @@ function randomIncident(types, start, end) {
 
 
 Meteor.startup(() => {
-  const types = ['success', 'info'];
+  const types = ['info', 'success', 'muted', 'primary', 'warning', 'danger'];
   const endDate = new Date();
   const startDate = new Date(endDate);
   startDate.setMonth(endDate.getMonth() - 12);
@@ -96,5 +96,15 @@ Meteor.startup(() => {
         }
       }
   });
-
+  
+  // generate random values for each type
+  Counts.remove({}, () => {
+      for (let t = 0; t < types.length; t++) {
+          Counts.insert({
+              x1: types[t],
+              y1: randomNumber() * 100,
+          });
+      }
+  });
+ 
 });

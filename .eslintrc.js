@@ -14,7 +14,6 @@ module.exports = {
   },
   "extends": ["eslint:recommended"],
   "rules": {
-    "accessor-pairs": "error",
     "array-bracket-spacing": "error",
     "array-callback-return": "off",
     "arrow-body-style": "off",
@@ -48,7 +47,7 @@ module.exports = {
     "computed-property-spacing": "error",
     "consistent-return": "off",
     "consistent-this": "error",
-    "curly": "error",
+    "curly": "warn",
     "default-case": "error",
     "dot-location": ["error", "property"],
     "dot-notation": "error",

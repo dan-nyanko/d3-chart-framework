@@ -70,8 +70,8 @@ class Axes {
   /**
   * init - initialize the plot x,y axes
   *
-  * @param {array} xDomain - the zoom xDomain or undefined
-  * @param {array} yDomain - the zoom yDomain or undefined
+  * @param {array=} xDomain - the zoom xDomain or undefined
+  * @param {array=} yDomain - the zoom yDomain or undefined
   */
   draw(xDomain, yDomain) {
     if (this.options.x.type === 'datetime') {
@@ -79,6 +79,12 @@ class Axes {
         this.xScale = d3.scaleTime().domain(xDomain).range([0, this.chart.getWidth()]).nice();
       } else {
         this.xScale = d3.scaleTime().domain(this.defaultMinMax[0]).range([0, this.chart.getWidth()]).nice();
+      }
+    } else if (this.options.x.type === 'band') {
+      if (xDomain) {
+        this.xScale = d3.scaleBand().domain(xDomain).rangeRound([0, this.chart.getWidth()]).padding(0.1);
+      } else {
+        this.xScale = d3.scaleBand().domain(['']).rangeRound([0, this.chart.getWidth()]).padding(0.1);
       }
     } else {
       if (xDomain) {
@@ -89,6 +95,8 @@ class Axes {
     }
     if (this.options.x.type === 'datetime') {
       this.xAxis = d3.axisBottom().scale(this.xScale).ticks(10).tickFormat(d3.timeFormat(this.formatDate()));
+    } else if (this.options.x.type === 'band') {
+      this.xAxis = d3.axisBottom().scale(this.xScale);
     } else {
       this.xAxis = d3.axisBottom().scale(this.xScale).ticks(10);
     }
@@ -170,7 +178,8 @@ class Axes {
     this.yScale.domain(minMax[1]);
     if (this.options.filter) {
       this.chart.removeFilter('_domain').addFilter('_domain', (d) => {
-        // TODO: should this scope be the Plot or the Axes?
+        if (this.options.x.type === 'band') return d;
+        // TODO: should this scope be the Chart/Plot or the Axes?
         let x1 = this.xScale.domain()[0];
         if (x1 instanceof Date) {
           x1 = x1.getTime();
@@ -219,7 +228,10 @@ class Axes {
   calcMinMax(shouldFilterDomain) {
       const data = this.chart.getGroupsNodes(shouldFilterDomain);
       if (data.length === 0) {
-          return [[0, 0], [0, 0]];
+        if (this.options.x.type === 'band') {
+          return [[''], [0, 0]];
+        }
+        return [[0, 0], [0, 0]];
       }
       let xMin = 0;
       let xMax = 0;
@@ -234,6 +246,8 @@ class Axes {
         if (isNaN(xMax)) {
           xMax = Axes.maxDatetime(x1, this.useAutoPadding);
         }
+      } else if (this.options.x.type === 'band') {
+        xMin = _.pluck(data, 'x1');
       } else {
         const x1 = _.pluck(data, 'x1');
         const x2 = _.pluck(data, 'x2');
@@ -248,6 +262,9 @@ class Axes {
       }
       const yMin = 0;
       const yMax = Axes.maxNumeric(_.pluck(data, 'y1'), this.useAutoPadding);
+      if (this.options.x.type === 'band') {
+        return [xMin, [yMin, yMax]];
+      }
       return [[xMin, xMax], [yMin, yMax]];
   }
 

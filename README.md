@@ -7,7 +7,8 @@ Provides an extensible, reusable approach to building charts with [D3js.org](htt
 
 ## Live Example
 
-See a live example of the react-meteor application on heroku:
+See a live example of the react-meteor application on heroku (this may take awhile due to [dyno sleeping](https://devcenter.heroku.com/articles/free-dyno-hours#dyno-sleeping)):
+
 [chart-framework-app](https://chart-framework-app.herokuapp.com/)
 
 
