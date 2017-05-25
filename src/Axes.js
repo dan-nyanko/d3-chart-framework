@@ -82,9 +82,9 @@ class Axes {
       }
     } else if (this.options.x.type === 'band') {
       if (xDomain) {
-        this.xScale = d3.scaleBand().domain(['info', 'success', 'muted', 'primary', 'warning', 'danger']).rangeRound([0, this.chart.getWidth()]).padding(0.1);
+        this.xScale = d3.scaleBand().domain(xDomain).rangeRound([0, this.chart.getWidth()]).padding(0.1);
       } else {
-        this.xScale = d3.scaleBand().rangeRound([0, this.chart.getWidth()]).padding(0.1);
+        this.xScale = d3.scaleBand().domain(['']).rangeRound([0, this.chart.getWidth()]).padding(0.1);
       }
     } else {
       if (xDomain) {
@@ -178,7 +178,8 @@ class Axes {
     this.yScale.domain(minMax[1]);
     if (this.options.filter) {
       this.chart.removeFilter('_domain').addFilter('_domain', (d) => {
-        // TODO: should this scope be the Plot or the Axes?
+        if (this.options.x.type === 'band') return d;
+        // TODO: should this scope be the Chart/Plot or the Axes?
         let x1 = this.xScale.domain()[0];
         if (x1 instanceof Date) {
           x1 = x1.getTime();
@@ -227,7 +228,10 @@ class Axes {
   calcMinMax(shouldFilterDomain) {
       const data = this.chart.getGroupsNodes(shouldFilterDomain);
       if (data.length === 0) {
-          return [[0, 0], [0, 0]];
+        if (this.options.x.type === 'band') {
+          return [[''], [0, 0]];
+        }
+        return [[0, 0], [0, 0]];
       }
       let xMin = 0;
       let xMax = 0;
@@ -242,6 +246,8 @@ class Axes {
         if (isNaN(xMax)) {
           xMax = Axes.maxDatetime(x1, this.useAutoPadding);
         }
+      } else if (this.options.x.type === 'band') {
+        xMin = _.pluck(data, 'x1');
       } else {
         const x1 = _.pluck(data, 'x1');
         const x2 = _.pluck(data, 'x2');
@@ -256,6 +262,9 @@ class Axes {
       }
       const yMin = 0;
       const yMax = Axes.maxNumeric(_.pluck(data, 'y1'), this.useAutoPadding);
+      if (this.options.x.type === 'band') {
+        return [xMin, [yMin, yMax]];
+      }
       return [[xMin, xMax], [yMin, yMax]];
   }
 

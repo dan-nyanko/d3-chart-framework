@@ -1,14 +1,32 @@
 import React, { Component, PropTypes } from 'react';
 
+import { BarChart } from 'd3-chart-framework';
+// import { BarChart } from '../api/build/d3-chart-framework';
+
 export default class Toolbar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      activeFilters: {
-        info: true,
-        success: true,
-      },
-    };
+    if (this.props.chart instanceof BarChart) {
+      this.state = {
+        activeFilters: {
+          info: true,
+          success: true,
+          muted: true,
+          primary: true,
+          warning: true,
+          danger: true,
+        },
+        showReset: false,
+      };
+    } else {
+      this.state = {
+        activeFilters: {
+          info: true,
+          success: true,
+        },
+        showReset: true,
+      };
+    }
   }
 
   resetZoom(event) {
@@ -46,24 +64,73 @@ export default class Toolbar extends Component {
   }
 
   render() {
+    const buttons = [];
+    if (this.state.activeFilters.hasOwnProperty('info')) {
+        buttons.push(
+          <button key={'info'} className={this.buttonFilterClassNames(this.state.activeFilters.info, 'info')} onClick={(event) => this.toggleFilter(event, 'info')}>
+            <i className={this.iconFilterClassNames(this.state.activeFilters.info)}></i>
+            <span>Info</span>
+          </button>
+        );
+    }
+    if (this.state.activeFilters.hasOwnProperty('success')) {
+      buttons.push(
+        <button key={'success'} className={this.buttonFilterClassNames(this.state.activeFilters.success, 'success')} onClick={(event) => this.toggleFilter(event, 'success')}>
+          <i className={this.iconFilterClassNames(this.state.activeFilters.success)}></i>
+          <span>Success</span>
+        </button>
+      );
+    }
+    if (this.state.activeFilters.hasOwnProperty('muted')) {
+      buttons.push(
+        <button key={'muted'} className={this.buttonFilterClassNames(this.state.activeFilters.muted, 'muted')} onClick={(event) => this.toggleFilter(event, 'muted')}>
+          <i className={this.iconFilterClassNames(this.state.activeFilters.muted)}></i>
+          <span>Muted</span>
+        </button>
+      );
+    }
+    if (this.state.activeFilters.hasOwnProperty('primary')) {
+      buttons.push(
+        <button key={'primary'} className={this.buttonFilterClassNames(this.state.activeFilters.primary, 'primary')} onClick={(event) => this.toggleFilter(event, 'primary')}>
+          <i className={this.iconFilterClassNames(this.state.activeFilters.primary)}></i>
+          <span>Primary</span>
+        </button>
+      );
+    }
+    if (this.state.activeFilters.hasOwnProperty('warning')) {
+      buttons.push(
+        <button key={'warning'} className={this.buttonFilterClassNames(this.state.activeFilters.warning, 'warning')} onClick={(event) => this.toggleFilter(event, 'warning')}>
+          <i className={this.iconFilterClassNames(this.state.activeFilters.warning)}></i>
+          <span>Warning</span>
+        </button>
+      );
+    }
+    if (this.state.activeFilters.hasOwnProperty('danger')) {
+      buttons.push(
+        <button key={'danger'} className={this.buttonFilterClassNames(this.state.activeFilters.danger, 'danger')} onClick={(event) => this.toggleFilter(event, 'danger')}>
+          <i className={this.iconFilterClassNames(this.state.activeFilters.danger)}></i>
+          <span>Danger</span>
+        </button>
+      );
+    }
+    let resetButton = null;
+    if (this.state.showReset) {
+      resetButton = (
+        <button className="btn btn-xs btn-default d3cf-toolbar-button" onClick={(event) => this.resetZoom(event)}>
+          <i className="fa fa-search-plus"></i>
+          <span>Reset</span>
+        </button>
+      );
+    }
+
     return (
       <div className="d3cf-toolbar">
         <div className="row" style={{paddingRight: 20}}>
           <div className="pull-left">
-            <button className={this.buttonFilterClassNames(this.state.activeFilters.info, 'info')} onClick={(event) => this.toggleFilter(event, 'info')}>
-              <i className={this.iconFilterClassNames(this.state.activeFilters.info)}></i>
-              <span>Info</span>
-            </button>
-            <button className={this.buttonFilterClassNames(this.state.activeFilters.success, 'success')} onClick={(event) => this.toggleFilter(event, 'success')}>
-              <i className={this.iconFilterClassNames(this.state.activeFilters.success)}></i>
-              <span>Success</span>
-            </button>
+            {buttons}
           </div>
           <div className="pull-right">
-            <button className="btn btn-xs btn-default d3cf-toolbar-button" onClick={(event) => this.resetZoom(event)}>
-              <i className="fa fa-search-plus"></i>
-              <span>Reset</span>
-            </button>
+            {resetButton}
           </div>
         </div>
       </div>

@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import Immutable from 'immutable';
 import _ from 'underscore';
 
-//import { BarChart, InvalidNodeError, BarNode, BarGroup } from 'd3-chart-framework';
-import { BarChart, InvalidNodeError, BarNode, BarGroup } from '../api/build/d3-chart-framework';
+import { BarChart, InvalidNodeError, BarNode, BarGroup } from 'd3-chart-framework';
+// import { BarChart, InvalidNodeError, BarNode, BarGroup } from '../api/build/d3-chart-framework';
 import Toolbar from './Toolbar';
 
 
@@ -21,9 +21,6 @@ const tmpl = _.template(`
         style="color: <%= obj.getFill(obj.meta.type) %>"
       <% } %>
       aria-hidden="true"></i> <%= obj.y1 %>
-  </p>
-  <p style="padding: 0;">
-    <%= obj.x1 %>
   </p>
 `);
 
@@ -93,7 +90,8 @@ export default class BarChartComponent extends Component {
         id: `node-${count._id}`,
         x1: count.x1,
         y1: parseFloat(count.y1),
-        o: 0, // opacity
+        o: 1, // opacity
+        w: 100, // width (default is d3-scale bandwidth())
         meta: {
           type: count.x1,
         },
@@ -141,7 +139,7 @@ export default class BarChartComponent extends Component {
       <div>
         <header>
           <h1>BarChart</h1>
-          <p>Subclass of Chart, displays random lines.</p>
+          <p>Subclass of Chart, displays a bar chart with random heights.</p>
         </header>
         { this.renderToolbar() }
         <div id="chart" className="d3cf"></div>

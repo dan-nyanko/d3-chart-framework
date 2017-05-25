@@ -77,7 +77,7 @@ class BarNode extends Node {
     }).attr('height', () => {
       return this.chart.getHeight() - this.chart.axes.yScale(this.y1);
     }).style('fill', () => {
-      return this.f;
+      return this.getFill(this.x1);
     }).style('opacity', () => {
       return this.o;
     }).on('mouseover', () => {

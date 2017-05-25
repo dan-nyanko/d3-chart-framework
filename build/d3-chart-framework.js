@@ -336,9 +336,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      } else if (this.options.x.type === 'band') {
 	        if (xDomain) {
-	          this.xScale = d3.scaleBand().domain(['info', 'success', 'muted', 'primary', 'warning', 'danger']).rangeRound([0, this.chart.getWidth()]).padding(0.1);
+	          this.xScale = d3.scaleBand().domain(xDomain).rangeRound([0, this.chart.getWidth()]).padding(0.1);
 	        } else {
-	          this.xScale = d3.scaleBand().rangeRound([0, this.chart.getWidth()]).padding(0.1);
+	          this.xScale = d3.scaleBand().domain(['']).rangeRound([0, this.chart.getWidth()]).padding(0.1);
 	        }
 	      } else {
 	        if (xDomain) {
@@ -414,7 +414,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.yScale.domain(minMax[1]);
 	      if (this.options.filter) {
 	        this.chart.removeFilter('_domain').addFilter('_domain', function (d) {
-	          // TODO: should this scope be the Plot or the Axes?
+	          if (_this2.options.x.type === 'band') return d;
+	          // TODO: should this scope be the Chart/Plot or the Axes?
 	          var x1 = _this2.xScale.domain()[0];
 	          if (x1 instanceof Date) {
 	            x1 = x1.getTime();
@@ -469,6 +470,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function calcMinMax(shouldFilterDomain) {
 	      var data = this.chart.getGroupsNodes(shouldFilterDomain);
 	      if (data.length === 0) {
+	        if (this.options.x.type === 'band') {
+	          return [[''], [0, 0]];
+	        }
 	        return [[0, 0], [0, 0]];
 	      }
 	      var xMin = 0;
@@ -484,6 +488,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (isNaN(xMax)) {
 	          xMax = Axes.maxDatetime(x1, this.useAutoPadding);
 	        }
+	      } else if (this.options.x.type === 'band') {
+	        xMin = _.pluck(data, 'x1');
 	      } else {
 	        var _x = _.pluck(data, 'x1');
 	        var _x2 = _.pluck(data, 'x2');
@@ -498,6 +504,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      var yMin = 0;
 	      var yMax = Axes.maxNumeric(_.pluck(data, 'y1'), this.useAutoPadding);
+	      if (this.options.x.type === 'band') {
+	        return [xMin, [yMin, yMax]];
+	      }
 	      return [[xMin, xMax], [yMin, yMax]];
 	    }
 	
@@ -1132,7 +1141,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'update',
 	    value: function update() {
 	      var filtered = this.chart.applyFilters(this.getNodes());
-	      console.log('filtered: ', filtered);
 	      this.group.attr('numNodes', filtered.length);
 	      var nodes = this.group.selectAll('.d3cf-node').data(filtered, function (d) {
 	        return d.id;
@@ -1434,7 +1442,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }).attr('height', function () {
 	        return _this2.chart.getHeight() - _this2.chart.axes.yScale(_this2.y1);
 	      }).style('fill', function () {
-	        return _this2.f;
+	        return _this2.getFill(_this2.x1);
 	      }).style('opacity', function () {
 	        return _this2.o;
 	      }).on('mouseover', function () {

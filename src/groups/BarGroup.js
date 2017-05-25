@@ -14,7 +14,6 @@ class BarGroup extends Group {
   */
   update() {
     const filtered = this.chart.applyFilters(this.getNodes());
-    console.log('filtered: ', filtered);
     this.group.attr('numNodes', filtered.length);
     const nodes = this.group.selectAll('.d3cf-node').data(filtered, (d) => {
       return d.id;
