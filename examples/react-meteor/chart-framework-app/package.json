@@ -7,14 +7,15 @@
   "dependencies": {
     "babel-runtime": "^6.20.0",
     "d3": "^4.4.0",
+    "d3-chart-framework": "^0.0.11",
     "immutable": "^3.8.1",
     "moment": "^2.17.1",
+    "prop-types": "^15.5.10",
     "react": "^15.4.1",
     "react-addons-pure-render-mixin": "^15.4.1",
     "react-addons-shallow-compare": "^15.4.1",
     "react-dom": "^15.4.1",
-    "react-virtualized": "^8.8.1",
-    "underscore": "^1.8.3",
-    "d3-chart-framework": "^0.0.11"
+    "react-virtualized": "^9.7.6",
+    "underscore": "^1.8.3"
   }
 }
