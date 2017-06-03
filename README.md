@@ -1,6 +1,8 @@
-# d3-chart-framework [![CircleCI](https://circleci.com/gh/dan-nyanko/d3-chart-framework.svg?style=svg)](https://circleci.com/gh/dan-nyanko/d3-chart-framework)
-Provides an extensible, reusable approach to building charts with [D3js.org](https://d3js.org/)
+# d3-chart-framework
+[![CircleCI](https://circleci.com/gh/dan-nyanko/d3-chart-framework.svg?style=svg)](https://circleci.com/gh/dan-nyanko/d3-chart-framework)
+[![npm](https://img.shields.io/npm/v/d3-chart-framework.svg)](https://www.npmjs.com/package/d3-chart-framework)
 
+Provides an extensible, reusable approach to building charts with [D3js.org](https://d3js.org/)
 
 ![Line Chart Screenshot](screenshots/LineChart.png)
 
