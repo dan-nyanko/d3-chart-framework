@@ -66,7 +66,9 @@ export default class BarChartComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.updateChart(nextProps);
+    if (nextProps.counts !== this.props.counts) {
+      this.updateChart(nextProps);
+    }
   }
 
   /*

@@ -69,7 +69,9 @@ export default class LineChartComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.updateChart(nextProps);
+    if (nextProps.prices !== this.props.prices) {
+      this.updateChart(nextProps);
+    }
   }
 
   /*

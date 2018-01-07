@@ -64,7 +64,9 @@ export default class ScatterPlotComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.updateChart(nextProps);
+    if (nextProps.incidents !== this.props.incidents) {
+      this.updateChart(nextProps);
+    }
   }
 
   /*
