@@ -251,12 +251,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	var moment = __webpack_require__(5);
 	
 	/**
-	* getDatetimeUnit - determine the unit of time for padding the axis
-	*
-	* @param {object} min, the min moment datetime object
-	* @param {object} max, the max moment datetime object
-	* @return {string} the datetime unit {day, week, month}
-	*/
+	 * getDatetimeUnit - determine the unit of time for padding the axis
+	 *
+	 * @param {object} min, the min moment datetime object
+	 * @param {object} max, the max moment datetime object
+	 * @return {string} the datetime unit {day, week, month}
+	 */
 	function getDatetimeUnit(min, max) {
 	  var diff = max.diff(min, 'days');
 	  var unit = 'month';
@@ -270,41 +270,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var Axes = function () {
 	  /**
-	  * Axes
-	  * constructs 2d cartesian axes, appends to the container SVG element of the chart
-	  *
-	  * @param {object} chart - the chart to append the axis
-	  * @param {object} options - the properties for the axis
-	  * @param {boolean} grid - should the grid be displayed?
-	  * X axis properties
-	  * @param {object} options.axes.x - the properties for x axis
-	  * @param {string} options.axes.x.title - the title of the x axis
-	  * @param {string} options.axes.x.type - the datatype of the x axis {numeric, datetime}
-	  * Y axis properties
-	  * @param {object} options.axes.y - the properties for y axis
-	  * @param {string} options.axes.y.title - the title of the y axis
-	  * @param {string} options.axes.y.type - the datatype of the y axis {numeric, datetime}
-	  * @returns {object} this - returns self
-	  * @example usage:
-	  *  with an instance of a chart:
-	  ```
-	  axes = new Axes(plot, {
-	    axes: {
-	      grid: true,
-	      x: {
-	        title: 'Time',
-	        type: 'datetime',
-	        minMax: [1443371126, 1474993537]
-	      },
-	      y: {
-	        title: 'Incidents',
-	        type: 'numeric',
-	        minMax: [0, 100]
-	      },
-	    }
-	  })
-	  ```
-	  */
+	   * Axes
+	   * constructs 2d cartesian axes, appends to the container SVG element of the chart
+	   *
+	   * @param {object} chart - the chart to append the axis
+	   * @param {object} options - the properties for the axis
+	   * @param {boolean} grid - should the grid be displayed?
+	   * X axis properties
+	   * @param {object} options.axes.x - the properties for x axis
+	   * @param {string} options.axes.x.title - the title of the x axis
+	   * @param {string} options.axes.x.type - the datatype of the x axis {numeric, datetime}
+	   * Y axis properties
+	   * @param {object} options.axes.y - the properties for y axis
+	   * @param {string} options.axes.y.title - the title of the y axis
+	   * @param {string} options.axes.y.type - the datatype of the y axis {numeric, datetime}
+	   * @returns {object} this - returns self
+	   * @example usage:
+	   *  with an instance of a chart:
+	   ```
+	   axes = new Axes(plot, {
+	     axes: {
+	       grid: true,
+	       x: {
+	         title: 'Time',
+	         type: 'datetime',
+	         minMax: [1443371126, 1474993537]
+	       },
+	       y: {
+	         title: 'Incidents',
+	         type: 'numeric',
+	         minMax: [0, 100]
+	       },
+	     }
+	   })
+	   ```
+	   */
 	  function Axes(chart, options) {
 	    _classCallCheck(this, Axes);
 	
@@ -316,11 +316,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /**
-	  * init - initialize the plot x,y axes
-	  *
-	  * @param {array=} xDomain - the zoom xDomain or undefined
-	  * @param {array=} yDomain - the zoom yDomain or undefined
-	  */
+	   * init - initialize the plot x,y axes
+	   *
+	   * @param {array=} xDomain - the zoom xDomain or undefined
+	   * @param {array=} yDomain - the zoom yDomain or undefined
+	   */
 	
 	
 	  _createClass(Axes, [{
@@ -400,9 +400,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * setDomain - sets the x, y domains based on the current chart data
-	    *
-	    */
+	     * setDomain - sets the x, y domains based on the current chart data
+	     *
+	     */
 	
 	  }, {
 	    key: 'setDomain',
@@ -440,12 +440,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * update - update the x,y axes using the zoom domain
-	    *
-	    * @param {array} data - an array of {object} for each marker
-	    * @param {boolean} shouldSetDomain - should the domain be set to data bounds
-	    * @return {object} this
-	    */
+	     * update - update the x,y axes using the zoom domain
+	     *
+	     * @param {array} data - an array of {object} for each marker
+	     * @param {boolean} shouldSetDomain - should the domain be set to data bounds
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'update',
@@ -459,11 +459,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * the minMax for all nodes without the domain filters
-	    *
-	    * @param {boolean} shouldFilterDomain
-	    * @return {array} minMax
-	    */
+	     * the minMax for all nodes without the domain filters
+	     *
+	     * @param {boolean} shouldFilterDomain
+	     * @return {array} minMax
+	     */
 	
 	  }, {
 	    key: 'calcMinMax',
@@ -511,9 +511,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * reset - resets the x,y axes back to the original domain
-	    *
-	    */
+	     * reset - resets the x,y axes back to the original domain
+	     *
+	     */
 	
 	  }, {
 	    key: 'reset',
@@ -528,10 +528,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * zoom - zooms the x, y axes based on the zoomArea object
-	    *
-	    * @param {object} zoomArea, an object containing a bounding box of x,y coordinates
-	    */
+	     * zoom - zooms the x, y axes based on the zoomArea object
+	     *
+	     * @param {object} zoomArea, an object containing a bounding box of x,y coordinates
+	     */
 	
 	  }, {
 	    key: 'zoom',
@@ -561,9 +561,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * remove - removes the x,y axis groups from the plot
-	    *
-	    */
+	     * remove - removes the x,y axis groups from the plot
+	     *
+	     */
 	
 	  }, {
 	    key: 'remove',
@@ -576,9 +576,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * formatDate - a method that formats the axis date label
-	    *
-	    */
+	     * formatDate - a method that formats the axis date label
+	     *
+	     */
 	
 	  }, {
 	    key: 'formatDate',
@@ -592,13 +592,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * maxNumeric - determine the maximum value with padding. Padding is determined
-	    * by the number of digits ^ 10 / 10, unless number of digets == 10 then return
-	    * 10
-	    *
-	    * @param {array} data - an array of positive integers
-	    * @return {number} max
-	    */
+	     * maxNumeric - determine the maximum value with padding. Padding is determined
+	     * by the number of digits ^ 10 / 10, unless number of digets == 10 then return
+	     * 10
+	     *
+	     * @param {array} data - an array of positive integers
+	     * @return {number} max
+	     */
 	
 	  }], [{
 	    key: 'maxNumeric',
@@ -616,13 +616,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * minNumeric - determine the minimum value with padding. Padding is determined
-	    * by the number of digits ^ 10 / 10, unless number of digets == 10 then return
-	    * 10
-	    *
-	    * @param {array} data - an array of positive integers
-	    * @return {number} max
-	    */
+	     * minNumeric - determine the minimum value with padding. Padding is determined
+	     * by the number of digits ^ 10 / 10, unless number of digets == 10 then return
+	     * 10
+	     *
+	     * @param {array} data - an array of positive integers
+	     * @return {number} max
+	     */
 	
 	  }, {
 	    key: 'minNumeric',
@@ -640,11 +640,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * maxDatetime - determine the maximum value with padding
-	    *
-	    * @param {array} data - an array of timestamps in milliseconds
-	    * @return {number} max - maximum datetime value
-	    */
+	     * maxDatetime - determine the maximum value with padding
+	     *
+	     * @param {array} data - an array of timestamps in milliseconds
+	     * @return {number} max - maximum datetime value
+	     */
 	
 	  }, {
 	    key: 'maxDatetime',
@@ -659,11 +659,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * minDatetime - determine the minimum value with padding
-	    *
-	    * @param {array} data - an array of timestamps in milliseconds
-	    * @return {number} min - minimum datetime value
-	    */
+	     * minDatetime - determine the minimum value with padding
+	     *
+	     * @param {array} data - an array of timestamps in milliseconds
+	     * @return {number} min - minimum datetime value
+	     */
 	
 	  }, {
 	    key: 'minDatetime',
@@ -697,13 +697,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var Grid = function () {
 	  /**
-	  * Grid - constructs grids lines for the plot
-	  *
-	  * @param {object} axes - the axes to determine xScale, yScale
-	  * @param {object} plot - the plot to append the axis
-	  * @param {object} options - the properties for the axis
-	  * @returns {object} this
-	  */
+	   * Grid - constructs grids lines for the plot
+	   *
+	   * @param {object} axes - the axes to determine xScale, yScale
+	   * @param {object} plot - the plot to append the axis
+	   * @param {object} options - the properties for the axis
+	   * @returns {object} this
+	   */
 	  function Grid(axes, plot, options) {
 	    _classCallCheck(this, Grid);
 	
@@ -714,10 +714,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return this;
 	  }
 	
-	  /*
-	  * init - initialize the x,y grid lines for a plot
-	  *
-	  */
+	  /**
+	   * init - initialize the x,y grid lines for a plot
+	   *
+	   */
 	
 	
 	  _createClass(Grid, [{
@@ -729,10 +729,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.yGroup = this.plot.container.insert('g', ':first-child').attr('class', 'd3cf-grid').attr('transform', 'translate(' + this.plot.margins.left + ', 0)').attr('opacity', null).call(this.yGrid);
 	    }
 	
-	    /*
-	    * remove - removed the grid lines from the plot
-	    *
-	    */
+	    /**
+	     * remove - removed the grid lines from the plot
+	     *
+	     */
 	
 	  }, {
 	    key: 'remove',
@@ -782,10 +782,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	/**
-	* InvalidNodeError - error thrown when an object is not instanceof Node
-	*
-	* @param {string} [message] - (optional) the message to the user
-	*/
+	 * InvalidNodeError - error thrown when an object is not instanceof Node
+	 *
+	 * @param {string} [message] - (optional) the message to the user
+	 */
 	var InvalidNodeError = exports.InvalidNodeError = function (_Error) {
 	  _inherits(InvalidNodeError, _Error);
 	
@@ -800,10 +800,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(Error);
 	
 	/**
-	* InvalidGroupError - error thrown when an object is not instanceof Group
-	*
-	* @param {string} [message] - (optional) the message to the user
-	*/
+	 * InvalidGroupError - error thrown when an object is not instanceof Group
+	 *
+	 * @param {string} [message] - (optional) the message to the user
+	 */
 	
 	
 	var InvalidGroupError = exports.InvalidGroupError = function (_Error2) {
@@ -950,9 +950,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * remove - removes the group from the DOM
-	    *
-	    */
+	     * remove - removes the group from the DOM
+	     *
+	     */
 	
 	  }, {
 	    key: 'remove',
@@ -963,9 +963,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * destroy - destroys the group and any associated elements
-	    *
-	    */
+	     * destroy - destroys the group and any associated elements
+	     *
+	     */
 	
 	  }, {
 	    key: 'destroy',
@@ -978,33 +978,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * onEnter - the default event handler for a group. This may be overridden or
-	    *   a new event handler passed into the constructor as `options.onEnter`
-	    *
-	    * @param {object} selections - the d3 selection object containing the children for this group
-	    */
+	     * onEnter - the default event handler for a group. This may be overridden or
+	     *   a new event handler passed into the constructor as `options.onEnter`
+	     *
+	     * @param {object} selections - the d3 selection object containing the children for this group
+	     */
 	
 	  }], [{
 	    key: 'onEnter',
 	    value: function onEnter() {}
 	
 	    /**
-	    * onUpdate - the default event handler for a group. This may be overridden or
-	    *   a new event handler passed into the constructor as `options.onUpdate`
-	    *
-	    * @param {object} selections - the d3 selection object for this group
-	    */
+	     * onUpdate - the default event handler for a group. This may be overridden or
+	     *   a new event handler passed into the constructor as `options.onUpdate`
+	     *
+	     * @param {object} selections - the d3 selection object for this group
+	     */
 	
 	  }, {
 	    key: 'onUpdate',
 	    value: function onUpdate() {}
 	
 	    /**
-	    * onExit - the default event handler for a group. This may be overridden or
-	    *   a new event handler passed into the constructor as `options.onExit`
-	    *
-	    * @param {object} selections - the d3 selection object for this group
-	    */
+	     * onExit - the default event handler for a group. This may be overridden or
+	     *   a new event handler passed into the constructor as `options.onExit`
+	     *
+	     * @param {object} selections - the d3 selection object for this group
+	     */
 	
 	  }, {
 	    key: 'onExit',
@@ -1036,12 +1036,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var Node = function () {
 	  /**
-	  * Node - base class
-	  *
-	  * @param {object} options - the options used to construct the SegmentMarker
-	  * @param {object} options.meta - the optional meta data associated with the node (e.g. used in the Tooltip)
-	  * @return {object} this
-	  */
+	   * Node - base class
+	   *
+	   * @param {object} options - the options used to construct the SegmentMarker
+	   * @param {object} options.meta - the optional meta data associated with the node (e.g. used in the Tooltip)
+	   * @return {object} this
+	   */
 	  function Node(options) {
 	    _classCallCheck(this, Node);
 	
@@ -1052,9 +1052,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /**
-	  * remove - removes the marker from the DOM
-	  *
-	  */
+	   * remove - removes the marker from the DOM
+	   *
+	   */
 	
 	
 	  _createClass(Node, [{
@@ -1066,9 +1066,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * update - updates one or more elements within the RectNode SVG group
-	    *
-	    */
+	     * update - updates one or more elements within the RectNode SVG group
+	     *
+	     */
 	
 	  }, {
 	    key: 'update',
@@ -1077,10 +1077,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * detached - builds a detached svg group and returns the node
-	    *
-	    * @return {object} node - the SVG node to append to the parent during .call()
-	    */
+	     * detached - builds a detached svg group and returns the node
+	     *
+	     * @return {object} node - the SVG node to append to the parent during .call()
+	     */
 	
 	  }, {
 	    key: 'detached',
@@ -1131,10 +1131,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /**
-	  * update - handles updating the marker
-	  *
-	  * @return {object} this
-	  */
+	   * update - handles updating the marker
+	   *
+	   * @return {object} this
+	   */
 	
 	
 	  _createClass(BarGroup, [{
@@ -1205,10 +1205,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /**
-	  * update - handles updating the marker
-	  *
-	  * @return {object} this
-	  */
+	   * update - handles updating the marker
+	   *
+	   * @return {object} this
+	   */
 	
 	
 	  _createClass(LineGroup, [{
@@ -1220,12 +1220,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	      }
 	      /**
-	      * comparator function for sorting by x1 ascending
-	      *
-	      * @param {object} a - LineNode object
-	      * @param {object} b - LineNode object
-	      * @return {number}
-	      */
+	       * comparator function for sorting by x1 ascending
+	       *
+	       * @param {object} a - LineNode object
+	       * @param {object} b - LineNode object
+	       * @return {number}
+	       */
 	      function cmp(a, b) {
 	        return a.x1 - b.x1;
 	      }
@@ -1299,11 +1299,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /**
-	  * update - handles updating the marker
-	  * @override
-	  *
-	  * @return {object} this
-	  */
+	   * update - handles updating the marker
+	   * @override
+	   *
+	   * @return {object} this
+	   */
 	
 	
 	  _createClass(NodeGroup, [{
@@ -1358,17 +1358,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _inherits(BarNode, _Node);
 	
 	  /**
-	  * BarNode - a data point for a path/line generator
-	  *
-	  * @param {object} chart - an instance of a chart
-	  * @param {object} options - the options used to construct the chart
-	  * @param {string} options.x1 - the category for x1 position
-	  * @param {number} options.y1 - the value for y1 position
-	  * @param {string} options.f - the fill of the bar
-	  * @param {number} options.o - the opacity of the bar
-	  * @param {object=} options.meta - the optional meta data associated with the circle (e.g. used in the Tooltip)
-	  * @return {object} this
-	  */
+	   * BarNode - a data point for a path/line generator
+	   *
+	   * @param {object} chart - an instance of a chart
+	   * @param {object} options - the options used to construct the chart
+	   * @param {string} options.x1 - the category for x1 position
+	   * @param {number} options.y1 - the value for y1 position
+	   * @param {string} options.fill - the fill of the bar
+	   * @param {number} options.opacity - the opacity of the bar
+	   * @param {object=} options.meta - the optional meta data associated with the circle (e.g. used in the Tooltip)
+	   * @return {object} this
+	   */
 	  function BarNode(chart, options) {
 	    var _ret;
 	
@@ -1379,8 +1379,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.chart = chart;
 	    _this.x1 = options.x1;
 	    _this.y1 = options.y1;
-	    _this.f = options.r || '#345e7e';
-	    _this.o = options.o || 0;
+	    _this.fill = options.fill || '#345e7e';
+	    _this.opacity = options.opacity || 0;
 	    _this.style = options.style || 'd3cf-node';
 	    _this.meta = options.meta || {};
 	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
@@ -1444,7 +1444,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }).style('fill', function () {
 	        return _this2.getFill(_this2.x1);
 	      }).style('opacity', function () {
-	        return _this2.o;
+	        return _this2.opacity;
 	      }).on('mouseover', function () {
 	        if (_this2.chart.tooltip) {
 	          return _this2.chart.tooltip.mouseover(_this2, d3.event.pageX, d3.event.pageY);
@@ -1501,17 +1501,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _inherits(LineNode, _Node);
 	
 	  /**
-	  * LineNode - a data point for a path/line generator
-	  *
-	  * @param {object} chart - an instance of a chart
-	  * @param {object} options - the options used to construct the plot
-	  * @param {number} options.x1 - the value for x1 position
-	  * @param {number} options.y1 - the value for y1 position
-	  * @param {string} options.r - the radius of the circle
-	  * @param {number} options.o - the opacity of the cirle
-	  * @param {object} options.meta - the optional meta data associated with the circle (e.g. used in the Tooltip)
-	  * @return {object} this
-	  */
+	   * LineNode - a data point for a path/line generator
+	   *
+	   * @param {object} chart - an instance of a chart
+	   * @param {object} options - the options used to construct the plot
+	   * @param {number} options.x1 - the value for x1 position
+	   * @param {number} options.y1 - the value for y1 position
+	   * @param {string} options.radius - the radius of the circle
+	   * @param {number} options.opacity - the opacity of the cirle
+	   * @param {object} options.meta - the optional meta data associated with the circle (e.g. used in the Tooltip)
+	   * @return {object} this
+	   */
 	  function LineNode(chart, options) {
 	    var _ret;
 	
@@ -1522,8 +1522,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.chart = chart;
 	    _this.x1 = options.x1;
 	    _this.y1 = options.y1;
-	    _this.r = options.r || 3;
-	    _this.o = options.o || 0;
+	    _this.radius = options.radius || 3;
+	    _this.opacity = options.opacity || 0;
 	    _this.style = options.style || 'd3cf-node';
 	    _this.meta = options.meta || {};
 	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
@@ -1550,9 +1550,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * update - updates one or more elements
-	    *
-	    */
+	     * update - updates one or more elements
+	     *
+	     */
 	
 	  }, {
 	    key: 'update',
@@ -1563,11 +1563,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.group = d3.select('#' + this.id);
 	      }
 	      /**
-	      * Each node of the line's `path` (see LineGroup) is a transparent circle in
-	      * order to have a mouseover event.
-	      *
-	      * @see https://groups.google.com/forum/#!topic/d3-js/gHzOj91X2NA
-	      */
+	       * Each node of the line's `path` (see LineGroup) is a transparent circle in
+	       * order to have a mouseover event.
+	       *
+	       * @see https://groups.google.com/forum/#!topic/d3-js/gHzOj91X2NA
+	       */
 	      // select
 	      var circle = this.group.selectAll('circle').data([this], function (d) {
 	        return d.id;
@@ -1578,9 +1578,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }).attr('cy', function () {
 	        return _this2.chart.axes.yScale(_this2.y1);
 	      }).attr('r', function () {
-	        return _this2.r;
+	        return _this2.radius;
 	      }).attr('opacity', function () {
-	        return _this2.o;
+	        return _this2.opacity;
 	      }).on('mouseover', function () {
 	        if (_this2.chart.tooltip) {
 	          return _this2.chart.tooltip.mouseover(_this2, d3.event.pageX, d3.event.pageY);
@@ -1596,9 +1596,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }).attr('cy', function () {
 	        return _this2.chart.axes.yScale(_this2.y1);
 	      }).attr('r', function () {
-	        return _this2.r;
+	        return _this2.radius;
 	      }).attr('opacity', function () {
-	        return _this2.o;
+	        return _this2.opacity;
 	      });
 	      // remove
 	      circle.exit().remove();
@@ -1640,19 +1640,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _inherits(RectNode, _Node);
 	
 	  /**
-	  * RectNode - a rectangular node
-	  *
-	  * @param {object} plot - an instance of a plot
-	  * @param {object} options - the options used to construct the plot
-	  * @param {number} options.x1 - the value for x1 position
-	  * @param {number} options.x2 - the value for x2 position
-	  * @param {number} options.y1 - the value for y1 position
-	  * @param {number} options.h - the value for the height
-	  * @param {string} options.f - the fill of the marker
-	  * @param {number} options.o - the opacity of the marker
-	  * @param {object} options.meta - the optional meta data associated with the marker (e.g. used in the Tooltip)
-	  * @return {object} this
-	  */
+	   * RectNode - a rectangular node
+	   *
+	   * @param {object} plot - an instance of a plot
+	   * @param {object} options - the options used to construct the plot
+	   * @param {number} options.x1 - the value for x1 position
+	   * @param {number} options.x2 - the value for x2 position
+	   * @param {number} options.y1 - the value for y1 position
+	   * @param {number} options.height - the value for the height
+	   * @param {string} options.fill - the fill of the marker
+	   * @param {number} options.opacity - the opacity of the marker
+	   * @param {object} options.meta - the optional meta data associated with the marker (e.g. used in the Tooltip)
+	   * @return {object} this
+	   */
 	  function RectNode(plot, options) {
 	    var _ret;
 	
@@ -1664,9 +1664,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.x1 = options.x1;
 	    _this.x2 = options.x2;
 	    _this.y1 = options.y1;
-	    _this.h = options.h || 10;
-	    _this.f = options.f || '#345e7e';
-	    _this.o = options.o || 0.4;
+	    _this.height = options.height || 10;
+	    _this.fill = options.fill || '#345e7e';
+	    _this.opacity = options.opacity || 0.4;
 	    _this.style = options.style || 'd3cf-node';
 	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	  }
@@ -1693,7 +1693,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      rect.enter().append('rect').attr('class', this.style).attr('x', function () {
 	        return _this2.plot.axes.xScale(_this2.x1);
 	      }).attr('y', function () {
-	        var height = _this2.h;
+	        var height = _this2.height;
 	        if (height < MINIMUM_MARKER_HEIGHT) {
 	          height = MINIMUM_MARKER_HEIGHT;
 	        }
@@ -1705,15 +1705,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        return width;
 	      }).attr('height', function () {
-	        var height = _this2.h;
+	        var height = _this2.height;
 	        if (height < MINIMUM_MARKER_HEIGHT) {
 	          height = MINIMUM_MARKER_HEIGHT;
 	        }
 	        return height;
 	      }).style('fill', function () {
-	        return _this2.f;
+	        return _this2.fill;
 	      }).style('opacity', function () {
-	        return _this2.o;
+	        return _this2.opacity;
 	      }).on('mouseover', function () {
 	        if (_this2.plot.tooltip) {
 	          return _this2.plot.tooltip.mouseover(_this2, d3.event.pageX, d3.event.pageY);
@@ -1728,7 +1728,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      rect.attr('x', function () {
 	        return _this2.plot.axes.xScale(_this2.x1);
 	      }).attr('y', function () {
-	        var height = _this2.h;
+	        var height = _this2.height;
 	        if (height < MINIMUM_MARKER_HEIGHT) {
 	          height = MINIMUM_MARKER_HEIGHT;
 	        }
@@ -1740,7 +1740,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        return width;
 	      }).attr('height', function () {
-	        var height = _this2.h;
+	        var height = _this2.height;
 	        if (height < MINIMUM_MARKER_HEIGHT) {
 	          height = MINIMUM_MARKER_HEIGHT;
 	        }
@@ -1794,18 +1794,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _inherits(SegmentNode, _Node);
 	
 	  /**
-	  * SegmentNode - a line with beginning and end circles
-	  * @param {object} plot - an instance of a plot
-	  * @param {object} options - the options used to construct the SegmentNode
-	  * @param {number} options.x - the value for x position
-	  * @param {number} options.y - the value for y position
-	  * @param {number} options.l - the value for the length of the line
-	  * @param {number} options.h - the value for the height
-	  * @param {string} options.f - the fill of the line
-	  * @param {number} options.o - the opacity of the line
-	  * @param {object} options.meta - the optional meta data associated with the node (e.g. used in the Tooltip)
-	  * @return {object} this
-	  */
+	   * SegmentNode - a line with beginning and end circles
+	   * @param {object} plot - an instance of a plot
+	   * @param {object} options - the options used to construct the SegmentNode
+	   * @param {number} options.x - the value for x position
+	   * @param {number} options.y - the value for y position
+	   * @param {number} options.length - the value for the length of the line
+	   * @param {number} options.height - the value for the height
+	   * @param {string} options.fill - the fill of the line
+	   * @param {number} options.opacity - the opacity of the line
+	   * @param {object} options.meta - the optional meta data associated with the node (e.g. used in the Tooltip)
+	   * @return {object} this
+	   */
 	  function SegmentNode(plot, options) {
 	    var _ret;
 	
@@ -1816,20 +1816,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.plot = plot;
 	    _this.x = options.x;
 	    _this.y = options.y;
-	    _this.w = options.w;
-	    _this.h = options.h || MINIMUM_LINE_STROKE;
-	    _this.r = options.r || MINIMUM_CIRCLE_RADIUS;
-	    _this.f = options.f || '#345e7e';
-	    _this.o = options.o || 0.3;
+	    _this.width = options.w;
+	    _this.height = options.height || MINIMUM_LINE_STROKE;
+	    _this.radius = options.r || MINIMUM_CIRCLE_RADIUS;
+	    _this.fill = options.fill || '#345e7e';
+	    _this.opacity = options.opacity || 0.3;
 	    _this.meta = options.meta || {};
 	    return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	  }
 	
 	  /**
-	  * remove - removes the node from the DOM
-	  *
-	  * @return {object} this
-	  */
+	   * remove - removes the node from the DOM
+	   *
+	   * @return {object} this
+	   */
 	
 	
 	  _createClass(SegmentNode, [{
@@ -1841,9 +1841,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * filteredOrderedPair - determine if the pair exists within the domain
-	    *
-	    */
+	     * filteredOrderedPair - determine if the pair exists within the domain
+	     *
+	     */
 	
 	  }, {
 	    key: 'filteredOrderedPair',
@@ -1864,10 +1864,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * update - handles updating the node
-	    *
-	    * @return {object} this
-	    */
+	     * update - handles updating the node
+	     *
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'update',
@@ -1877,17 +1877,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (typeof this.group === 'undefined') {
 	        this.group = _d2.default.select('#' + this.id);
 	      }
-	      var linePairs = [[this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)], [this.plot.axes.xScale(this.w), this.plot.axes.yScale(this.y)]];
+	      var linePairs = [[this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)], [this.plot.axes.xScale(this.width), this.plot.axes.yScale(this.y)]];
 	      var lineDistance = this.distance(linePairs);
 	      var totalRange = this.plot.axes.xScale.range()[1];
 	      var linePercentage = Math.floor(lineDistance / totalRange * 100);
-	      var startPoint = this.filteredOrderedPair([this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)]);
+	      var startPoint = this.fillilteredOrderedPair([this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)]);
 	      var start = this.group.selectAll('.start-circle').data([this], function (d) {
 	        return d.id;
 	      });
 	      if (startPoint[0] !== null && startPoint[1] !== null) {
-	        start.enter().append('circle').attr('class', 'start-circle').style('fill', this.f).attr('cx', startPoint[0]).attr('cy', startPoint[1]).attr('r', function () {
-	          var radius = _this2.r;
+	        start.enter().append('circle').attr('class', 'start-circle').style('fill', this.fill).attr('cx', startPoint[0]).attr('cy', startPoint[1]).attr('r', function () {
+	          var radius = _this2.radius;
 	          radius = Math.ceil(radius * (linePercentage / 100) + radius);
 	          if (radius < MINIMUM_CIRCLE_RADIUS) {
 	            radius = MINIMUM_CIRCLE_RADIUS;
@@ -1895,7 +1895,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return radius;
 	        });
 	        start.attr('cx', startPoint[0]).attr('cy', startPoint[1]).attr('r', function () {
-	          var radius = _this2.r;
+	          var radius = _this2.radius;
 	          radius = Math.ceil(radius * (linePercentage / 100) + radius);
 	          if (radius < MINIMUM_CIRCLE_RADIUS) {
 	            radius = MINIMUM_CIRCLE_RADIUS;
@@ -1927,13 +1927,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }
 	          return linePairs[1][0];
 	        }).attr('y2', linePairs[1][1]).attr('stroke-width', function () {
-	          var height = _this2.h;
+	          var height = _this2.height;
 	          height = Math.ceil(height * (linePercentage / 100) + height);
 	          if (height < MINIMUM_LINE_STROKE) {
 	            return MINIMUM_LINE_STROKE;
 	          }
 	          return height;
-	        }).attr('stroke', this.f);
+	        }).attr('stroke', this.fill);
 	        line.attr('x1', function () {
 	          if (linePairs[0][0] <= _this2.plot.axes.xScale.range()[0]) {
 	            return _this2.plot.axes.xScale.range()[0];
@@ -1951,7 +1951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }
 	          return linePairs[1][0];
 	        }).attr('y2', linePairs[1][1]).attr('stroke-width', function () {
-	          var height = _this2.h;
+	          var height = _this2.height;
 	          height = Math.ceil(height * (linePercentage / 100) + height);
 	          if (height < MINIMUM_LINE_STROKE) {
 	            return MINIMUM_LINE_STROKE;
@@ -1961,22 +1961,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else {
 	        this.group.selectAll('line').remove();
 	      }
-	      var endPoint = this.filteredOrderedPair([this.plot.axes.xScale(this.w), this.plot.axes.yScale(this.y)]);
+	      var endPoint = this.fillilteredOrderedPair([this.plot.axes.xScale(this.width), this.plot.axes.yScale(this.y)]);
 	      if (linePercentage >= MINIMUM_LINE_THRESHOLD) {
 	        if (endPoint[0] !== null && endPoint[1] !== null) {
 	          var end = this.group.selectAll('.end-circle').data([this], function (d) {
 	            return d.id;
 	          });
 	          end.enter().append('circle').attr('class', 'end-circle').attr('cx', endPoint[0]).attr('cy', endPoint[1]).attr('r', function () {
-	            var radius = _this2.r;
+	            var radius = _this2.radius;
 	            radius = Math.ceil(radius * linePercentage / 100 + radius);
 	            if (radius < MINIMUM_CIRCLE_RADIUS) {
 	              radius = MINIMUM_CIRCLE_RADIUS;
 	            }
 	            return radius;
-	          }).style('fill', this.f);
+	          }).style('fill', this.fill);
 	          end.attr('class', 'end-circle').attr('cx', endPoint[0]).attr('cy', endPoint[1]).attr('r', function () {
-	            var radius = _this2.r;
+	            var radius = _this2.radius;
 	            radius = Math.ceil(radius * linePercentage / 100 + radius);
 	            if (radius < MINIMUM_CIRCLE_RADIUS) {
 	              radius = MINIMUM_CIRCLE_RADIUS;
@@ -1993,24 +1993,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * detached - builds a detached svg group and returns the node
-	    *
-	    * @return {object} node - the SVG node to append to the parent during .call()
-	    */
+	     * detached - builds a detached svg group and returns the node
+	     *
+	     * @return {object} node - the SVG node to append to the parent during .call()
+	     */
 	
 	  }, {
 	    key: 'detached',
 	    value: function detached() {
-	      this.remove();
-	      this.group = _d2.default.select(document.createElementNS(_d2.default.namespaces.svg, 'g')).attr('id', this.id).attr('class', 'node').attr('opacity', this.o).remove();
+	      this.radiusemove();
+	      this.group = _d2.default.select(document.createElementNS(_d2.default.namespaces.svg, 'g')).attr('id', this.id).attr('class', 'node').attr('opacity', this.opacity).remove();
 	      this.update();
 	      this.group.node();
 	    }
 	
 	    /**
-	    * distance - determine the distance between two pairs
-	    *
-	    */
+	     * distance - determine the distance between two pairs
+	     *
+	     */
 	
 	  }, {
 	    key: 'distance',
@@ -2019,11 +2019,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * groupOverlappingSegments - group overlapping segments together
-	    *
-	    * @param {array} segments - an array of SegmentNode's
-	    * @return {object} groups - groups of overlapping segments
-	    */
+	     * groupOverlappingSegments - group overlapping segments together
+	     *
+	     * @param {array} segments - an array of SegmentNode's
+	     * @return {object} groups - groups of overlapping segments
+	     */
 	
 	  }], [{
 	    key: 'groupOverlappingSegments',
@@ -2120,18 +2120,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var Chart = function () {
 	  /**
-	  * Chart - creates a new instance of a chart
-	  *
-	  * @param {object} options - the options to create a chart
-	  * @param {string} containerID - the id of the container div
-	  * @param {string} svgcontainerClass - the desired class of the constructed svg element
-	  * @param {object} tooltip
-	  * @param {number} tooltip.opacity - the background opacity for the tooltip
-	  * @param {object} tooltip.template - the compiled template
-	  * @param {boolean} scale - scale the svg on window resize @default false
-	  * @param {boolean} resize -resize the svg on window resize @default true
-	  * @return {object} returns self
-	  */
+	   * Chart - creates a new instance of a chart
+	   *
+	   * @param {object} options - the options to create a chart
+	   * @param {string} containerID - the id of the container div
+	   * @param {string} svgcontainerClass - the desired class of the constructed svg element
+	   * @param {object} tooltip
+	   * @param {number} tooltip.opacity - the background opacity for the tooltip
+	   * @param {object} tooltip.template - the compiled template
+	   * @param {boolean} scale - scale the svg on window resize @default false
+	   * @param {boolean} resize -resize the svg on window resize @default true
+	   * @return {object} returns self
+	   */
 	  function Chart(options) {
 	    _classCallCheck(this, Chart);
 	
@@ -2143,11 +2143,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /**
-	  * init - method to initialize the chart, allows the chart to be re-initialized
-	  *  on resize while keeping the current chart data in memory
-	  *
-	  * @return {object} this
-	  */
+	   * init - method to initialize the chart, allows the chart to be re-initialized
+	   *  on resize while keeping the current chart data in memory
+	   *
+	   * @return {object} this
+	   */
 	
 	
 	  _createClass(Chart, [{
@@ -2172,9 +2172,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * setDimensions - method to set the dimensions of the chart based on the current window
-	    *
-	    */
+	     * setDimensions - method to set the dimensions of the chart based on the current window
+	     *
+	     */
 	
 	  }, {
 	    key: 'setDimensions',
@@ -2196,12 +2196,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * update - update the width and height attributes of the root and container
-	    *  elements. then call update on the chart axes
-	    *
-	    * @param {array} nodes - an array of {object} for each node
-	    * @return {object} this
-	    */
+	     * update - update the width and height attributes of the root and container
+	     *  elements. then call update on the chart axes
+	     *
+	     * @param {array} nodes - an array of {object} for each node
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'update',
@@ -2223,13 +2223,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * draw - draws the markers on the chart
-	    *
-	    * @see this will automatically show/hide a warning message if the data
-	    * is empty. Do not call super() to override this behavior.
-	    *
-	    * @param {array} nodes - an array of {object} for each marker
-	    */
+	     * draw - draws the markers on the chart
+	     *
+	     * @see this will automatically show/hide a warning message if the data
+	     * is empty. Do not call super() to override this behavior.
+	     *
+	     * @param {array} nodes - an array of {object} for each marker
+	     */
 	
 	  }, {
 	    key: 'draw',
@@ -2261,10 +2261,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * defaultGroup - creates a default group if an array is passed to the draw method
-	    *
-	    * @param {array} nodes - an array of Node's
-	    */
+	     * defaultGroup - creates a default group if an array is passed to the draw method
+	     *
+	     * @param {array} nodes - an array of Node's
+	     */
 	
 	  }, {
 	    key: 'defaultGroup',
@@ -2273,11 +2273,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * applyFilters - apply any filters from the chart
-	    *
-	    * @param {object} filters - an array of filters to apply
-	    * @return {array} filtered, the filtered data
-	    */
+	     * applyFilters - apply any filters from the chart
+	     *
+	     * @param {object} filters - an array of filters to apply
+	     * @return {array} filtered, the filtered data
+	     */
 	
 	  }, {
 	    key: 'applyFilters',
@@ -2307,10 +2307,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * getWidth
-	    *
-	    * @return {number} width - (excluding margins) for the root svg
-	    */
+	     * getWidth
+	     *
+	     * @return {number} width - (excluding margins) for the root svg
+	     */
 	
 	  }, {
 	    key: 'getWidth',
@@ -2319,10 +2319,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * getHeigth
-	    *
-	    * @return {number} width - (excluding margins) for the root svg
-	    */
+	     * getHeigth
+	     *
+	     * @return {number} width - (excluding margins) for the root svg
+	     */
 	
 	  }, {
 	    key: 'getHeight',
@@ -2331,11 +2331,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * showWarn - shows a warning message in the center of the chart
-	    *
-	    * @param {string} m - the message to display
-	    * @return {object} this
-	    */
+	     * showWarn - shows a warning message in the center of the chart
+	     *
+	     * @param {string} m - the message to display
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'showWarn',
@@ -2351,10 +2351,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * removeWarn - removes the warning message from the chart
-	    *
-	    * @return {object} this
-	    */
+	     * removeWarn - removes the warning message from the chart
+	     *
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'removeWarn',
@@ -2366,10 +2366,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * remove - removes the chart from the DOM and any event listeners
-	    *
-	    * @return {object} this
-	    */
+	     * remove - removes the chart from the DOM and any event listeners
+	     *
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'remove',
@@ -2382,9 +2382,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * destroy - destroys the chart and any associated elements
-	    *
-	    */
+	     * destroy - destroys the chart and any associated elements
+	     *
+	     */
 	
 	  }, {
 	    key: 'destroy',
@@ -2399,12 +2399,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * addGroup
-	    *
-	    * @param {object} group - add a group to the chart
-	    * @throws {InvalidGroupError} error
-	    * @return {Chart} this
-	    */
+	     * addGroup
+	     *
+	     * @param {object} group - add a group to the chart
+	     * @throws {InvalidGroupError} error
+	     * @return {Chart} this
+	     */
 	
 	  }, {
 	    key: 'addGroup',
@@ -2417,11 +2417,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * removeGroup
-	    *
-	    * @param {string} id - the group to remove
-	    * @return {Chart} this
-	    */
+	     * removeGroup
+	     *
+	     * @param {string} id - the group to remove
+	     * @return {Chart} this
+	     */
 	
 	  }, {
 	    key: 'removeGroup',
@@ -2433,10 +2433,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * getGroups - returns the groups associated with this chart
-	    *
-	    * @return {array} groups - the groups associated with this chart
-	    */
+	     * getGroups - returns the groups associated with this chart
+	     *
+	     * @return {array} groups - the groups associated with this chart
+	     */
 	
 	  }, {
 	    key: 'getGroups',
@@ -2445,11 +2445,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * getGroups - returns the size of all the groups
-	    *
-	    * @param {boolean} shouldFilter - should the nodes be filtered by domain
-	    * @return {Number} size - the size of all the groups
-	    */
+	     * getGroups - returns the size of all the groups
+	     *
+	     * @param {boolean} shouldFilter - should the nodes be filtered by domain
+	     * @return {Number} size - the size of all the groups
+	     */
 	
 	  }, {
 	    key: 'getGroupsSize',
@@ -2469,11 +2469,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * getGroupsNodes - returns all the nodes for each group
-	    *
-	    * @param {boolean} shouldFilter - should the nodes be filtered by domain
-	    * @return {array} nodes - an array of nodes
-	    */
+	     * getGroupsNodes - returns all the nodes for each group
+	     *
+	     * @param {boolean} shouldFilter - should the nodes be filtered by domain
+	     * @return {array} nodes - an array of nodes
+	     */
 	
 	  }, {
 	    key: 'getGroupsNodes',
@@ -2493,10 +2493,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * mergeGroups - merge groups from data passed directly to the draw method
-	    *
-	    * @param {object} nodes - a grouping of nodes
-	    */
+	     * mergeGroups - merge groups from data passed directly to the draw method
+	     *
+	     * @param {object} nodes - a grouping of nodes
+	     */
 	
 	  }, {
 	    key: 'mergeGroups',
@@ -2505,12 +2505,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * addFilter - add a filter to the chart
-	    *
-	    * @param {string} name - the name of the filter
-	    * @param {function} fn - the function to be applied to the data
-	    * @return {object} this
-	    */
+	     * addFilter - add a filter to the chart
+	     *
+	     * @param {string} name - the name of the filter
+	     * @param {function} fn - the function to be applied to the data
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'addFilter',
@@ -2520,11 +2520,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * removeFilter - removes a filter from the chart
-	    *
-	    * @param {string} name - the name of the filter
-	    * @return {object} this
-	    */
+	     * removeFilter - removes a filter from the chart
+	     *
+	     * @param {string} name - the name of the filter
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'removeFilter',
@@ -2536,9 +2536,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * resetZoom - resets the zoom of the axes
-	    *
-	    */
+	     * resetZoom - resets the zoom of the axes
+	     *
+	     */
 	
 	  }, {
 	    key: 'resetZoom',
@@ -2569,15 +2569,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var Tooltip = function () {
 	  /**
-	  * Tooltip - allows for an HTML div to be faded in/out on mouseover of a marker
-	  *
-	  * @param {object} plot - the plot append the tooltip
-	  * @param {object} options - the options for the plot
-	  * @param {object} options.tooltip - the options for the tooltip
-	  * @param {number} options.opacity - the opacity of the tooltip
-	  * @param {object} options.template - an underscore compiled template
-	  * @return {object} this
-	  */
+	   * Tooltip - allows for an HTML div to be faded in/out on mouseover of a marker
+	   *
+	   * @param {object} plot - the plot append the tooltip
+	   * @param {object} options - the options for the plot
+	   * @param {object} options.tooltip - the options for the tooltip
+	   * @param {number} options.opacity - the opacity of the tooltip
+	   * @param {object} options.template - an underscore compiled template
+	   * @return {object} this
+	   */
 	  function Tooltip(plot, options) {
 	    _classCallCheck(this, Tooltip);
 	
@@ -2592,13 +2592,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /**
-	  * mouseover - unbound method for mouseover event
-	  *
-	  * @param {object} d - the data
-	  * @param {number} x - the x coordinate
-	  * @param {number} y - the y coordinate
-	  * @return {object} this
-	  */
+	   * mouseover - unbound method for mouseover event
+	   *
+	   * @param {object} d - the data
+	   * @param {number} x - the x coordinate
+	   * @param {number} y - the y coordinate
+	   * @return {object} this
+	   */
 	
 	
 	  _createClass(Tooltip, [{
@@ -2615,10 +2615,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * mouseout - unbound method for mouseout event
-	    *
-	    * @return {object} this
-	    */
+	     * mouseout - unbound method for mouseout event
+	     *
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'mouseout',
@@ -2628,9 +2628,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * remove - removes the element from the DOM
-	    *
-	    */
+	     * remove - removes the element from the DOM
+	     *
+	     */
 	
 	  }, {
 	    key: 'remove',
@@ -2661,12 +2661,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var Zoom = function () {
 	  /**
-	  * Zoom - a zoomable interface for a plot
-	  *
-	  * @param {object} plot - the plot to enable the zooming interface
-	  * @param {object} options - the object containing the passed in options to the plot constructor
-	  * @return {object} this
-	  */
+	   * Zoom - a zoomable interface for a plot
+	   *
+	   * @param {object} plot - the plot to enable the zooming interface
+	   * @param {object} options - the object containing the passed in options to the plot constructor
+	   * @return {object} this
+	   */
 	  function Zoom(plot, options) {
 	    _classCallCheck(this, Zoom);
 	
@@ -2713,10 +2713,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	  }
 	
-	  /*
-	  * ondrag - the event handler for the ondrag event
-	  * @param {array} pos, the x,y position of the mouse
-	  */
+	  /**
+	   * ondrag - the event handler for the ondrag event
+	   * @param {array} pos, the x,y position of the mouse
+	   */
 	
 	
 	  _createClass(Zoom, [{
@@ -2739,10 +2739,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * ondragend - the event handler for the ondragend event
-	    *
-	    * @param {array} pos - the x,y position of the mouse
-	    */
+	     * ondragend - the event handler for the ondragend event
+	     *
+	     * @param {array} pos - the x,y position of the mouse
+	     */
 	
 	  }, {
 	    key: 'ondragend',
@@ -2773,9 +2773,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * zoom - the zooming method called an the end of ondragend
-	    *
-	    */
+	     * zoom - the zooming method called an the end of ondragend
+	     *
+	     */
 	
 	  }, {
 	    key: 'zoom',
@@ -2786,9 +2786,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * resetZoom - reset the plot zoom back to the original viewBox
-	    *
-	    */
+	     * resetZoom - reset the plot zoom back to the original viewBox
+	     *
+	     */
 	
 	  }, {
 	    key: 'reset',
@@ -2799,9 +2799,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * remove - remove the zoom interface from a plot
-	    *
-	    */
+	     * remove - remove the zoom interface from a plot
+	     *
+	     */
 	
 	  }, {
 	    key: 'remove',
@@ -2850,17 +2850,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _inherits(BarChart, _Chart);
 	
 	  /**
-	  * BarChart - constructs the root SVG element to contain the BarChart
-	  * @param {object} options, the options to create a BarChart
-	  * @param {string} containerID, the id of the BarChart container div
-	  * @param {string} svgcontainerClass, the desired class of the constructed svg element
-	  * @param {object} tooltip,
-	  * @param {number} tooltip.opacity, the background opacity for the tooltip
-	  * @param {object} tooltip.template, the compiled template
-	  * @param {boolean} scale, scale the svg on window resize @default false
-	  * @param {boolean} resize, resize the svg on window resize @default true
-	  * @returns {object} this, returns self
-	  */
+	   * BarChart - constructs the root SVG element to contain the BarChart
+	   * @param {object} options, the options to create a BarChart
+	   * @param {string} containerID, the id of the BarChart container div
+	   * @param {string} svgcontainerClass, the desired class of the constructed svg element
+	   * @param {object} tooltip,
+	   * @param {number} tooltip.opacity, the background opacity for the tooltip
+	   * @param {object} tooltip.template, the compiled template
+	   * @param {boolean} scale, scale the svg on window resize @default false
+	   * @param {boolean} resize, resize the svg on window resize @default true
+	   * @returns {object} this, returns self
+	   */
 	  function BarChart(options) {
 	    var _ret;
 	
@@ -2873,9 +2873,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /**
-	  * init - method to set/re-set the resizeHandler
-	  * @returns {object} this
-	  */
+	   * init - method to set/re-set the resizeHandler
+	   * @returns {object} this
+	   */
 	
 	
 	  _createClass(BarChart, [{
@@ -2890,10 +2890,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * draw - draw using d3 select.data.enter workflow
-	    * @param {array} data, an array of {object} for each marker
-	    * @returns {object} this
-	    */
+	     * draw - draw using d3 select.data.enter workflow
+	     * @param {array} data, an array of {object} for each marker
+	     * @returns {object} this
+	     */
 	
 	  }, {
 	    key: 'draw',
@@ -2913,9 +2913,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * defaultGroup - creates a default group if an array is passed to the draw method
-	    * @param {array} nodes, an array of Node's
-	    */
+	     * defaultGroup - creates a default group if an array is passed to the draw method
+	     * @param {array} nodes, an array of Node's
+	     */
 	
 	  }, {
 	    key: 'defaultGroup',
@@ -2937,11 +2937,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * mergeGroups - merge groups from data passed directly to the draw method
-	    * @override
-	    * @param {object} groups, a set of Groups
-	    * @return {boolean} hasChanged
-	    */
+	     * mergeGroups - merge groups from data passed directly to the draw method
+	     * @override
+	     * @param {object} groups, a set of Groups
+	     * @return {boolean} hasChanged
+	     */
 	
 	  }, {
 	    key: 'mergeGroups',
@@ -2990,10 +2990,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * update the dimensions of the chart (axes, gridlines, then redraw)
-	    * @param {array} data, an array of {object} for each marker
-	    * @returns {object} this
-	    */
+	     * update the dimensions of the chart (axes, gridlines, then redraw)
+	     * @param {array} data, an array of {object} for each marker
+	     * @returns {object} this
+	     */
 	
 	  }, {
 	    key: 'update',
@@ -3004,9 +3004,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * remove - removes the chart from the DOM and any event listeners
-	    * @return {object} this
-	    */
+	     * remove - removes the chart from the DOM and any event listeners
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'remove',
@@ -3019,9 +3019,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * resize - re-renders the chart
-	    * @return {object} this
-	    */
+	     * resize - re-renders the chart
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'resize',
@@ -3068,18 +3068,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _inherits(ScatterPlot, _Chart);
 	
 	  /**
-	  * ScatterPlot - constructs the root SVG element to contain the ScatterPlot
-	  *
-	  * @param {object} options - the options to create a ScatterPlot
-	  * @param {string} containerID - the id of the ScatterPlot container div
-	  * @param {string} svgcontainerClass - the desired class of the constructed svg element
-	  * @param {object} tooltip
-	  * @param {number} tooltip.opacity - the background opacity for the tooltip
-	  * @param {object} tooltip.template - the compiled template
-	  * @param {boolean} scale - scale the svg on window resize @default false
-	  * @param {boolean} resize - resize the svg on window resize @default true
-	  * @returns {object} this - returns self
-	  */
+	   * ScatterPlot - constructs the root SVG element to contain the ScatterPlot
+	   *
+	   * @param {object} options - the options to create a ScatterPlot
+	   * @param {string} containerID - the id of the ScatterPlot container div
+	   * @param {string} svgcontainerClass - the desired class of the constructed svg element
+	   * @param {object} tooltip
+	   * @param {number} tooltip.opacity - the background opacity for the tooltip
+	   * @param {object} tooltip.template - the compiled template
+	   * @param {boolean} scale - scale the svg on window resize @default false
+	   * @param {boolean} resize - resize the svg on window resize @default true
+	   * @returns {object} this - returns self
+	   */
 	  function ScatterPlot(options) {
 	    var _ret;
 	
@@ -3092,10 +3092,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /**
-	  * init - method to set/re-set the resizeHandler
-	  *
-	  * @returns {object} this
-	  */
+	   * init - method to set/re-set the resizeHandler
+	   *
+	   * @returns {object} this
+	   */
 	
 	
 	  _createClass(ScatterPlot, [{
@@ -3110,11 +3110,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * draw - draw using d3 select.data.enter workflow
-	    *
-	    * @param {array} data - an array of {object} for each marker
-	    * @returns {object} this
-	    */
+	     * draw - draw using d3 select.data.enter workflow
+	     *
+	     * @param {array} data - an array of {object} for each marker
+	     * @returns {object} this
+	     */
 	
 	  }, {
 	    key: 'draw',
@@ -3134,10 +3134,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * defaultGroup - creates a default group if an array is passed to the draw method
-	    *
-	    * @param {array} nodes - an array of Node's
-	    */
+	     * defaultGroup - creates a default group if an array is passed to the draw method
+	     *
+	     * @param {array} nodes - an array of Node's
+	     */
 	
 	  }, {
 	    key: 'defaultGroup',
@@ -3159,11 +3159,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * mergeGroups - merge groups from data passed directly to the draw method
-	    *
-	    * @param {object} groups - a set of Groups
-	    * @return {boolean} shouldReset - should the axes domain be reset to currentMinMax
-	    */
+	     * mergeGroups - merge groups from data passed directly to the draw method
+	     *
+	     * @param {object} groups - a set of Groups
+	     * @return {boolean} shouldReset - should the axes domain be reset to currentMinMax
+	     */
 	
 	  }, {
 	    key: 'mergeGroups',
@@ -3214,11 +3214,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * update the dimensions of the plot (axes, gridlines, then redraw)
-	    *
-	    * @param {array} data - an array of {object} for each marker
-	    * @returns {object} this
-	    */
+	     * update the dimensions of the plot (axes, gridlines, then redraw)
+	     *
+	     * @param {array} data - an array of {object} for each marker
+	     * @returns {object} this
+	     */
 	
 	  }, {
 	    key: 'update',
@@ -3229,10 +3229,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * remove - removes the plot from the DOM and any event listeners
-	    *
-	    * @return {object} this
-	    */
+	     * remove - removes the plot from the DOM and any event listeners
+	     *
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'remove',
@@ -3244,10 +3244,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * resize - re-renders the plot
-	    *
-	    * @return {object} this
-	    */
+	     * resize - re-renders the plot
+	     *
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'resize',
@@ -3256,10 +3256,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this;
 	    }
 	
-	    /*
-	    * resetZoom - resets the zoom of the axes
-	    *
-	    */
+	    /**
+	     * resetZoom - resets the zoom of the axes
+	     *
+	     */
 	
 	  }, {
 	    key: 'resetZoom',
@@ -3307,17 +3307,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _inherits(LineChart, _Chart);
 	
 	  /**
-	  * LineChart - constructs the root SVG element to contain the LineChart
-	  * @param {object} options, the options to create a LineChart
-	  * @param {string} containerID, the id of the LineChart container div
-	  * @param {string} svgcontainerClass, the desired class of the constructed svg element
-	  * @param {object} tooltip,
-	  * @param {number} tooltip.opacity, the background opacity for the tooltip
-	  * @param {object} tooltip.template, the compiled template
-	  * @param {boolean} scale, scale the svg on window resize @default false
-	  * @param {boolean} resize, resize the svg on window resize @default true
-	  * @returns {object} this, returns self
-	  */
+	   * LineChart - constructs the root SVG element to contain the LineChart
+	   * @param {object} options, the options to create a LineChart
+	   * @param {string} containerID, the id of the LineChart container div
+	   * @param {string} svgcontainerClass, the desired class of the constructed svg element
+	   * @param {object} tooltip,
+	   * @param {number} tooltip.opacity, the background opacity for the tooltip
+	   * @param {object} tooltip.template, the compiled template
+	   * @param {boolean} scale, scale the svg on window resize @default false
+	   * @param {boolean} resize, resize the svg on window resize @default true
+	   * @returns {object} this, returns self
+	   */
 	  function LineChart(options) {
 	    var _ret;
 	
@@ -3330,9 +3330,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  /**
-	  * init - method to set/re-set the resizeHandler
-	  * @returns {object} this
-	  */
+	   * init - method to set/re-set the resizeHandler
+	   * @returns {object} this
+	   */
 	
 	
 	  _createClass(LineChart, [{
@@ -3347,10 +3347,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * draw - draw using d3 select.data.enter workflow
-	    * @param {array} data, an array of {object} for each marker
-	    * @returns {object} this
-	    */
+	     * draw - draw using d3 select.data.enter workflow
+	     * @param {array} data, an array of {object} for each marker
+	     * @returns {object} this
+	     */
 	
 	  }, {
 	    key: 'draw',
@@ -3370,9 +3370,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * defaultGroup - creates a default group if an array is passed to the draw method
-	    * @param {array} nodes, an array of Node's
-	    */
+	     * defaultGroup - creates a default group if an array is passed to the draw method
+	     * @param {array} nodes, an array of Node's
+	     */
 	
 	  }, {
 	    key: 'defaultGroup',
@@ -3394,11 +3394,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * mergeGroups - merge groups from data passed directly to the draw method
-	    * @override
-	    * @param {object} groups, a set of Groups
-	    * @return {boolean} hasChanged
-	    */
+	     * mergeGroups - merge groups from data passed directly to the draw method
+	     * @override
+	     * @param {object} groups, a set of Groups
+	     * @return {boolean} hasChanged
+	     */
 	
 	  }, {
 	    key: 'mergeGroups',
@@ -3447,10 +3447,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * update the dimensions of the chart (axes, gridlines, then redraw)
-	    * @param {array} data, an array of {object} for each marker
-	    * @returns {object} this
-	    */
+	     * update the dimensions of the chart (axes, gridlines, then redraw)
+	     * @param {array} data, an array of {object} for each marker
+	     * @returns {object} this
+	     */
 	
 	  }, {
 	    key: 'update',
@@ -3461,9 +3461,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * remove - removes the chart from the DOM and any event listeners
-	    * @return {object} this
-	    */
+	     * remove - removes the chart from the DOM and any event listeners
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'remove',
@@ -3476,9 +3476,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	    * resize - re-renders the chart
-	    * @return {object} this
-	    */
+	     * resize - re-renders the chart
+	     * @return {object} this
+	     */
 	
 	  }, {
 	    key: 'resize',

@@ -8,37 +8,37 @@ const MINIMUM_LINE_THRESHOLD = 2;
 
 class SegmentNode extends Node {
   /**
-  * SegmentNode - a line with beginning and end circles
-  * @param {object} plot - an instance of a plot
-  * @param {object} options - the options used to construct the SegmentNode
-  * @param {number} options.x - the value for x position
-  * @param {number} options.y - the value for y position
-  * @param {number} options.l - the value for the length of the line
-  * @param {number} options.h - the value for the height
-  * @param {string} options.f - the fill of the line
-  * @param {number} options.o - the opacity of the line
-  * @param {object} options.meta - the optional meta data associated with the node (e.g. used in the Tooltip)
-  * @return {object} this
-  */
+   * SegmentNode - a line with beginning and end circles
+   * @param {object} plot - an instance of a plot
+   * @param {object} options - the options used to construct the SegmentNode
+   * @param {number} options.x - the value for x position
+   * @param {number} options.y - the value for y position
+   * @param {number} options.length - the value for the length of the line
+   * @param {number} options.height - the value for the height
+   * @param {string} options.fill - the fill of the line
+   * @param {number} options.opacity - the opacity of the line
+   * @param {object} options.meta - the optional meta data associated with the node (e.g. used in the Tooltip)
+   * @return {object} this
+   */
   constructor(plot, options) {
     super(options);
     this.plot = plot;
     this.x = options.x;
     this.y = options.y;
-    this.w = options.w;
-    this.h = options.h || MINIMUM_LINE_STROKE;
-    this.r = options.r || MINIMUM_CIRCLE_RADIUS;
-    this.f = options.f || '#345e7e';
-    this.o = options.o || 0.3;
+    this.width = options.w;
+    this.height = options.height || MINIMUM_LINE_STROKE;
+    this.radius = options.r || MINIMUM_CIRCLE_RADIUS;
+    this.fill = options.fill || '#345e7e';
+    this.opacity = options.opacity || 0.3;
     this.meta = options.meta || {};
     return this;
   }
 
   /**
-  * remove - removes the node from the DOM
-  *
-  * @return {object} this
-  */
+   * remove - removes the node from the DOM
+   *
+   * @return {object} this
+   */
   remove() {
     if (this.group) {
       return this.group.remove();
@@ -46,9 +46,9 @@ class SegmentNode extends Node {
   }
 
   /**
-  * filteredOrderedPair - determine if the pair exists within the domain
-  *
-  */
+   * filteredOrderedPair - determine if the pair exists within the domain
+   *
+   */
   filteredOrderedPair(orderedPair) {
     if (orderedPair[0] < this.plot.axes.xScale.range()[0]) {
       orderedPair[0] = null;
@@ -66,25 +66,25 @@ class SegmentNode extends Node {
   }
 
   /**
-  * update - handles updating the node
-  *
-  * @return {object} this
-  */
+   * update - handles updating the node
+   *
+   * @return {object} this
+   */
   update() {
     if (typeof this.group === 'undefined') {
       this.group = d3.select(`#${this.id}`);
     }
-    const linePairs = [[this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)], [this.plot.axes.xScale(this.w), this.plot.axes.yScale(this.y)]];
+    const linePairs = [[this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)], [this.plot.axes.xScale(this.width), this.plot.axes.yScale(this.y)]];
     const lineDistance = this.distance(linePairs);
     const totalRange = this.plot.axes.xScale.range()[1];
     const linePercentage = Math.floor((lineDistance / totalRange) * 100);
-    const startPoint = this.filteredOrderedPair([this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)]);
+    const startPoint = this.fillilteredOrderedPair([this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)]);
     const start = this.group.selectAll('.start-circle').data([this], (d) => {
       return d.id;
     });
     if (startPoint[0] !== null && startPoint[1] !== null) {
-      start.enter().append('circle').attr('class', 'start-circle').style('fill', this.f).attr('cx', startPoint[0]).attr('cy', startPoint[1]).attr('r', () => {
-        let radius = this.r;
+      start.enter().append('circle').attr('class', 'start-circle').style('fill', this.fill).attr('cx', startPoint[0]).attr('cy', startPoint[1]).attr('r', () => {
+        let radius = this.radius;
         radius = Math.ceil((radius * (linePercentage / 100)) + radius);
         if (radius < MINIMUM_CIRCLE_RADIUS) {
           radius = MINIMUM_CIRCLE_RADIUS;
@@ -92,7 +92,7 @@ class SegmentNode extends Node {
         return radius;
       });
       start.attr('cx', startPoint[0]).attr('cy', startPoint[1]).attr('r', () => {
-        let radius = this.r;
+        let radius = this.radius;
         radius = Math.ceil((radius * (linePercentage / 100)) + radius);
         if (radius < MINIMUM_CIRCLE_RADIUS) {
           radius = MINIMUM_CIRCLE_RADIUS;
@@ -124,13 +124,13 @@ class SegmentNode extends Node {
         }
         return linePairs[1][0];
       }).attr('y2', linePairs[1][1]).attr('stroke-width', () => {
-        let height = this.h;
+        let height = this.height;
         height = Math.ceil((height * (linePercentage / 100)) + height);
         if (height < MINIMUM_LINE_STROKE) {
           return MINIMUM_LINE_STROKE;
         }
         return height;
-      }).attr('stroke', this.f);
+      }).attr('stroke', this.fill);
       line.attr('x1', () => {
         if (linePairs[0][0] <= this.plot.axes.xScale.range()[0]) {
           return this.plot.axes.xScale.range()[0];
@@ -148,7 +148,7 @@ class SegmentNode extends Node {
         }
         return linePairs[1][0];
       }).attr('y2', linePairs[1][1]).attr('stroke-width', () => {
-        let height = this.h;
+        let height = this.height;
         height = Math.ceil((height * (linePercentage / 100)) + height);
         if (height < MINIMUM_LINE_STROKE) {
           return MINIMUM_LINE_STROKE;
@@ -158,22 +158,22 @@ class SegmentNode extends Node {
     } else {
       this.group.selectAll('line').remove();
     }
-    const endPoint = this.filteredOrderedPair([this.plot.axes.xScale(this.w), this.plot.axes.yScale(this.y)]);
+    const endPoint = this.fillilteredOrderedPair([this.plot.axes.xScale(this.width), this.plot.axes.yScale(this.y)]);
     if (linePercentage >= MINIMUM_LINE_THRESHOLD) {
       if (endPoint[0] !== null && endPoint[1] !== null) {
         const end = this.group.selectAll('.end-circle').data([this], (d) => {
           return d.id;
         });
         end.enter().append('circle').attr('class', 'end-circle').attr('cx', endPoint[0]).attr('cy', endPoint[1]).attr('r', () => {
-          let radius = this.r;
+          let radius = this.radius;
           radius = Math.ceil(((radius * linePercentage) / 100) + radius);
           if (radius < MINIMUM_CIRCLE_RADIUS) {
             radius = MINIMUM_CIRCLE_RADIUS;
           }
           return radius;
-        }).style('fill', this.f);
+        }).style('fill', this.fill);
         end.attr('class', 'end-circle').attr('cx', endPoint[0]).attr('cy', endPoint[1]).attr('r', () => {
-          let radius = this.r;
+          let radius = this.radius;
           radius = Math.ceil(((radius * linePercentage) / 100) + radius);
           if (radius < MINIMUM_CIRCLE_RADIUS) {
             radius = MINIMUM_CIRCLE_RADIUS;
@@ -190,31 +190,31 @@ class SegmentNode extends Node {
   }
 
   /**
-  * detached - builds a detached svg group and returns the node
-  *
-  * @return {object} node - the SVG node to append to the parent during .call()
-  */
+   * detached - builds a detached svg group and returns the node
+   *
+   * @return {object} node - the SVG node to append to the parent during .call()
+   */
   detached() {
-    this.remove();
-    this.group = d3.select(document.createElementNS(d3.namespaces.svg, 'g')).attr('id', this.id).attr('class', 'node').attr('opacity', this.o).remove();
+    this.radiusemove();
+    this.group = d3.select(document.createElementNS(d3.namespaces.svg, 'g')).attr('id', this.id).attr('class', 'node').attr('opacity', this.opacity).remove();
     this.update();
     this.group.node();
   }
 
   /**
-  * distance - determine the distance between two pairs
-  *
-  */
+   * distance - determine the distance between two pairs
+   *
+   */
   distance(pairs) {
     return Math.sqrt(Math.pow(Math.abs(pairs[0][0] - pairs[1][0]), 2) + Math.pow(Math.abs(pairs[0][1] - pairs[1][1]), 2));
   }
 
   /**
-  * groupOverlappingSegments - group overlapping segments together
-  *
-  * @param {array} segments - an array of SegmentNode's
-  * @return {object} groups - groups of overlapping segments
-  */
+   * groupOverlappingSegments - group overlapping segments together
+   *
+   * @param {array} segments - an array of SegmentNode's
+   * @return {object} groups - groups of overlapping segments
+   */
   static groupOverlappingSegments(segments) {
     const groups = {};
     const segmentsByHeightAndCumulative = _.groupBy(segments, (segment) => {

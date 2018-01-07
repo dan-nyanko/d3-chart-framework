@@ -5,12 +5,12 @@ const MINIMUM_ZOOM_THRESHOLD = 5;
 
 class Zoom {
   /**
-  * Zoom - a zoomable interface for a plot
-  *
-  * @param {object} plot - the plot to enable the zooming interface
-  * @param {object} options - the object containing the passed in options to the plot constructor
-  * @return {object} this
-  */
+   * Zoom - a zoomable interface for a plot
+   *
+   * @param {object} plot - the plot to enable the zooming interface
+   * @param {object} options - the object containing the passed in options to the plot constructor
+   * @return {object} this
+   */
   constructor(plot, options) {
     this.plot = plot;
     this.options = options;
@@ -52,10 +52,10 @@ class Zoom {
     });
   }
 
-  /*
-  * ondrag - the event handler for the ondrag event
-  * @param {array} pos, the x,y position of the mouse
-  */
+  /**
+   * ondrag - the event handler for the ondrag event
+   * @param {array} pos, the x,y position of the mouse
+   */
   ondrag(pos) {
     if (pos[0] < this.bandPos[0]) {
       this.zoomBand.attr('transform', `translate(${(pos[0] + this.plot.margins.left)}, ${this.bandPos[1]})`);
@@ -74,10 +74,10 @@ class Zoom {
   }
 
   /**
-  * ondragend - the event handler for the ondragend event
-  *
-  * @param {array} pos - the x,y position of the mouse
-  */
+   * ondragend - the event handler for the ondragend event
+   *
+   * @param {array} pos - the x,y position of the mouse
+   */
   ondragend(pos, zoom) {
     const x1 = this.plot.axes.xScale.invert(this.bandPos[0]);
     const x2 = this.plot.axes.xScale.invert(pos[0]);
@@ -105,9 +105,9 @@ class Zoom {
   }
 
   /**
-  * zoom - the zooming method called an the end of ondragend
-  *
-  */
+   * zoom - the zooming method called an the end of ondragend
+   *
+   */
   zoom() {
     this.isZoomed = true;
     this.plot.axes.zoom(this.zoomArea);
@@ -115,9 +115,9 @@ class Zoom {
   }
 
   /**
-  * resetZoom - reset the plot zoom back to the original viewBox
-  *
-  */
+   * resetZoom - reset the plot zoom back to the original viewBox
+   *
+   */
   reset() {
     this.isZoomed = false;
     this.plot.axes.reset();
@@ -125,9 +125,9 @@ class Zoom {
   }
 
   /**
-  * remove - remove the zoom interface from a plot
-  *
-  */
+   * remove - remove the zoom interface from a plot
+   *
+   */
   remove() {
     this.zoomGroup.remove();
     this.drag.on('drag.plot', null);

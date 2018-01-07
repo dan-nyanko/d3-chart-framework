@@ -8,11 +8,11 @@ class NodeGroup extends Group {
   }
 
   /**
-  * update - handles updating the marker
-  * @override
-  *
-  * @return {object} this
-  */
+   * update - handles updating the marker
+   * @override
+   *
+   * @return {object} this
+   */
   update() {
     if (typeof this.group === 'undefined') {
       return;

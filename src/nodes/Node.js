@@ -9,12 +9,12 @@ function genId() {
 
 class Node {
   /**
-  * Node - base class
-  *
-  * @param {object} options - the options used to construct the SegmentMarker
-  * @param {object} options.meta - the optional meta data associated with the node (e.g. used in the Tooltip)
-  * @return {object} this
-  */
+   * Node - base class
+   *
+   * @param {object} options - the options used to construct the SegmentMarker
+   * @param {object} options.meta - the optional meta data associated with the node (e.g. used in the Tooltip)
+   * @return {object} this
+   */
   constructor(options) {
     this.id = options.id || genId();
     this.meta = options.meta || {};
@@ -23,9 +23,9 @@ class Node {
   }
 
   /**
-  * remove - removes the marker from the DOM
-  *
-  */
+   * remove - removes the marker from the DOM
+   *
+   */
   remove() {
     if (this.group) {
       return this.group.remove();
@@ -33,18 +33,18 @@ class Node {
   }
 
   /**
-  * update - updates one or more elements within the RectNode SVG group
-  *
-  */
+   * update - updates one or more elements within the RectNode SVG group
+   *
+   */
   update() {
     return this;
   }
 
   /**
-  * detached - builds a detached svg group and returns the node
-  *
-  * @return {object} node - the SVG node to append to the parent during .call()
-  */
+   * detached - builds a detached svg group and returns the node
+   *
+   * @return {object} node - the SVG node to append to the parent during .call()
+   */
   detached() {
     this.remove();
     this.group = d3.select(document.createElementNS(d3.namespaces.svg, 'g')).attr('id', this.id).attr('class', 'd3cf-node').attr('opacity', this.o).remove();

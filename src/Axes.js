@@ -5,12 +5,12 @@ const moment = require('moment');
 import Grid from './Grid';
 
 /**
-* getDatetimeUnit - determine the unit of time for padding the axis
-*
-* @param {object} min, the min moment datetime object
-* @param {object} max, the max moment datetime object
-* @return {string} the datetime unit {day, week, month}
-*/
+ * getDatetimeUnit - determine the unit of time for padding the axis
+ *
+ * @param {object} min, the min moment datetime object
+ * @param {object} max, the max moment datetime object
+ * @return {string} the datetime unit {day, week, month}
+ */
 function getDatetimeUnit(min, max) {
   const diff = max.diff(min, 'days');
   let unit = 'month';
@@ -24,41 +24,41 @@ function getDatetimeUnit(min, max) {
 
 class Axes {
   /**
-  * Axes
-  * constructs 2d cartesian axes, appends to the container SVG element of the chart
-  *
-  * @param {object} chart - the chart to append the axis
-  * @param {object} options - the properties for the axis
-  * @param {boolean} grid - should the grid be displayed?
-  * X axis properties
-  * @param {object} options.axes.x - the properties for x axis
-  * @param {string} options.axes.x.title - the title of the x axis
-  * @param {string} options.axes.x.type - the datatype of the x axis {numeric, datetime}
-  * Y axis properties
-  * @param {object} options.axes.y - the properties for y axis
-  * @param {string} options.axes.y.title - the title of the y axis
-  * @param {string} options.axes.y.type - the datatype of the y axis {numeric, datetime}
-  * @returns {object} this - returns self
-  * @example usage:
-  *  with an instance of a chart:
-  ```
-  axes = new Axes(plot, {
-    axes: {
-      grid: true,
-      x: {
-        title: 'Time',
-        type: 'datetime',
-        minMax: [1443371126, 1474993537]
-      },
-      y: {
-        title: 'Incidents',
-        type: 'numeric',
-        minMax: [0, 100]
-      },
-    }
-  })
-  ```
-  */
+   * Axes
+   * constructs 2d cartesian axes, appends to the container SVG element of the chart
+   *
+   * @param {object} chart - the chart to append the axis
+   * @param {object} options - the properties for the axis
+   * @param {boolean} grid - should the grid be displayed?
+   * X axis properties
+   * @param {object} options.axes.x - the properties for x axis
+   * @param {string} options.axes.x.title - the title of the x axis
+   * @param {string} options.axes.x.type - the datatype of the x axis {numeric, datetime}
+   * Y axis properties
+   * @param {object} options.axes.y - the properties for y axis
+   * @param {string} options.axes.y.title - the title of the y axis
+   * @param {string} options.axes.y.type - the datatype of the y axis {numeric, datetime}
+   * @returns {object} this - returns self
+   * @example usage:
+   *  with an instance of a chart:
+   ```
+   axes = new Axes(plot, {
+     axes: {
+       grid: true,
+       x: {
+         title: 'Time',
+         type: 'datetime',
+         minMax: [1443371126, 1474993537]
+       },
+       y: {
+         title: 'Incidents',
+         type: 'numeric',
+         minMax: [0, 100]
+       },
+     }
+   })
+   ```
+   */
   constructor(chart, options) {
     this.chart = chart;
     this.options = options || {x: {title: 'x', type: 'numeric'}, y: {title: 'y', type: 'numeric'}, grid: true, filter: true};
@@ -68,11 +68,11 @@ class Axes {
   }
 
   /**
-  * init - initialize the plot x,y axes
-  *
-  * @param {array=} xDomain - the zoom xDomain or undefined
-  * @param {array=} yDomain - the zoom yDomain or undefined
-  */
+   * init - initialize the plot x,y axes
+   *
+   * @param {array=} xDomain - the zoom xDomain or undefined
+   * @param {array=} yDomain - the zoom yDomain or undefined
+   */
   draw(xDomain, yDomain) {
     if (this.options.x.type === 'datetime') {
       if (xDomain) {
@@ -169,9 +169,9 @@ class Axes {
   }
 
   /**
-  * setDomain - sets the x, y domains based on the current chart data
-  *
-  */
+   * setDomain - sets the x, y domains based on the current chart data
+   *
+   */
   setDomain() {
     const minMax = this.calcMinMax(false);
     this.xScale.domain(minMax[0]);
@@ -204,12 +204,12 @@ class Axes {
   }
 
   /**
-  * update - update the x,y axes using the zoom domain
-  *
-  * @param {array} data - an array of {object} for each marker
-  * @param {boolean} shouldSetDomain - should the domain be set to data bounds
-  * @return {object} this
-  */
+   * update - update the x,y axes using the zoom domain
+   *
+   * @param {array} data - an array of {object} for each marker
+   * @param {boolean} shouldSetDomain - should the domain be set to data bounds
+   * @return {object} this
+   */
   update(data, shouldSetDomain) {
     this.remove();
     if (data && shouldSetDomain) {
@@ -220,11 +220,11 @@ class Axes {
   }
 
   /**
-  * the minMax for all nodes without the domain filters
-  *
-  * @param {boolean} shouldFilterDomain
-  * @return {array} minMax
-  */
+   * the minMax for all nodes without the domain filters
+   *
+   * @param {boolean} shouldFilterDomain
+   * @return {array} minMax
+   */
   calcMinMax(shouldFilterDomain) {
       const data = this.chart.getGroupsNodes(shouldFilterDomain);
       if (data.length === 0) {
@@ -269,9 +269,9 @@ class Axes {
   }
 
   /**
-  * reset - resets the x,y axes back to the original domain
-  *
-  */
+   * reset - resets the x,y axes back to the original domain
+   *
+   */
   reset() {
     const minMax = this.calcMinMax(false);
     if (minMax[0][0] === 0 && minMax[0][1] === 0 && minMax[1][0] === 0 && minMax[1][1] === 0) {
@@ -283,10 +283,10 @@ class Axes {
   }
 
   /**
-  * zoom - zooms the x, y axes based on the zoomArea object
-  *
-  * @param {object} zoomArea, an object containing a bounding box of x,y coordinates
-  */
+   * zoom - zooms the x, y axes based on the zoomArea object
+   *
+   * @param {object} zoomArea, an object containing a bounding box of x,y coordinates
+   */
   zoom(zoomArea) {
     if (zoomArea.x1 > zoomArea.x2) {
       this.xScale.domain([zoomArea.x2, zoomArea.x1]);
@@ -313,9 +313,9 @@ class Axes {
   }
 
   /**
-  * remove - removes the x,y axis groups from the plot
-  *
-  */
+   * remove - removes the x,y axis groups from the plot
+   *
+   */
   remove() {
     this.xGroup.remove();
     this.yGroup.remove();
@@ -325,9 +325,9 @@ class Axes {
   }
 
   /**
-  * formatDate - a method that formats the axis date label
-  *
-  */
+   * formatDate - a method that formats the axis date label
+   *
+   */
   formatDate() {
     const xDomain = this.xScale.domain();
     const duration = moment.duration(moment(xDomain[1]).diff(xDomain[0])).asDays();
@@ -338,13 +338,13 @@ class Axes {
   }
 
   /**
-  * maxNumeric - determine the maximum value with padding. Padding is determined
-  * by the number of digits ^ 10 / 10, unless number of digets == 10 then return
-  * 10
-  *
-  * @param {array} data - an array of positive integers
-  * @return {number} max
-  */
+   * maxNumeric - determine the maximum value with padding. Padding is determined
+   * by the number of digits ^ 10 / 10, unless number of digets == 10 then return
+   * 10
+   *
+   * @param {array} data - an array of positive integers
+   * @return {number} max
+   */
   static maxNumeric(data, useAutoPadding) {
     const m = Math.floor(_.max(data));
     if (useAutoPadding) {
@@ -359,13 +359,13 @@ class Axes {
   }
 
   /**
-  * minNumeric - determine the minimum value with padding. Padding is determined
-  * by the number of digits ^ 10 / 10, unless number of digets == 10 then return
-  * 10
-  *
-  * @param {array} data - an array of positive integers
-  * @return {number} max
-  */
+   * minNumeric - determine the minimum value with padding. Padding is determined
+   * by the number of digits ^ 10 / 10, unless number of digets == 10 then return
+   * 10
+   *
+   * @param {array} data - an array of positive integers
+   * @return {number} max
+   */
   static minNumeric(data, useAutoPadding) {
     const m = Math.floor(_.min(data));
     if (useAutoPadding) {
@@ -380,11 +380,11 @@ class Axes {
   }
 
   /**
-  * maxDatetime - determine the maximum value with padding
-  *
-  * @param {array} data - an array of timestamps in milliseconds
-  * @return {number} max - maximum datetime value
-  */
+   * maxDatetime - determine the maximum value with padding
+   *
+   * @param {array} data - an array of timestamps in milliseconds
+   * @return {number} max - maximum datetime value
+   */
   static maxDatetime(data, useAutoPadding) {
     const max = moment(_.max(data));
     if (useAutoPadding) {
@@ -396,11 +396,11 @@ class Axes {
   }
 
   /**
-  * minDatetime - determine the minimum value with padding
-  *
-  * @param {array} data - an array of timestamps in milliseconds
-  * @return {number} min - minimum datetime value
-  */
+   * minDatetime - determine the minimum value with padding
+   *
+   * @param {array} data - an array of timestamps in milliseconds
+   * @return {number} min - minimum datetime value
+   */
   static minDatetime(data, useAutoPadding) {
     const min = moment(_.min(data));
     if (useAutoPadding) {

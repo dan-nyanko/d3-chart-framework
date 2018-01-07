@@ -8,10 +8,10 @@ class BarGroup extends Group {
   }
 
   /**
-  * update - handles updating the marker
-  *
-  * @return {object} this
-  */
+   * update - handles updating the marker
+   *
+   * @return {object} this
+   */
   update() {
     const filtered = this.chart.applyFilters(this.getNodes());
     this.group.attr('numNodes', filtered.length);

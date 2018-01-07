@@ -6,18 +6,18 @@ import NodeGroup from './groups/NodeGroup';
 
 class ScatterPlot extends Chart {
   /**
-  * ScatterPlot - constructs the root SVG element to contain the ScatterPlot
-  *
-  * @param {object} options - the options to create a ScatterPlot
-  * @param {string} containerID - the id of the ScatterPlot container div
-  * @param {string} svgcontainerClass - the desired class of the constructed svg element
-  * @param {object} tooltip
-  * @param {number} tooltip.opacity - the background opacity for the tooltip
-  * @param {object} tooltip.template - the compiled template
-  * @param {boolean} scale - scale the svg on window resize @default false
-  * @param {boolean} resize - resize the svg on window resize @default true
-  * @returns {object} this - returns self
-  */
+   * ScatterPlot - constructs the root SVG element to contain the ScatterPlot
+   *
+   * @param {object} options - the options to create a ScatterPlot
+   * @param {string} containerID - the id of the ScatterPlot container div
+   * @param {string} svgcontainerClass - the desired class of the constructed svg element
+   * @param {object} tooltip
+   * @param {number} tooltip.opacity - the background opacity for the tooltip
+   * @param {object} tooltip.template - the compiled template
+   * @param {boolean} scale - scale the svg on window resize @default false
+   * @param {boolean} resize - resize the svg on window resize @default true
+   * @returns {object} this - returns self
+   */
   constructor(options) {
     super(options);
     this.init();
@@ -25,10 +25,10 @@ class ScatterPlot extends Chart {
   }
 
   /**
-  * init - method to set/re-set the resizeHandler
-  *
-  * @returns {object} this
-  */
+   * init - method to set/re-set the resizeHandler
+   *
+   * @returns {object} this
+   */
   init() {
     super.init();
     const resizeEnabled = this.options.resize || true;
@@ -39,11 +39,11 @@ class ScatterPlot extends Chart {
   }
 
   /**
-  * draw - draw using d3 select.data.enter workflow
-  *
-  * @param {array} data - an array of {object} for each marker
-  * @returns {object} this
-  */
+   * draw - draw using d3 select.data.enter workflow
+   *
+   * @param {array} data - an array of {object} for each marker
+   * @returns {object} this
+   */
   draw(data) {
     super.draw(data);
     const groups = this.groups.selectAll('.group').data(this.getGroups(), (d) => {
@@ -60,10 +60,10 @@ class ScatterPlot extends Chart {
   }
 
   /**
-  * defaultGroup - creates a default group if an array is passed to the draw method
-  *
-  * @param {array} nodes - an array of Node's
-  */
+   * defaultGroup - creates a default group if an array is passed to the draw method
+   *
+   * @param {array} nodes - an array of Node's
+   */
   defaultGroup(nodes) {
     let group = this.getGroups().find((g) => {
       return g.id === 'default_';
@@ -82,11 +82,11 @@ class ScatterPlot extends Chart {
   }
 
   /**
-  * mergeGroups - merge groups from data passed directly to the draw method
-  *
-  * @param {object} groups - a set of Groups
-  * @return {boolean} shouldReset - should the axes domain be reset to currentMinMax
-  */
+   * mergeGroups - merge groups from data passed directly to the draw method
+   *
+   * @param {object} groups - a set of Groups
+   * @return {boolean} shouldReset - should the axes domain be reset to currentMinMax
+   */
   mergeGroups(groups) {
     const notMerged = Object.keys(this.groups_);
     let addedNewGroup = false;
@@ -132,11 +132,11 @@ class ScatterPlot extends Chart {
   }
 
   /**
-  * update the dimensions of the plot (axes, gridlines, then redraw)
-  *
-  * @param {array} data - an array of {object} for each marker
-  * @returns {object} this
-  */
+   * update the dimensions of the plot (axes, gridlines, then redraw)
+   *
+   * @param {array} data - an array of {object} for each marker
+   * @returns {object} this
+   */
   update(data) {
     super.update(data);
     this.draw(data);
@@ -144,10 +144,10 @@ class ScatterPlot extends Chart {
   }
 
   /**
-  * remove - removes the plot from the DOM and any event listeners
-  *
-  * @return {object} this
-  */
+   * remove - removes the plot from the DOM and any event listeners
+   *
+   * @return {object} this
+   */
   remove() {
     if (this.resizeHandler) {
       window.removeEventListener('resize', this.resizeHandler);
@@ -156,19 +156,19 @@ class ScatterPlot extends Chart {
   }
 
   /**
-  * resize - re-renders the plot
-  *
-  * @return {object} this
-  */
+   * resize - re-renders the plot
+   *
+   * @return {object} this
+   */
   resize() {
     this.update();
     return this;
   }
 
-  /*
-  * resetZoom - resets the zoom of the axes
-  *
-  */
+  /**
+   * resetZoom - resets the zoom of the axes
+   *
+   */
   resetZoom() {
     if (this.zoom) {
       return this.zoom.reset();

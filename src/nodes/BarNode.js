@@ -5,24 +5,24 @@ import Node from './Node';
 
 class BarNode extends Node {
   /**
-  * BarNode - a data point for a path/line generator
-  *
-  * @param {object} chart - an instance of a chart
-  * @param {object} options - the options used to construct the chart
-  * @param {string} options.x1 - the category for x1 position
-  * @param {number} options.y1 - the value for y1 position
-  * @param {string} options.f - the fill of the bar
-  * @param {number} options.o - the opacity of the bar
-  * @param {object=} options.meta - the optional meta data associated with the circle (e.g. used in the Tooltip)
-  * @return {object} this
-  */
+   * BarNode - a data point for a path/line generator
+   *
+   * @param {object} chart - an instance of a chart
+   * @param {object} options - the options used to construct the chart
+   * @param {string} options.x1 - the category for x1 position
+   * @param {number} options.y1 - the value for y1 position
+   * @param {string} options.fill - the fill of the bar
+   * @param {number} options.opacity - the opacity of the bar
+   * @param {object=} options.meta - the optional meta data associated with the circle (e.g. used in the Tooltip)
+   * @return {object} this
+   */
   constructor(chart, options) {
     super(options);
     this.chart = chart;
     this.x1 = options.x1;
     this.y1 = options.y1;
-    this.f = options.r || '#345e7e';
-    this.o = options.o || 0;
+    this.fill = options.fill || '#345e7e';
+    this.opacity = options.opacity || 0;
     this.style = options.style || 'd3cf-node';
     this.meta = options.meta || {};
     return this;
@@ -79,7 +79,7 @@ class BarNode extends Node {
     }).style('fill', () => {
       return this.getFill(this.x1);
     }).style('opacity', () => {
-      return this.o;
+      return this.opacity;
     }).on('mouseover', () => {
       if (this.chart.tooltip) {
         return this.chart.tooltip.mouseover(this, d3.event.pageX, d3.event.pageY);

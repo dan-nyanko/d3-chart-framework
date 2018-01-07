@@ -19,21 +19,21 @@ class LineGroup extends Group {
   }
 
   /**
-  * update - handles updating the marker
-  *
-  * @return {object} this
-  */
+   * update - handles updating the marker
+   *
+   * @return {object} this
+   */
   update() {
     if (typeof this.group === 'undefined') {
       return;
     }
     /**
-    * comparator function for sorting by x1 ascending
-    *
-    * @param {object} a - LineNode object
-    * @param {object} b - LineNode object
-    * @return {number}
-    */
+     * comparator function for sorting by x1 ascending
+     *
+     * @param {object} a - LineNode object
+     * @param {object} b - LineNode object
+     * @return {number}
+     */
     function cmp(a, b) {
       return a.x1 - b.x1;
     }

@@ -94,9 +94,9 @@ class Group {
   }
 
   /**
-  * remove - removes the group from the DOM
-  *
-  */
+   * remove - removes the group from the DOM
+   *
+   */
   remove() {
     if (this.group) {
       this.group.remove();
@@ -104,9 +104,9 @@ class Group {
   }
 
   /**
-  * destroy - destroys the group and any associated elements
-  *
-  */
+   * destroy - destroys the group and any associated elements
+   *
+   */
   destroy() {
     this.remove();
     this.chart.removeLayer(this.id);
@@ -116,27 +116,27 @@ class Group {
   }
 
   /**
-  * onEnter - the default event handler for a group. This may be overridden or
-  *   a new event handler passed into the constructor as `options.onEnter`
-  *
-  * @param {object} selections - the d3 selection object containing the children for this group
-  */
+   * onEnter - the default event handler for a group. This may be overridden or
+   *   a new event handler passed into the constructor as `options.onEnter`
+   *
+   * @param {object} selections - the d3 selection object containing the children for this group
+   */
   static onEnter() {}
 
   /**
-  * onUpdate - the default event handler for a group. This may be overridden or
-  *   a new event handler passed into the constructor as `options.onUpdate`
-  *
-  * @param {object} selections - the d3 selection object for this group
-  */
+   * onUpdate - the default event handler for a group. This may be overridden or
+   *   a new event handler passed into the constructor as `options.onUpdate`
+   *
+   * @param {object} selections - the d3 selection object for this group
+   */
   static onUpdate() {}
 
   /**
-  * onExit - the default event handler for a group. This may be overridden or
-  *   a new event handler passed into the constructor as `options.onExit`
-  *
-  * @param {object} selections - the d3 selection object for this group
-  */
+   * onExit - the default event handler for a group. This may be overridden or
+   *   a new event handler passed into the constructor as `options.onExit`
+   *
+   * @param {object} selections - the d3 selection object for this group
+   */
   static onExit() {}
 }
 

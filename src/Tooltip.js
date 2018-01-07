@@ -3,15 +3,15 @@ const _ = require('underscore');
 
 class Tooltip {
   /**
-  * Tooltip - allows for an HTML div to be faded in/out on mouseover of a marker
-  *
-  * @param {object} plot - the plot append the tooltip
-  * @param {object} options - the options for the plot
-  * @param {object} options.tooltip - the options for the tooltip
-  * @param {number} options.opacity - the opacity of the tooltip
-  * @param {object} options.template - an underscore compiled template
-  * @return {object} this
-  */
+   * Tooltip - allows for an HTML div to be faded in/out on mouseover of a marker
+   *
+   * @param {object} plot - the plot append the tooltip
+   * @param {object} options - the options for the plot
+   * @param {object} options.tooltip - the options for the tooltip
+   * @param {number} options.opacity - the opacity of the tooltip
+   * @param {object} options.template - an underscore compiled template
+   * @return {object} this
+   */
   constructor(plot, options) {
     this.tooltipOpts = options.tooltip || {
       'opacity': 1,
@@ -24,13 +24,13 @@ class Tooltip {
   }
 
   /**
-  * mouseover - unbound method for mouseover event
-  *
-  * @param {object} d - the data
-  * @param {number} x - the x coordinate
-  * @param {number} y - the y coordinate
-  * @return {object} this
-  */
+   * mouseover - unbound method for mouseover event
+   *
+   * @param {object} d - the data
+   * @param {number} x - the x coordinate
+   * @param {number} y - the y coordinate
+   * @return {object} this
+   */
   mouseover(d, x, y) {
     const box = this.element.node().getBoundingClientRect();
     if ((x + box.width) >= (window.innerWidth - 20)) {
@@ -43,19 +43,19 @@ class Tooltip {
   }
 
   /**
-  * mouseout - unbound method for mouseout event
-  *
-  * @return {object} this
-  */
+   * mouseout - unbound method for mouseout event
+   *
+   * @return {object} this
+   */
   mouseout() {
     this.element.transition().duration(500).style('opacity', 0);
     return this;
   }
 
   /**
-  * remove - removes the element from the DOM
-  *
-  */
+   * remove - removes the element from the DOM
+   *
+   */
   remove() {
     return this.element.remove();
   }
