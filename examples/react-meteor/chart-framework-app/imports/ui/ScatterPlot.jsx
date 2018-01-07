@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Immutable from 'immutable'
 
-// import { ScatterPlot, InvalidNodeError, RectNode, NodeGroup } from 'd3-chart-framework';
-import { ScatterPlot, InvalidNodeError, RectNode, NodeGroup } from '../api/build/d3-chart-framework';
+import { ScatterPlot, InvalidNodeError, RectNode, NodeGroup } from 'd3-chart-framework';
+// import { ScatterPlot, InvalidNodeError, RectNode, NodeGroup } from '../api/build/d3-chart-framework';
 import Toolbar from './Toolbar';
 
 

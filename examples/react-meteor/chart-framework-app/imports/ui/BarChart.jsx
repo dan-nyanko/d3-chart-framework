@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import Immutable from 'immutable';
 import _ from 'underscore';
 
-//import { BarChart, InvalidNodeError, BarNode, BarGroup } from 'd3-chart-framework';
-import { BarChart, InvalidNodeError, BarNode, BarGroup } from '../api/build/d3-chart-framework';
+import { BarChart, InvalidNodeError, BarNode, BarGroup } from 'd3-chart-framework';
+// import { BarChart, InvalidNodeError, BarNode, BarGroup } from '../api/build/d3-chart-framework';
 import Toolbar from './Toolbar';
 
 
