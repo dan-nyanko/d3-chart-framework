@@ -13,7 +13,7 @@ class SegmentNode extends Node {
    * @param {object} options - the options used to construct the SegmentNode
    * @param {number} options.x - the value for x position
    * @param {number} options.y - the value for y position
-   * @param {number} options.length - the value for the length of the line
+   * @param {number} options.width - the value for the width of the line
    * @param {number} options.height - the value for the height
    * @param {string} options.fill - the fill of the line
    * @param {number} options.opacity - the opacity of the line
@@ -25,9 +25,9 @@ class SegmentNode extends Node {
     this.plot = plot;
     this.x = options.x;
     this.y = options.y;
-    this.width = options.w;
+    this.width = options.width;
     this.height = options.height || MINIMUM_LINE_STROKE;
-    this.radius = options.r || MINIMUM_CIRCLE_RADIUS;
+    this.radius = options.radius || MINIMUM_CIRCLE_RADIUS;
     this.fill = options.fill || '#345e7e';
     this.opacity = options.opacity || 0.3;
     this.meta = options.meta || {};
@@ -78,7 +78,7 @@ class SegmentNode extends Node {
     const lineDistance = this.distance(linePairs);
     const totalRange = this.plot.axes.xScale.range()[1];
     const linePercentage = Math.floor((lineDistance / totalRange) * 100);
-    const startPoint = this.fillilteredOrderedPair([this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)]);
+    const startPoint = this.filteredOrderedPair([this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)]);
     const start = this.group.selectAll('.start-circle').data([this], (d) => {
       return d.id;
     });
@@ -158,7 +158,7 @@ class SegmentNode extends Node {
     } else {
       this.group.selectAll('line').remove();
     }
-    const endPoint = this.fillilteredOrderedPair([this.plot.axes.xScale(this.width), this.plot.axes.yScale(this.y)]);
+    const endPoint = this.filteredOrderedPair([this.plot.axes.xScale(this.width), this.plot.axes.yScale(this.y)]);
     if (linePercentage >= MINIMUM_LINE_THRESHOLD) {
       if (endPoint[0] !== null && endPoint[1] !== null) {
         const end = this.group.selectAll('.end-circle').data([this], (d) => {
@@ -195,7 +195,7 @@ class SegmentNode extends Node {
    * @return {object} node - the SVG node to append to the parent during .call()
    */
   detached() {
-    this.radiusemove();
+    this.remove();
     this.group = d3.select(document.createElementNS(d3.namespaces.svg, 'g')).attr('id', this.id).attr('class', 'node').attr('opacity', this.opacity).remove();
     this.update();
     this.group.node();

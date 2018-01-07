@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import Immutable from 'immutable';
 import _ from 'underscore';
 
-import { BarChart, InvalidNodeError, BarNode, BarGroup } from 'd3-chart-framework';
-// import { BarChart, InvalidNodeError, BarNode, BarGroup } from '../api/build/d3-chart-framework';
+//import { BarChart, InvalidNodeError, BarNode, BarGroup } from 'd3-chart-framework';
+import { BarChart, InvalidNodeError, BarNode, BarGroup } from '../api/build/d3-chart-framework';
 import Toolbar from './Toolbar';
 
 
@@ -93,8 +93,8 @@ export default class BarChartComponent extends Component {
         id: `node-${count._id}`,
         x1: count.x1,
         y1: parseFloat(count.y1),
-        o: 1, // opacity
-        w: 100, // width (default is d3-scale bandwidth())
+        opacity: 1, // opacity
+        width: 100, // width (default is d3-scale bandwidth())
         meta: {
           type: count.x1,
         },

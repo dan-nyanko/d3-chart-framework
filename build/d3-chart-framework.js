@@ -1799,7 +1799,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {object} options - the options used to construct the SegmentNode
 	   * @param {number} options.x - the value for x position
 	   * @param {number} options.y - the value for y position
-	   * @param {number} options.length - the value for the length of the line
+	   * @param {number} options.width - the value for the width of the line
 	   * @param {number} options.height - the value for the height
 	   * @param {string} options.fill - the fill of the line
 	   * @param {number} options.opacity - the opacity of the line
@@ -1816,9 +1816,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.plot = plot;
 	    _this.x = options.x;
 	    _this.y = options.y;
-	    _this.width = options.w;
+	    _this.width = options.width;
 	    _this.height = options.height || MINIMUM_LINE_STROKE;
-	    _this.radius = options.r || MINIMUM_CIRCLE_RADIUS;
+	    _this.radius = options.radius || MINIMUM_CIRCLE_RADIUS;
 	    _this.fill = options.fill || '#345e7e';
 	    _this.opacity = options.opacity || 0.3;
 	    _this.meta = options.meta || {};
@@ -1881,7 +1881,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var lineDistance = this.distance(linePairs);
 	      var totalRange = this.plot.axes.xScale.range()[1];
 	      var linePercentage = Math.floor(lineDistance / totalRange * 100);
-	      var startPoint = this.fillilteredOrderedPair([this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)]);
+	      var startPoint = this.filteredOrderedPair([this.plot.axes.xScale(this.x), this.plot.axes.yScale(this.y)]);
 	      var start = this.group.selectAll('.start-circle').data([this], function (d) {
 	        return d.id;
 	      });
@@ -1961,7 +1961,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else {
 	        this.group.selectAll('line').remove();
 	      }
-	      var endPoint = this.fillilteredOrderedPair([this.plot.axes.xScale(this.width), this.plot.axes.yScale(this.y)]);
+	      var endPoint = this.filteredOrderedPair([this.plot.axes.xScale(this.width), this.plot.axes.yScale(this.y)]);
 	      if (linePercentage >= MINIMUM_LINE_THRESHOLD) {
 	        if (endPoint[0] !== null && endPoint[1] !== null) {
 	          var end = this.group.selectAll('.end-circle').data([this], function (d) {
@@ -2001,7 +2001,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'detached',
 	    value: function detached() {
-	      this.radiusemove();
+	      this.remove();
 	      this.group = _d2.default.select(document.createElementNS(_d2.default.namespaces.svg, 'g')).attr('id', this.id).attr('class', 'node').attr('opacity', this.opacity).remove();
 	      this.update();
 	      this.group.node();

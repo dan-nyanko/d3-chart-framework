@@ -9,6 +9,7 @@
     "d3": "^4.4.0",
     "d3-chart-framework": "^0.0.11",
     "immutable": "^3.8.1",
+    "meteor-node-stubs": "^0.3.2",
     "moment": "^2.17.1",
     "prop-types": "^15.5.10",
     "react": "^15.4.1",

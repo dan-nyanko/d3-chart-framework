@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Immutable from 'immutable'
 
-import { ScatterPlot, InvalidNodeError, RectNode, NodeGroup } from 'd3-chart-framework';
-//import { ScatterPlot, InvalidNodeError, RectNode, NodeGroup } from '../api/build/d3-chart-framework';
+// import { ScatterPlot, InvalidNodeError, RectNode, NodeGroup } from 'd3-chart-framework';
+import { ScatterPlot, InvalidNodeError, RectNode, NodeGroup } from '../api/build/d3-chart-framework';
 import Toolbar from './Toolbar';
 
 
@@ -16,7 +16,7 @@ const tmpl = _.template(`
     <% if (obj.hasOwnProperty('meta')) { %>
         <%= obj.meta.type %>
     <% } %>
-    <i class="fa fa-square" style="color: <%= obj.f %>" aria-hidden="true"></i> <%= obj.y1 %>
+    <i class="fa fa-square" style="color: <%= obj.fill %>" aria-hidden="true"></i> <%= obj.y1 %>
   </p>
   <p style="padding: 0;">
     <%= new Date(obj.x1).toLocaleDateString() %> to <%= new Date(obj.x2).toLocaleDateString() %>
@@ -102,8 +102,8 @@ export default class ScatterPlotComponent extends Component {
         x1: incident.x1,
         x2: incident.x2,
         y1: incident.y1,
-        f: getFill(incident.type),
-        o: 0.5,
+        fill: getFill(incident.type),
+        opacity: 0.5,
         meta: {
           // this could be any extra metadata from your database...
           type: incident.type,
