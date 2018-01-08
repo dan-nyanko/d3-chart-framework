@@ -36,7 +36,7 @@ To run the meteor example:
 ```
 
 ### Example using React with d3-chart-framework
-The following code provided an example of rendering a line chart with a tooltip. The tooltip template is a [compiled](https://lodash.com/docs/#template) lodash/underscore template and uses the `<% %>` tags. The chart accepts an options object to define the container ID, optional CSS class, the height of the chart, and setting up the axes.
+The following code provides an example of rendering a line chart with a tooltip. The tooltip template is a [compiled](http://underscorejs.org/#template) underscore template and uses the `<% %>` tags. The chart accepts an options object to define the container ID, optional CSS class, the height of the chart, and setting up the axes.
 
 
 
@@ -149,8 +149,8 @@ The following code provided an example of rendering a line chart with a tooltip.
           let line = groups[groupId];
           const groupOpts = {
             id: groupId,
-            s: getStroke(price.type),
-            w: 1.5,
+            stroke: getStroke(price.type),
+            width: 1.5,
             meta: {
               type: price.type,
             },
@@ -159,8 +159,8 @@ The following code provided an example of rendering a line chart with a tooltip.
             id: `node-${price._id}`,
             x1: price.x1,
             y1: parseFloat(price.y1),
-            o: 0, // opacity
-            r: 3, // radius
+            opacity: 0,
+            radius: 3,
             meta: {
               type: price.type,
             },
