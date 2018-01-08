@@ -105,8 +105,8 @@ export default class LineChartComponent extends Component {
       let line = groups[groupId];
       const groupOpts = {
         id: groupId,
-        s: getStroke(price.type),
-        w: 1.5,
+        stroke: getStroke(price.type),
+        width: 1.5,
         meta: {
           type: price.type,
         },
@@ -115,8 +115,8 @@ export default class LineChartComponent extends Component {
         id: `node-${price._id}`,
         x1: price.x1,
         y1: parseFloat(price.y1),
-        o: 0, // opacity
-        r: 3, // radius
+        opacity: 0,
+        radius: 3,
         meta: {
           type: price.type,
         },

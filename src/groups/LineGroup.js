@@ -6,8 +6,8 @@ import Group from './Group';
 class LineGroup extends Group {
   constructor(chart, options) {
     super(chart, options);
-    this.s = options.s || 'steelblue';
-    this.w = options.w || 1.5;
+    this.stroke = options.stroke || 'steelblue';
+    this.width = options.width || 1.5;
     this.meta = options.meta || {};
     const defaultGenerator = d3.line().x((d) => {
       return this.chart.axes.xScale(d.x1);
@@ -48,10 +48,10 @@ class LineGroup extends Group {
           return d.id;
         })
         .attr('fill', 'transparent')
-        .attr('stroke', this.s)
+        .attr('stroke', this.stroke)
         .attr('stroke-linejoin', 'round')
         .attr('stroke-linecap', 'round')
-        .attr('stroke-width', this.w)
+        .attr('stroke-width', this.width)
         .attr('class', 'd3cf-line')
         .attr('d', (d) => {
           return this.generator(d);
@@ -59,8 +59,8 @@ class LineGroup extends Group {
         .call(this.onEnter);
     }
     // update
-    path.attr('stroke', this.s)
-      .attr('stroke-width', this.w)
+    path.attr('stroke', this.stroke)
+      .attr('stroke-width', this.width)
       .attr('d', (d) => {
         return this.generator(d);
       }).call(this.onUpdate);

@@ -1192,8 +1192,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    var _this = _possibleConstructorReturn(this, (LineGroup.__proto__ || Object.getPrototypeOf(LineGroup)).call(this, chart, options));
 	
-	    _this.s = options.s || 'steelblue';
-	    _this.w = options.w || 1.5;
+	    _this.stroke = options.stroke || 'steelblue';
+	    _this.width = options.width || 1.5;
 	    _this.meta = options.meta || {};
 	    var defaultGenerator = d3.line().x(function (d) {
 	      return _this.chart.axes.xScale(d.x1);
@@ -1237,12 +1237,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // enter
 	        this.group.append('path').datum(filtered, function (d) {
 	          return d.id;
-	        }).attr('fill', 'transparent').attr('stroke', this.s).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round').attr('stroke-width', this.w).attr('class', 'd3cf-line').attr('d', function (d) {
+	        }).attr('fill', 'transparent').attr('stroke', this.stroke).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round').attr('stroke-width', this.width).attr('class', 'd3cf-line').attr('d', function (d) {
 	          return _this2.generator(d);
 	        }).call(this.onEnter);
 	      }
 	      // update
-	      path.attr('stroke', this.s).attr('stroke-width', this.w).attr('d', function (d) {
+	      path.attr('stroke', this.stroke).attr('stroke-width', this.width).attr('d', function (d) {
 	        return _this2.generator(d);
 	      }).call(this.onUpdate);
 	      // exit
