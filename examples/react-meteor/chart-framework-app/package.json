@@ -7,7 +7,7 @@
   "dependencies": {
     "babel-runtime": "^6.20.0",
     "d3": "^4.4.0",
-    "d3-chart-framework": "^0.0.11",
+    "d3-chart-framework": "^0.0.12",
     "immutable": "^3.8.1",
     "meteor-node-stubs": "^0.3.2",
     "moment": "^2.17.1",
